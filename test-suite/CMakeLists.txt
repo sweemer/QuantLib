@@ -379,7 +379,6 @@ if (QL_BUILD_TEST_SUITE)
     target_link_libraries(ql_test_suite PRIVATE
         ql_library
         ql_unit_test_main
-        Boost::unit_test_framework
         ${QL_TEST_SUITE_LIBRARIES})
     if (QL_INSTALL_TEST_SUITE)
         install(TARGETS ql_test_suite RUNTIME DESTINATION ${QL_INSTALL_BINDIR})
@@ -399,7 +398,6 @@ IF (QL_BUILD_BENCHMARK)
     endif()
     target_link_libraries(ql_benchmark PRIVATE
         ql_library
-        Boost::unit_test_framework
         ${QL_BENCHMARK_LIBRARIES})
     if (QL_INSTALL_BENCHMARK)
         install(TARGETS ql_benchmark RUNTIME DESTINATION ${QL_INSTALL_BINDIR})
