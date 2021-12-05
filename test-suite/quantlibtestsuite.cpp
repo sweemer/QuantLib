@@ -533,5 +533,5 @@ test_suite* init_unit_test_suite(int, char* []) {
 
     test->add(QUANTLIB_TEST_CASE(stopTimer));
 
-    return test;
+    return nullptr;
 }
