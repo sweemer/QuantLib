@@ -1,10 +1,20 @@
-/*
- * Use header-only version of Boost Test in order to get manual registration working with dynamic linking as per https://stackoverflow.com/a/24447829
- * 
- * It is possible to use the header-only variant of the Unit Test Framework even if the test module has multiple translation units:
- *   one translation unit should define BOOST_TEST_MODULE and include <boost/test/included/unit_test.hpp>
- *   all the other translation units should include <boost/test/unit_test.hpp>
- * 
- * https://www.boost.org/doc/libs/1_77_0/libs/test/doc/html/boost_test/adv_scenarios/single_header_customizations/multiple_translation_units.html
- */
-#include <boost/test/included/unit_test.hpp>
+#ifdef BOOST_TEST_DYN_LINK
+/* This file needs to be linked with the test suite in case the
+   shared-library version of the Boost unit-test framework is used. */
+#include <boost/test/unit_test.hpp>
+#include <boost/test/framework.hpp>
+
+using namespace boost::unit_test;
+
+test_suite* init_unit_test_suite(int, char* []);
+
+bool init_function() {
+    framework::master_test_suite().add(init_unit_test_suite(0,0));
+    return true;
+}
+
+int main( int argc, char* argv[] ) {
+    return ::boost::unit_test::unit_test_main( &init_function, argc, argv );
+}
+
+#endif
