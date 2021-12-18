@@ -315,9 +315,6 @@ int main(int, char* []) {
         // the one used for forward rate forecasting
         RelinkableHandle<YieldTermStructure> forecastingTermStructure;
 
-        discountingTermStructure.linkTo(eoniaTermStructure);
-
-
         /*********************
         **    EURIBOR 6M    **
         *********************/
@@ -731,10 +728,6 @@ int main(int, char* []) {
                    "5-years swap mispriced by "
                    << io::rate(std::fabs(fairRate-s5yRate->value())));
 
-
-        forecastingTermStructure.linkTo(euribor6MTermStructure);
-        discountingTermStructure.linkTo(euribor6MTermStructure);
-
         NPV = spot5YearSwap.NPV();
         fairSpread = spot5YearSwap.fairSpread();
         fairRate = spot5YearSwap.fairRate();
@@ -765,10 +758,6 @@ int main(int, char* []) {
                   << headers[3] << separator << std::endl;
         std::cout << rule << std::endl;
 
-
-        forecastingTermStructure.linkTo(euribor6MTermStructure);
-        discountingTermStructure.linkTo(eoniaTermStructure);
-
         NPV = oneYearForward5YearSwap.NPV();
         fairSpread = oneYearForward5YearSwap.fairSpread();
         fairRate = oneYearForward5YearSwap.fairRate();
@@ -782,9 +771,6 @@ int main(int, char* []) {
         std::cout << std::setw(headers[3].size())
                   << io::rate(fairRate) << separator;
         std::cout << std::endl;
-
-        forecastingTermStructure.linkTo(euribor6MTermStructure);
-        discountingTermStructure.linkTo(euribor6MTermStructure);
 
         NPV = oneYearForward5YearSwap.NPV();
         fairSpread = oneYearForward5YearSwap.fairSpread();
@@ -829,9 +815,6 @@ int main(int, char* []) {
         std::cout << rule << std::endl;
 
         // now get the updated results
-        forecastingTermStructure.linkTo(euribor6MTermStructure);
-        discountingTermStructure.linkTo(eoniaTermStructure);
-
         NPV = spot5YearSwap.NPV();
         fairSpread = spot5YearSwap.fairSpread();
         fairRate = spot5YearSwap.fairRate();
@@ -848,10 +831,6 @@ int main(int, char* []) {
 
         QL_REQUIRE(std::fabs(fairRate-s5yRate->value())<1e-8,
                    "5-years swap mispriced!");
-
-
-        forecastingTermStructure.linkTo(euribor6MTermStructure);
-        discountingTermStructure.linkTo(euribor6MTermStructure);
 
         NPV = spot5YearSwap.NPV();
         fairSpread = spot5YearSwap.fairSpread();
@@ -883,10 +862,6 @@ int main(int, char* []) {
                   << headers[3] << separator << std::endl;
         std::cout << rule << std::endl;
 
-
-        forecastingTermStructure.linkTo(euribor6MTermStructure);
-        discountingTermStructure.linkTo(eoniaTermStructure);
-
         NPV = oneYearForward5YearSwap.NPV();
         fairSpread = oneYearForward5YearSwap.fairSpread();
         fairRate = oneYearForward5YearSwap.fairRate();
@@ -900,10 +875,6 @@ int main(int, char* []) {
         std::cout << std::setw(headers[3].size())
                   << io::rate(fairRate) << separator;
         std::cout << std::endl;
-
-
-        forecastingTermStructure.linkTo(euribor6MTermStructure);
-        discountingTermStructure.linkTo(euribor6MTermStructure);
 
         NPV = oneYearForward5YearSwap.NPV();
         fairSpread = oneYearForward5YearSwap.fairSpread();
