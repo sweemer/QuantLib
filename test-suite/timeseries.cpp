@@ -118,23 +118,6 @@ void TimeSeriesTest::testIterators() {
         BOOST_ERROR("value does not match");
     }
 
-    // unordered container
-    typedef TimeSeries<int, boost::unordered_map<Date, int> >
-                                                          TimeSeriesUnordered;
-    TimeSeriesUnordered ts1;
-    Date d0(25, March, 2005), d1(25, April, 2005), d = d0;
-    UnitedStates calendar(UnitedStates::NYSE);
-    for (int i = 0; d < d1; ++i, d = calendar.advance(d, 1, Days)) {
-        ts1[d] = i;
-    }
-
-    d = d0;
-    for (int i = 0; d < d1; ++i, d = calendar.advance(d, 1, Days)) {
-        if (ts1[d] != int(i)) {
-            BOOST_ERROR("value does not match");
-        }
-    }
-
     // reverse iterators
 
     std::vector<std::pair<Date,Real> > data(prices.size());
