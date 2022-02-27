@@ -115,7 +115,7 @@ namespace QuantLib {
     template<>
     Real inline MultidimIntegral::vectorBinder<0> (
         const ext::function<Real (const std::vector<Real>&)>& f, 
-        Real z,
+        const Real z,
         const std::vector<Real>& a,
         const std::vector<Real>& b) const
     {
@@ -125,9 +125,9 @@ namespace QuantLib {
 
     template<>
     void inline MultidimIntegral::spawnFcts<1>() const {
-        integrationLevelEntries_[0] = 
-            ext::bind(&MultidimIntegral::integrate<0>, this,
-                      ext::placeholders::_1, ext::placeholders::_2, ext::placeholders::_3);
+        integrationLevelEntries_[0] = [this](const auto& f, const auto& a, const auto& b) {
+            return integrate<0>(f, a, b);
+        };
     }
 
     template<int nT>
@@ -137,15 +137,15 @@ namespace QuantLib {
         const std::vector<Real>& b) const 
     {
         return 
-            (*integrators_[nT])(
-                ext::bind(&MultidimIntegral::vectorBinder<nT>, this, f, 
-                    ext::placeholders::_1, ext::cref(a), ext::cref(b)), a[nT], b[nT]);
+            (*integrators_[nT])([this, &f, &a, &b](const auto z) {
+                return vectorBinder<nT>(f, z, ext::cref(a), ext::cref(b));
+            }, a[nT], b[nT]);
     }
 
     template<int T_N> 
     inline Real MultidimIntegral::vectorBinder (
         const ext::function<Real (const std::vector<Real>&)>& f,
-        Real z,
+        const Real z,
         const std::vector<Real>& a,
         const std::vector<Real>& b) const 
     {
@@ -155,9 +155,9 @@ namespace QuantLib {
 
     template<Size depth>
     void MultidimIntegral::spawnFcts() const {
-        integrationLevelEntries_[depth-1] =
-          ext::bind(&MultidimIntegral::integrate<depth-1>, this, 
-            ext::placeholders::_1, ext::placeholders::_2, ext::placeholders::_3);
+        integrationLevelEntries_[depth-1] = [this](const auto& f, const auto& a, const auto& b) {
+            return integrate<depth-1>(f, a, b);
+        };
         spawnFcts<depth-1>();
     }
 

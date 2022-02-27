@@ -74,8 +74,8 @@ if test "$ql_openmp" = "yes" ; then
    AC_SUBST([CXXFLAGS],["${CXXFLAGS} ${OPENMP_CXXFLAGS}"])
 fi
 
-# Check for C++11 support
-QL_CHECK_CPP11
+# Check for C++14 support
+QL_CHECK_CPP14
 
 # Check for Boost components
 QL_CHECK_BOOST
