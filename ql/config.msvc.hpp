@@ -60,6 +60,11 @@
 #endif
 
 
+// Suppress the following warning:
+// The file contains a character that cannot be represented in the current code page
+#pragma warning(disable : 4819)
+
+
 /* suppress C++ code analysis warning C26812 in VS 2019:
  * Prefer 'enum class' over 'enum' (Enum.3). */
 #pragma warning(disable : 26812)
