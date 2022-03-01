@@ -15,6 +15,9 @@ if (MSVC)
 
     add_compile_definitions(NOMINMAX)
 
+    # Required to resolve the correct __cplusplus value
+    add_compile_options(/Zc:__cplusplus)
+
     # /wd4267
     # Suppress warnings: assignment of 64-bit value to 32-bit QuantLib::Integer (x64)
 
