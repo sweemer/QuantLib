@@ -324,9 +324,18 @@ namespace QuantLib {
             void update() const {
                 boost::lock_guard<boost::recursive_mutex> lock(mutex_);
                 if (active_) {
-                    // c++17 is required if used with std::shared_ptr<T>
+#                   if defined(QL_USE_STD_SHARED_PTR) && __cplusplus < 201703L
+#                       ifdef BOOST_MSVC
+#                           pragma message("Thread-safe observer pattern requires at least C++17 for best performance.")
+#                       else
+#                           warning Thread-safe observer pattern requires at least C++17 for best performance.
+#                       endif
+                    const auto s = observer_->shared_from_this();
+                    const ext::weak_ptr<Observer> o = s;
+#                   else
                     const ext::weak_ptr<Observer> o
                         = observer_->weak_from_this();
+#                   endif
 
                     //check for empty weak reference
                     //https://stackoverflow.com/questions/45507041/how-to-check-if-weak-ptr-is-empty-non-assigned
