@@ -39,7 +39,6 @@
 #undef VERSION
 #endif
 
-#include <boost/thread/thread.hpp>
 #include <boost/interprocess/ipc/message_queue.hpp>
 #include <boost/interprocess/sync/scoped_lock.hpp>
 #include <boost/interprocess/sync/named_mutex.hpp>
@@ -57,6 +56,7 @@
 #include <string>
 #include <cstring>
 #include <cstdlib>
+#include <thread>
 
 #ifdef BOOST_MSVC
 #  define BOOST_LIB_NAME boost_system
@@ -212,7 +212,7 @@ int main( int argc, char* argv[] )
             }
             in.close();
 
-            unsigned nProc = boost::thread::hardware_concurrency();
+            auto nProc = std::thread::hardware_concurrency();
 
             std::stringstream cmd;
             cmd << "\"" << argv[0] << "\" ";
@@ -270,9 +270,9 @@ int main( int argc, char* argv[] )
                                                        std::list<test_unit_id>();
 
             // fork worker processes
-            boost::thread_group threadGroup;
+            std::vector<std::thread> threadGroup;
             for (unsigned i=0; i < nProc; ++i) {
-                threadGroup.create_thread([&]() { worker(cmd.str()); });
+                threadGroup.emplace_back([&]() { worker(cmd.str()); });
             }
 
             struct mutex_remove {
@@ -369,7 +369,8 @@ int main( int argc, char* argv[] )
             }
             out.close();
 
-            threadGroup.join_all();
+            for (auto& thread : threadGroup)
+                thread.join();
         }
         else {
             std::stringstream logBuf;

@@ -27,7 +27,7 @@
 #include <ql/termstructures/volatility/optionlet/strippedoptionlet.hpp>
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
-
+#include <thread>
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -193,7 +193,7 @@ void ObservableTest::testAsyncGarbagCollector() {
     const ext::shared_ptr<SimpleQuote> quote(new SimpleQuote(-1.0));
 
     GarbageCollector gc;
-    boost::thread workerThread(&GarbageCollector::run, &gc);
+    std::thread workerThread(&GarbageCollector::run, &gc);
 
     for (Size i=0; i < 10000; ++i) {
         const ext::shared_ptr<MTUpdateCounter> observer(new MTUpdateCounter);
@@ -222,7 +222,7 @@ void ObservableTest::testMultiThreadingGlobalSettings() {
     ObservableSettings::instance().disableUpdates(true);
 
     GarbageCollector gc;
-    boost::thread workerThread(&GarbageCollector::run, &gc);
+    std::thread workerThread(&GarbageCollector::run, &gc);
 
     typedef std::list<ext::shared_ptr<MTUpdateCounter> > local_list_type;
     local_list_type localList;
