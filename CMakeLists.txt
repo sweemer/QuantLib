@@ -147,8 +147,14 @@ if (QL_ENABLE_OPENMP)
 endif()
 
 # Parallel test runner needs library rt on *nix for shm_open, etc.
-if (QL_ENABLE_PARALLEL_UNIT_TEST_RUNNER AND UNIX AND NOT APPLE)
-    find_library(RT_LIBRARY rt REQUIRED)
+if (QL_ENABLE_PARALLEL_UNIT_TEST_RUNNER)
+    if (NOT DEFINED THREADS_PREFER_PTHREAD_FLAG)
+        set(THREADS_PREFER_PTHREAD_FLAG ON)
+    endif()
+    find_library(Threads REQUIRED)
+    if (UNIX AND NOT APPLE)
+        find_library(RT_LIBRARY rt REQUIRED)
+    endif()
 endif()
 
 # If available, use PIC for shared libs and PIE for executables

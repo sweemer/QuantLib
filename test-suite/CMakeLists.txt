@@ -376,9 +376,11 @@ if (QL_BUILD_TEST_SUITE)
         target_compile_definitions(ql_unit_test_main PRIVATE BOOST_TEST_DYN_LINK)
         target_compile_definitions(ql_test_suite PRIVATE BOOST_ALL_DYN_LINK BOOST_TEST_DYN_LINK)
     endif()
-    if (QL_ENABLE_PARALLEL_UNIT_TEST_RUNNER OR QL_ENABLE_SESSIONS OR
-            QL_ENABLE_SINGLETON_THREAD_SAFE_INIT OR QL_ENABLE_THREAD_SAFE_OBSERVER_PATTERN)
+    if (QL_ENABLE_SESSIONS OR QL_ENABLE_SINGLETON_THREAD_SAFE_INIT OR
+            QL_ENABLE_THREAD_SAFE_OBSERVER_PATTERN)
         set(QL_TEST_SUITE_LIBRARIES Boost::thread ${RT_LIBRARY})
+    elseif (QL_ENABLE_PARALLEL_UNIT_TEST_RUNNER)
+        set(QL_TEST_SUITE_LIBRARIES Threads::Threads ${RT_LIBRARY})
     endif()
     target_link_libraries(ql_test_suite PRIVATE
         ql_library
