@@ -39,8 +39,6 @@ namespace QuantLib {
 
     EndCriteria::Type LevenbergMarquardt::minimize(Problem& P,
                                                    const EndCriteria& endCriteria) {
-        using namespace ext::placeholders;
-
         EndCriteria::Type ecType = EndCriteria::None;
         P.reset();
         Array x_ = P.currentValue();
@@ -84,10 +82,14 @@ namespace QuantLib {
         // call lmdif to minimize the sum of the squares of m functions
         // in n variables by the Levenberg-Marquardt algorithm.
         MINPACK::LmdifCostFunction lmdifCostFunction =
-            ext::bind(&LevenbergMarquardt::fcn, this, _1, _2, _3, _4, _5);
+            [this](auto _1, auto _2, auto _3, auto _4, auto _5) {
+                fcn(_1, _2, _3, _4, _5);
+            };
         MINPACK::LmdifCostFunction lmdifJacFunction =
             useCostFunctionsJacobian_
-                ? ext::bind(&LevenbergMarquardt::jacFcn, this, _1, _2, _3, _4, _5)
+                ? [this](auto _1, auto _2, auto _3, auto _4, auto _5) {
+                    jacFcn(_1, _2, _3, _4, _5);
+                }
                 : MINPACK::LmdifCostFunction();
         MINPACK::lmdif(m, n, xx.get(), fvec.get(),
                        endCriteria.functionEpsilon(),

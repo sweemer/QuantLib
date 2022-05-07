@@ -50,30 +50,12 @@ namespace QuantLib {
         using std::bind;                           // NOLINT(misc-unused-using-decls)
         using std::ref;                            // NOLINT(misc-unused-using-decls)
         using std::cref;                           // NOLINT(misc-unused-using-decls)
-        namespace placeholders {
-            using namespace std::placeholders;     // NOLINT(misc-unused-using-decls)
-        }
         #define QL_NULL_FUNCTION nullptr
         #else
         using boost::function;                     // NOLINT(misc-unused-using-decls)
         using boost::bind;                         // NOLINT(misc-unused-using-decls)
         using boost::ref;                          // NOLINT(misc-unused-using-decls)
         using boost::cref;                         // NOLINT(misc-unused-using-decls)
-        namespace placeholders {
-            #if BOOST_VERSION >= 106000
-            using namespace boost::placeholders;   // NOLINT(misc-unused-using-decls)
-            #else
-            using ::_1;                            // NOLINT(misc-unused-using-decls)
-            using ::_2;                            // NOLINT(misc-unused-using-decls)
-            using ::_3;                            // NOLINT(misc-unused-using-decls)
-            using ::_4;                            // NOLINT(misc-unused-using-decls)
-            using ::_5;                            // NOLINT(misc-unused-using-decls)
-            using ::_6;                            // NOLINT(misc-unused-using-decls)
-            using ::_7;                            // NOLINT(misc-unused-using-decls)
-            using ::_8;                            // NOLINT(misc-unused-using-decls)
-            using ::_9;                            // NOLINT(misc-unused-using-decls)
-            #endif
-        }
         #define QL_NULL_FUNCTION 0
         #endif
 
