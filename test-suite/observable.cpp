@@ -27,6 +27,7 @@
 #include <ql/termstructures/volatility/optionlet/strippedoptionlet.hpp>
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
+#include <chrono>
 #include <thread>
 
 using namespace QuantLib;
@@ -108,10 +109,9 @@ void ObservableTest::testObservableSettings() {
 
 #ifdef QL_ENABLE_THREAD_SAFE_OBSERVER_PATTERN
 
-#include <boost/atomic.hpp>
-#include <boost/thread/locks.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/thread.hpp>
+#include <atomic>
+#include <mutex>
+#include <thread>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
 #include <list>
@@ -133,18 +133,18 @@ namespace {
         static int instanceCounter() { return instanceCounter_; }
 
       private:
-        boost::atomic<int> counter_;
-        static boost::atomic<int> instanceCounter_;
+        std::atomic<int> counter_;
+        static std::atomic<int> instanceCounter_;
     };
 
-    boost::atomic<int> MTUpdateCounter::instanceCounter_(0);
+    std::atomic<int> MTUpdateCounter::instanceCounter_(0);
 
     class GarbageCollector {
       public:
         GarbageCollector() : terminate_(false) { }
 
         void addObj(const ext::shared_ptr<MTUpdateCounter>& updateCounter) {
-            boost::lock_guard<boost::mutex> lock(mutex_);
+            std::lock_guard<std::mutex> lock(mutex_);
             objList.push_back(updateCounter);
         }
 
@@ -152,20 +152,20 @@ namespace {
             while(!terminate_) {
                 Size objListSize;
                 {
-                    boost::lock_guard<boost::mutex> lock(mutex_);
+                    std::lock_guard<std::mutex> lock(mutex_);
                     objListSize = objList.size();
                 }
 
                 if (objListSize > 20) {
                     // trigger gc
                     while (objListSize > 0) {
-                        boost::lock_guard<boost::mutex> lock(mutex_);
+                        std::lock_guard<std::mutex> lock(mutex_);
                         objList.pop_front();
                         objListSize = objList.size();
                     }
                 }
 
-                boost::this_thread::sleep(boost::posix_time::milliseconds(2));
+                std::this_thread::sleep_for(std::chrono::milliseconds(2));
             }
             objList.clear();
         }
@@ -174,8 +174,8 @@ namespace {
             terminate_ = true;
         }
       private:
-        boost::mutex mutex_;
-        boost::atomic<bool> terminate_;
+        std::mutex mutex_;
+        std::atomic<bool> terminate_;
 
         std::list<ext::shared_ptr<MTUpdateCounter> > objList;
     };

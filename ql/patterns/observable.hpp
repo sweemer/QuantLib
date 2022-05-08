@@ -255,12 +255,11 @@ namespace QuantLib {
 
 #else
 
-#include <boost/atomic.hpp>
-#include <boost/thread/locks.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/recursive_mutex.hpp>
 #include <boost/smart_ptr/owner_less.hpp>
+#include <atomic>
+#include <mutex>
 #include <set>
+#include <thread>
 
 namespace QuantLib {
 
@@ -322,7 +321,7 @@ namespace QuantLib {
             }
 
             void update() const {
-                boost::lock_guard<boost::recursive_mutex> lock(mutex_);
+                std::lock_guard<std::recursive_mutex> lock(mutex_);
                 if (active_) {
                     // c++17 is required if used with std::shared_ptr<T>
                     const ext::weak_ptr<Observer> o
@@ -343,18 +342,18 @@ namespace QuantLib {
             }
 
             void deactivate() {
-                boost::lock_guard<boost::recursive_mutex> lock(mutex_);
+                std::lock_guard<std::recursive_mutex> lock(mutex_);
                 active_ = false;
             }
 
         private:
             bool active_;
-            mutable boost::recursive_mutex mutex_;
+            mutable std::recursive_mutex mutex_;
             Observer* const observer_;
         };
 
         ext::shared_ptr<Proxy> proxy_;
-        mutable boost::recursive_mutex mutex_;
+        mutable std::recursive_mutex mutex_;
 
         QL_DEPRECATED_DISABLE_WARNING
         set_type observables_;
@@ -399,7 +398,7 @@ namespace QuantLib {
         set_type observers_;
         QL_DEPRECATED_ENABLE_WARNING
 
-        mutable boost::recursive_mutex mutex_;
+        mutable std::recursive_mutex mutex_;
 
         ObservableSettings& settings_;
     };
@@ -411,7 +410,7 @@ namespace QuantLib {
 
       public:
         void disableUpdates(bool deferred=false) {
-            boost::lock_guard<boost::mutex> lock(mutex_);
+            std::lock_guard<std::mutex> lock(mutex_);
             updatesType_ = (deferred) ? UpdatesDeferred : 0;
         }
         void enableUpdates();
@@ -431,10 +430,10 @@ namespace QuantLib {
         void unregisterDeferredObserver(const ext::shared_ptr<Observer::Proxy>& proxy);
 
         set_type deferredObservers_;
-        mutable boost::mutex mutex_;
+        mutable std::mutex mutex_;
 
         enum UpdateType { UpdatesEnabled = 1, UpdatesDeferred = 2} ;
-        boost::atomic<int> updatesType_;
+        std::atomic<int> updatesType_;
     };
 
 
@@ -452,7 +451,7 @@ namespace QuantLib {
     }
 
     inline void ObservableSettings::enableUpdates() {
-        boost::lock_guard<boost::mutex> lock(mutex_);
+        std::lock_guard<std::mutex> lock(mutex_);
 
         // if there are outstanding deferred updates, do the notification
         updatesType_ = UpdatesEnabled;
@@ -503,7 +502,7 @@ namespace QuantLib {
         proxy_.reset(new Proxy(this));
 
         {
-             boost::lock_guard<boost::recursive_mutex> lock(o.mutex_);
+             std::lock_guard<std::recursive_mutex> lock(o.mutex_);
              observables_ = o.observables_;
         }
 
@@ -512,7 +511,7 @@ namespace QuantLib {
     }
 
     inline Observer& Observer::operator=(const Observer& o) {
-        boost::lock_guard<boost::recursive_mutex> lock(mutex_);
+        std::lock_guard<std::recursive_mutex> lock(mutex_);
         if (!proxy_) {
             proxy_.reset(new Proxy(this));
         }
@@ -521,7 +520,7 @@ namespace QuantLib {
             observable->unregisterObserver(proxy_, true);
 
         {
-            boost::lock_guard<boost::recursive_mutex> lock(o.mutex_);
+            std::lock_guard<std::recursive_mutex> lock(o.mutex_);
             observables_ = o.observables_;
         }
         for (const auto& observable : observables_)
@@ -531,7 +530,7 @@ namespace QuantLib {
     }
 
     inline Observer::~Observer() {
-        boost::lock_guard<boost::recursive_mutex> lock(mutex_);
+        std::lock_guard<std::recursive_mutex> lock(mutex_);
         if (proxy_)
             proxy_->deactivate();
 
@@ -541,7 +540,7 @@ namespace QuantLib {
 
     inline std::pair<Observer::iterator, bool>
     Observer::registerWith(const ext::shared_ptr<Observable>& h) {
-        boost::lock_guard<boost::recursive_mutex> lock(mutex_);
+        std::lock_guard<std::recursive_mutex> lock(mutex_);
         if (!proxy_) {
             proxy_.reset(new Proxy(this));
         }
@@ -556,7 +555,7 @@ namespace QuantLib {
     inline void
     Observer::registerWithObservables(const ext::shared_ptr<Observer>& o) {
         if (o) {
-            boost::lock_guard<boost::recursive_mutex> lock(o->mutex_);
+            std::lock_guard<std::recursive_mutex> lock(o->mutex_);
 
             for (const auto& observable : o->observables_)
                 registerWith(observable);
@@ -565,7 +564,7 @@ namespace QuantLib {
 
     inline
     Size Observer::unregisterWith(const ext::shared_ptr<Observable>& h) {
-        boost::lock_guard<boost::recursive_mutex> lock(mutex_);
+        std::lock_guard<std::recursive_mutex> lock(mutex_);
 
         if (h && proxy_)  {
             h->unregisterObserver(proxy_, true);
@@ -575,7 +574,7 @@ namespace QuantLib {
     }
 
     inline void Observer::unregisterWithAll() {
-        boost::lock_guard<boost::recursive_mutex> lock(mutex_);
+        std::lock_guard<std::recursive_mutex> lock(mutex_);
 
         for (const auto& observable : observables_)
             observable->unregisterObserver(proxy_, true);
