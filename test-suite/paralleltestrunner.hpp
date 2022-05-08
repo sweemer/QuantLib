@@ -58,15 +58,6 @@
 #include <cstdlib>
 #include <thread>
 
-#ifdef BOOST_MSVC
-#  define BOOST_LIB_NAME boost_system
-#  include <boost/config/auto_link.hpp>
-#  undef BOOST_LIB_NAME
-#  define BOOST_LIB_NAME boost_thread
-#  include <boost/config/auto_link.hpp>
-#  undef BOOST_LIB_NAME
-#endif
-
 using boost::unit_test::test_results;
 using namespace boost::interprocess;
 using namespace boost::unit_test_framework;
@@ -369,8 +360,9 @@ int main( int argc, char* argv[] )
             }
             out.close();
 
-            for (auto& thread : threadGroup)
+            for (auto& thread : threadGroup) {
                 thread.join();
+            }
         }
         else {
             std::stringstream logBuf;
