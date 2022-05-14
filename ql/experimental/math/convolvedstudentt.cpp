@@ -23,7 +23,6 @@
 #include <ql/math/distributions/normaldistribution.hpp>
 #include <ql/math/solvers1d/brent.hpp>
 #include <ql/math/functional.hpp>
-#include <boost/math/distributions/students_t.hpp>
 
 namespace QuantLib {
 

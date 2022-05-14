@@ -31,9 +31,8 @@
 #include <ql/math/functional.hpp>
 #include <ql/math/solvers1d/newtonsafe.hpp>
 #include <ql/math/distributions/normaldistribution.hpp>
-#include <boost/math/special_functions/fpclassify.hpp>
-#include <boost/math/special_functions/atanh.hpp>
-#include <boost/math/special_functions/sign.hpp>
+
+#include <cmath>
 
 namespace {
     void checkParameters(QuantLib::Real strike,
@@ -54,6 +53,10 @@ namespace {
 }
 
 namespace QuantLib {
+
+    inline int sign(const Real z) {
+        return (z == 0) ? 0 : (std::signbit)(z) ? -1 : 1;
+    }
 
     Real blackFormula(Option::Type optionType,
                       Real strike,
@@ -121,7 +124,7 @@ namespace QuantLib {
         auto sign = Integer(optionType);
 
         if (stdDev == 0.0)
-            return sign * std::max(1.0 * boost::math::sign((forward - strike) * sign), 0.0) * discount;
+            return sign * std::max(1.0 * QuantLib::sign((forward - strike) * sign), 0.0) * discount;
 
         forward = forward + displacement;
         strike = strike + displacement;
@@ -260,7 +263,7 @@ namespace QuantLib {
 
     namespace {
         Real Af(Real x) {
-            return 0.5*(1.0+boost::math::sign(x)
+            return 0.5*(1.0+QuantLib::sign(x)
                 *std::sqrt(1.0-std::exp(-M_2_PI*x*x)));
         }
     }
@@ -743,7 +746,7 @@ namespace QuantLib {
                    "discount (" << discount << ") must be positive");
         auto sign = Integer(optionType);
         if (stdDev == 0.0)
-            return sign * std::max(1.0 * boost::math::sign((forward - strike) * sign), 0.0) * discount;
+            return sign * std::max(1.0 * QuantLib::sign((forward - strike) * sign), 0.0) * discount;
         Real d = (forward - strike) * sign, h = d / stdDev;
         CumulativeNormalDistribution phi;
         return sign * phi(h) * discount;
