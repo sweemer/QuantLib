@@ -27,7 +27,7 @@ namespace QuantLib {
     void setCouponPricer(const Leg& leg,
                          const ext::shared_ptr<InflationCouponPricer>& p) {
         for (const auto& i : leg) {
-            ext::shared_ptr<InflationCoupon> c = ext::dynamic_pointer_cast<InflationCoupon>(i);
+            auto* c = dynamic_cast<InflationCoupon*>(i.get());
             if (c != nullptr)
                 c->setPricer(p);
         }
@@ -143,7 +143,7 @@ namespace QuantLib {
         rateCurve_ =
             !nominalTermStructure_.empty() ?
             nominalTermStructure_ :
-            ext::dynamic_pointer_cast<YoYInflationIndex>(coupon.index())
+            dynamic_cast<YoYInflationIndex*>(coupon.index().get())
             ->yoyInflationTermStructure()
             ->nominalTermStructure();
         QL_DEPRECATED_ENABLE_WARNING

@@ -555,8 +555,7 @@ namespace QuantLib {
 
     template<class Model> void SwaptionVolCube1x<Model>::fillVolatilityCube() const {
 
-        const ext::shared_ptr<SwaptionVolatilityDiscrete> atmVolStructure =
-            ext::dynamic_pointer_cast<SwaptionVolatilityDiscrete>(*atmVol_);
+        auto* atmVolStructure = dynamic_cast<SwaptionVolatilityDiscrete*>(atmVol_.get());
 
         std::vector<Time> atmOptionTimes(atmVolStructure->optionTimes());
         std::vector<Time> optionTimes(volCubeAtmCalibrated_.optionTimes());

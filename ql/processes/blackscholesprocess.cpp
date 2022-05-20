@@ -185,9 +185,7 @@ namespace QuantLib {
             isStrikeIndependent_=true;
 
             // constant Black vol?
-            ext::shared_ptr<BlackConstantVol> constVol =
-                ext::dynamic_pointer_cast<BlackConstantVol>(
-                                                          *blackVolatility());
+            auto* constVol = dynamic_cast<BlackConstantVol*>(blackVolatility()->get());
             if (constVol != nullptr) {
                 // ok, the local vol is constant too.
                 localVolatility_.linkTo(ext::make_shared<LocalConstantVol>(

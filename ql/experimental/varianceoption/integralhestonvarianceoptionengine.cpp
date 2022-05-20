@@ -383,8 +383,7 @@ namespace QuantLib {
                                         riskFreeRate->dayCounter(),
                                         Continuous);
 
-        ext::shared_ptr<PlainVanillaPayoff> plainPayoff =
-            ext::dynamic_pointer_cast<PlainVanillaPayoff>(arguments_.payoff);
+        auto* plainPayoff = dynamic_cast<PlainVanillaPayoff*>(arguments_.payoff.get());
         if ((plainPayoff != nullptr) && plainPayoff->optionType() == Option::Call) {
             // a specialization for Call options is available
             Real strike = plainPayoff->strike();

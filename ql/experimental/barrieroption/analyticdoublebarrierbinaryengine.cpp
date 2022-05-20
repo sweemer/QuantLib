@@ -36,12 +36,14 @@ namespace QuantLib {
         AnalyticDoubleBarrierBinaryEngine_helper(
              const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
              const ext::shared_ptr<CashOrNothingPayoff> &payoff,
-             const DoubleBarrierOption::arguments &arguments):
-        process_(process),
-        payoff_(payoff),
-        arguments_(arguments)
-        {
-        }
+             const DoubleBarrierOption::arguments &arguments)
+        : AnalyticDoubleBarrierBinaryEngine_helper(*process, *payoff, arguments) {}
+
+        AnalyticDoubleBarrierBinaryEngine_helper(
+             const GeneralizedBlackScholesProcess& process,
+             const CashOrNothingPayoff& payoff,
+             const DoubleBarrierOption::arguments& arguments)
+        : process_(process), payoff_(payoff), arguments_(arguments) {}
 
         Real payoffAtExpiry(Real spot, Real variance,
                             DoubleBarrier::Type barrierType,
@@ -53,9 +55,8 @@ namespace QuantLib {
                         Real requiredConvergence = 1e-8);
 
     private:
-
-        const ext::shared_ptr<GeneralizedBlackScholesProcess>& process_;
-        const ext::shared_ptr<CashOrNothingPayoff> &payoff_;
+        const GeneralizedBlackScholesProcess &process_;
+        const CashOrNothingPayoff &payoff_;
         const DoubleBarrierOption::arguments &arguments_;
     };
 
@@ -71,19 +72,19 @@ namespace QuantLib {
         QL_REQUIRE(variance>=0.0,
                    "negative variance not allowed");
 
-        Time residualTime = process_->time(arguments_.exercise->lastDate());
+        Time residualTime = process_.time(arguments_.exercise->lastDate());
         QL_REQUIRE(residualTime>0.0,
                    "expiration time must be > 0");
 
         // Option::Type type   = payoff_->optionType(); // this is not used ?
-        Real cash = payoff_->cashPayoff();
+        Real cash = payoff_.cashPayoff();
         Real barrier_lo = arguments_.barrier_lo;
         Real barrier_hi = arguments_.barrier_hi;
 
         Real sigmaq = variance/residualTime;
-        Real r = process_->riskFreeRate()->zeroRate(residualTime, Continuous,
+        Real r = process_.riskFreeRate()->zeroRate(residualTime, Continuous,
                                              NoFrequency);
-        Real q = process_->dividendYield()->zeroRate(residualTime,
+        Real q = process_.dividendYield()->zeroRate(residualTime,
                                                    Continuous, NoFrequency);
         Real b = r - q;
 
@@ -112,7 +113,7 @@ namespace QuantLib {
         if (barrierType == DoubleBarrier::KnockOut)
            return std::max(tot, 0.0); // KO
         else {
-           Rate discount = process_->riskFreeRate()->discount(
+           Rate discount = process_.riskFreeRate()->discount(
                                              arguments_.exercise->lastDate());
            QL_REQUIRE(discount>0.0,
                         "positive discount required");
@@ -131,20 +132,20 @@ namespace QuantLib {
         QL_REQUIRE(variance>=0.0,
                    "negative variance not allowed");
 
-        Time residualTime = process_->time(arguments_.exercise->lastDate());
+        Time residualTime = process_.time(arguments_.exercise->lastDate());
         QL_REQUIRE(residualTime>0.0,
                    "expiration time must be > 0");
 
-        Real cash = payoff_->cashPayoff();
+        Real cash = payoff_.cashPayoff();
         Real barrier_lo = arguments_.barrier_lo;
         Real barrier_hi = arguments_.barrier_hi;
         if (barrierType == DoubleBarrier::KOKI)
            std::swap(barrier_lo, barrier_hi);
 
         Real sigmaq = variance/residualTime;
-        Real r = process_->riskFreeRate()->zeroRate(residualTime, Continuous,
+        Real r = process_.riskFreeRate()->zeroRate(residualTime, Continuous,
                                              NoFrequency);
-        Real q = process_->dividendYield()->zeroRate(residualTime,
+        Real q = process_.dividendYield()->zeroRate(residualTime,
                                                    Continuous, NoFrequency);
         Real b = r - q;
 
@@ -181,21 +182,16 @@ namespace QuantLib {
 
         if (arguments_.barrierType == DoubleBarrier::KIKO ||
             arguments_.barrierType == DoubleBarrier::KOKI) {
-            ext::shared_ptr<AmericanExercise> ex =
-                ext::dynamic_pointer_cast<AmericanExercise>(
-                                                   arguments_.exercise);
+            auto* ex = dynamic_cast<AmericanExercise*>(arguments_.exercise.get());
             QL_REQUIRE(ex, "KIKO/KOKI options must have American exercise");
             QL_REQUIRE(ex->dates()[0] <=
                        process_->blackVolatility()->referenceDate(),
                        "American option with window exercise not handled yet");
         } else {
-            ext::shared_ptr<EuropeanExercise> ex =
-                ext::dynamic_pointer_cast<EuropeanExercise>(
-                                                   arguments_.exercise);
+            auto* ex = dynamic_cast<EuropeanExercise*>(arguments_.exercise.get());
             QL_REQUIRE(ex, "non-European exercise given");
         }
-        ext::shared_ptr<CashOrNothingPayoff> payoff =
-            ext::dynamic_pointer_cast<CashOrNothingPayoff>(arguments_.payoff);
+        auto* payoff = dynamic_cast<CashOrNothingPayoff*>(arguments_.payoff.get());
         QL_REQUIRE(payoff, "a cash-or-nothing payoff must be given");
 
         Real spot = process_->stateVariable()->value();

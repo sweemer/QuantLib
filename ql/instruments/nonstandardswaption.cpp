@@ -79,8 +79,7 @@ namespace QuantLib {
         const ext::shared_ptr<SwaptionVolatilityStructure>& swaptionVolatility,
         const BasketGeneratingEngine::CalibrationBasketType basketType) const {
 
-        ext::shared_ptr<BasketGeneratingEngine> engine =
-            ext::dynamic_pointer_cast<BasketGeneratingEngine>(engine_);
+        auto* engine = dynamic_cast<BasketGeneratingEngine*>(engine_.get());
         QL_REQUIRE(engine, "engine is not a basket generating engine");
         engine_->reset();
         setupArguments(engine_->getArguments());

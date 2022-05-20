@@ -90,7 +90,7 @@ namespace QuantLib {
         coupon_ = dynamic_cast<const SubPeriodsCoupon*>(&coupon);
         QL_REQUIRE(coupon_, "sub-periods coupon required");
 
-        ext::shared_ptr<IborIndex> index = ext::dynamic_pointer_cast<IborIndex>(coupon_->index());
+        auto* index = dynamic_cast<IborIndex*>(coupon_->index().get());
         if (!index) {
             // coupon was right, index is not
             QL_FAIL("IborIndex required");

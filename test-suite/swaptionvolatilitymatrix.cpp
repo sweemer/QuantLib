@@ -95,14 +95,11 @@ namespace swaption_volatility_matrix_test {
             // test market data change...
             if (mktDataFloating){
                 Volatility initialVolatility = atm.volsHandle[0][0]->value();
-                ext::dynamic_pointer_cast<SimpleQuote>(
-                              atm.volsHandle[0][0].currentLink())->setValue(10);
+                dynamic_cast<SimpleQuote*>(atm.volsHandle[0][0].currentLink().get())->setValue(10);
                 newVol = vol->volatility(
                     referenceDate + atm.tenors.options[0],
                     atm.tenors.swaps[0], dummyStrike, false);
-                ext::dynamic_pointer_cast<SimpleQuote>(
-                    atm.volsHandle[0][0].currentLink())
-                    ->setValue(initialVolatility);
+                dynamic_cast<SimpleQuote*>(atm.volsHandle[0][0].currentLink().get())->setValue(initialVolatility);
                 if (initialVol == newVol)
                     BOOST_ERROR(description << " the volatility should change when"
                                 " the market data is changed !");

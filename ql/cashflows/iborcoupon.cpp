@@ -65,7 +65,7 @@ namespace QuantLib {
     }
 
     void IborCoupon::initializeCachedData() const {
-        auto p = ext::dynamic_pointer_cast<IborCouponPricer>(pricer_);
+        auto* p = dynamic_cast<IborCouponPricer*>(pricer_.get());
         QL_REQUIRE(p, "IborCoupon: pricer not set or not derived from IborCouponPricer");
         p->initializeCachedData(*this);
     }

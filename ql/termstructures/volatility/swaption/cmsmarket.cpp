@@ -161,9 +161,7 @@ namespace QuantLib {
             // set new volatility structure and new mean reversion
             pricers_[j]->setSwaptionVolatility(v);
             if (meanReversion != Null<Real>()) {
-                ext::shared_ptr<MeanRevertingPricer> p =
-                    ext::dynamic_pointer_cast<MeanRevertingPricer>(
-                        pricers_[j]);
+                auto* p = dynamic_cast<MeanRevertingPricer*>(pricers_[j].get());
                 QL_REQUIRE(p != nullptr, "mean reverting pricer required at index " << j);
                 p->setMeanReversion(meanReversionQuote);
             }

@@ -221,8 +221,7 @@ namespace QuantLib {
             pastFixings = 0;
         }
 
-        ext::shared_ptr<PlainVanillaPayoff> payoff =
-            ext::dynamic_pointer_cast<PlainVanillaPayoff>(arguments_.payoff);
+        auto* payoff = dynamic_cast<PlainVanillaPayoff*>(arguments_.payoff.get());
         QL_REQUIRE(payoff, "non-plain payoff given");
 
         Real strike = payoff->strike();

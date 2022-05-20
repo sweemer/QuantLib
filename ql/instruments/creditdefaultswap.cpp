@@ -144,7 +144,7 @@ namespace QuantLib {
                     const ext::shared_ptr<CashFlow>& cf = leg_[i];
                     if (refDate < cf->date()) {
                         // Calculate the accrual. The most likely scenario.
-                        ext::shared_ptr<FixedRateCoupon> frc = ext::dynamic_pointer_cast<FixedRateCoupon>(cf);
+                        auto* frc = dynamic_cast<FixedRateCoupon*>(cf.get());
                         rebateAmount = frc->accruedAmount(refDate);
                         break;
                     } else if (refDate == cf->date() && i < leg_.size() - 1) {
@@ -154,7 +154,7 @@ namespace QuantLib {
                     } else {
                         // Must have trade date + 1 >= last coupon's payment date. '>' here probably does not make
                         // sense - should possibly have an exception above if trade date >= last coupon's date.
-                        ext::shared_ptr<FixedRateCoupon> frc = ext::dynamic_pointer_cast<FixedRateCoupon>(cf);
+                        auto* frc = dynamic_cast<FixedRateCoupon*>(cf.get());
                         rebateAmount = frc->amount();
                         break;
                     }
@@ -422,8 +422,7 @@ namespace QuantLib {
     }
 
     const Date& CreditDefaultSwap::protectionEndDate() const {
-        return ext::dynamic_pointer_cast<Coupon>(leg_.back())
-            ->accrualEndDate();
+        return dynamic_cast<Coupon*>(leg_.back().get())->accrualEndDate();
     }
 
     const ext::shared_ptr<SimpleCashFlow>& CreditDefaultSwap::upfrontPayment() const {

@@ -354,7 +354,7 @@ namespace QuantLib {
 
     void Bond::deepUpdate() {
         for (auto& cashflow : cashflows_) {
-            ext::shared_ptr<LazyObject> f = ext::dynamic_pointer_cast<LazyObject>(cashflow);
+            auto* f = dynamic_cast<LazyObject*>(cashflow.get());
             if (f != nullptr)
                 f->update();
         }
@@ -368,7 +368,7 @@ namespace QuantLib {
         Date lastPaymentDate = Date();
         notionalSchedule_.emplace_back();
         for (auto& cashflow : cashflows_) {
-            ext::shared_ptr<Coupon> coupon = ext::dynamic_pointer_cast<Coupon>(cashflow);
+            auto* coupon = dynamic_cast<Coupon*>(cashflow.get());
             if (!coupon)
                 continue;
 

@@ -83,8 +83,7 @@ namespace QuantLib {
                 new ArithmeticAveragedOvernightIndexedCouponPricer(mrs_, vol_, byApprox_));
 
         for (auto& i : legs_[1]) {
-            ext::shared_ptr<OvernightIndexedCoupon> c =
-                ext::dynamic_pointer_cast<OvernightIndexedCoupon>(i);
+            auto* c = dynamic_cast<OvernightIndexedCoupon*>(i.get());
             c->setPricer(arithmeticPricer);
         }
 

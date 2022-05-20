@@ -46,7 +46,7 @@ namespace QuantLib {
         bool basketIsHomogeneous = true;// hardcoded by now
 
         for (auto& i : arguments_.premiumLeg) {
-            ext::shared_ptr<FixedRateCoupon> coupon = ext::dynamic_pointer_cast<FixedRateCoupon>(i);
+            auto* coupon = dynamic_cast<FixedRateCoupon*>(i.get());
             Date d = i->date();
             if (d > discountCurve_->referenceDate()) {
                 /*
@@ -159,8 +159,8 @@ namespace QuantLib {
                 arguments_.basket->remainingNotional() 
                     * arguments_.upfrontRate
                     * discountCurve_->discount(
-                        ext::dynamic_pointer_cast<FixedRateCoupon>(
-                            arguments_.premiumLeg[0])->accrualStartDate());
+                        dynamic_cast<FixedRateCoupon*>(
+                            arguments_.premiumLeg[0].get())->accrualStartDate());
         if (arguments_.side == Protection::Buyer) {
             results_.premiumValue *= -1;
             accrualValue *= -1;

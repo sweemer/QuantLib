@@ -99,8 +99,7 @@ namespace QuantLib {
         arguments->fixedCoupons = std::vector<Real>(fixedCoupons.size());
 
         for (Size i=0; i<fixedCoupons.size(); ++i) {
-            ext::shared_ptr<FixedRateCoupon> coupon =
-                ext::dynamic_pointer_cast<FixedRateCoupon>(fixedCoupons[i]);
+            auto* coupon = dynamic_cast<FixedRateCoupon*>(fixedCoupons[i].get());
 
             arguments->fixedPayDates[i] = coupon->date();
             arguments->fixedResetDates[i] = coupon->accrualStartDate();
@@ -118,8 +117,7 @@ namespace QuantLib {
             std::vector<Spread>(floatingCoupons.size());
         arguments->floatingCoupons = std::vector<Real>(floatingCoupons.size());
         for (Size i=0; i<floatingCoupons.size(); ++i) {
-            ext::shared_ptr<IborCoupon> coupon =
-                ext::dynamic_pointer_cast<IborCoupon>(floatingCoupons[i]);
+            auto* coupon = dynamic_cast<IborCoupon*>(floatingCoupons[i].get());
 
             arguments->floatingResetDates[i] = coupon->accrualStartDate();
             arguments->floatingPayDates[i] = coupon->date();

@@ -249,15 +249,13 @@ namespace QuantLib {
             std::vector<bool>(fixedCoupons.size(), false);
 
         for (Size i = 0; i < fixedCoupons.size(); ++i) {
-            ext::shared_ptr<FixedRateCoupon> coupon =
-                ext::dynamic_pointer_cast<FixedRateCoupon>(fixedCoupons[i]);
+            auto* coupon = dynamic_cast<FixedRateCoupon*>(fixedCoupons[i].get());
             if (coupon != nullptr) {
                 arguments->fixedPayDates[i] = coupon->date();
                 arguments->fixedResetDates[i] = coupon->accrualStartDate();
                 arguments->fixedCoupons[i] = coupon->amount();
             } else {
-                ext::shared_ptr<CashFlow> cashflow =
-                    ext::dynamic_pointer_cast<CashFlow>(fixedCoupons[i]);
+                auto* cashflow = dynamic_cast<CashFlow*>(fixedCoupons[i].get());
                 std::vector<Date>::const_iterator j =
                     std::find(arguments->fixedPayDates.begin(),
                               arguments->fixedPayDates.end(), cashflow->date());
@@ -289,8 +287,7 @@ namespace QuantLib {
             std::vector<bool>(floatingCoupons.size(), false);
 
         for (Size i = 0; i < floatingCoupons.size(); ++i) {
-            ext::shared_ptr<IborCoupon> coupon =
-                ext::dynamic_pointer_cast<IborCoupon>(floatingCoupons[i]);
+            auto* coupon = dynamic_cast<IborCoupon*>(floatingCoupons[i].get());
             if (coupon != nullptr) {
                 arguments->floatingResetDates[i] = coupon->accrualStartDate();
                 arguments->floatingPayDates[i] = coupon->date();
@@ -305,8 +302,7 @@ namespace QuantLib {
                     arguments->floatingCoupons[i] = Null<Real>();
                 }
             } else {
-                ext::shared_ptr<CashFlow> cashflow =
-                    ext::dynamic_pointer_cast<CashFlow>(floatingCoupons[i]);
+                auto* cashflow = dynamic_cast<CashFlow*>(floatingCoupons[i].get());
                 std::vector<Date>::const_iterator j = std::find(
                     arguments->floatingPayDates.begin(),
                     arguments->floatingPayDates.end(), cashflow->date());

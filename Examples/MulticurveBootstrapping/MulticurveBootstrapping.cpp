@@ -468,8 +468,7 @@ int main(int, char* []) {
         // value contained in the Quote triggers a new bootstrapping
         // of the curve and a repricing of the swap.
 
-        ext::shared_ptr<SimpleQuote> fiveYearsRate =
-            ext::dynamic_pointer_cast<SimpleQuote>(s5yRate);
+        auto* fiveYearsRate = dynamic_cast<SimpleQuote*>(s5yRate.get());
         fiveYearsRate->setValue(0.0090);
 
         std::cout << dblrule << std::endl;

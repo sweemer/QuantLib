@@ -50,8 +50,7 @@ namespace QuantLib {
     void TreeCallableFixedRateBondEngine::calculateWithSpread(Spread s) const {
         QL_REQUIRE(!model_.empty(), "no model specified");
 
-        ext::shared_ptr<TermStructureConsistentModel> tsmodel =
-            ext::dynamic_pointer_cast<TermStructureConsistentModel>(*model_);
+        auto* tsmodel = dynamic_cast<TermStructureConsistentModel*>(model_->get());
         Handle<YieldTermStructure> discountCurve =
             tsmodel != nullptr ? tsmodel->termStructure() : termStructure_;
 

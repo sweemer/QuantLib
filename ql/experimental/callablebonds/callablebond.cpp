@@ -417,7 +417,7 @@ namespace QuantLib {
         for (const auto& cashflow : cashflows_) {
             // the first coupon paying after d is the one we're after
             if (!cashflow->hasOccurred(settlement, IncludeToday)) {
-                ext::shared_ptr<Coupon> coupon = ext::dynamic_pointer_cast<Coupon>(cashflow);
+                auto* coupon = dynamic_cast<Coupon*>(cashflow.get());
                 if (coupon != nullptr)
                     // !!!
                     return coupon->accruedAmount(settlement) /

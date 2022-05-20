@@ -126,7 +126,7 @@ namespace QuantLib {
         rateCurve_ =
             !nominalTermStructure_.empty() ?
             nominalTermStructure_ :
-            ext::dynamic_pointer_cast<ZeroInflationIndex>(coupon.index())
+            dynamic_cast<ZeroInflationIndex*>(coupon.index().get())
             ->zeroInflationTermStructure()
             ->nominalTermStructure();
         QL_DEPRECATED_ENABLE_WARNING

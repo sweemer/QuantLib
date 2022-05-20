@@ -168,8 +168,7 @@ namespace QuantLib {
         // if it was created with _this_ rate
         // _knowing_ the time from base to obs (etc).
 
-        ext::shared_ptr<IndexedCashFlow> icf =
-        ext::dynamic_pointer_cast<IndexedCashFlow>(legs_[1].at(0));
+        auto* icf = dynamic_cast<IndexedCashFlow*>(legs_[1].at(0).get());
         QL_REQUIRE(icf,"failed to downcast to IndexedCashFlow in ::fairRate()");
 
         // +1 because the IndexedCashFlow has growthOnly=true

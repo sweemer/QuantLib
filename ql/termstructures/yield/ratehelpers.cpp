@@ -834,8 +834,7 @@ namespace QuantLib {
         earliestDate_ = swap_->startDate();
         maturityDate_ = swap_->maturityDate();
 
-        ext::shared_ptr<IborCoupon> lastCoupon =
-            ext::dynamic_pointer_cast<IborCoupon>(swap_->floatingLeg().back());
+        auto* lastCoupon = dynamic_cast<IborCoupon*>(swap_->floatingLeg().back().get());
         latestRelevantDate_ = std::max(maturityDate_, lastCoupon->fixingEndDate());
 
         switch (pillarChoice_) {

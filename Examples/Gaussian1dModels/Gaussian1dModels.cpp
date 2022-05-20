@@ -71,7 +71,7 @@ void printBasket(
                  "===================="
                  "==================" << std::endl;
     for (const auto& j : basket) {
-        ext::shared_ptr<SwaptionHelper> helper = ext::dynamic_pointer_cast<SwaptionHelper>(j);
+        auto* helper = dynamic_cast<SwaptionHelper*>(j.get());
         Date endDate = helper->underlyingSwap()->fixedSchedule().dates().back();
         Real nominal = helper->underlyingSwap()->nominal();
         Real vol = helper->volatility()->value();
@@ -107,8 +107,7 @@ void printModelCalibration(
                  "====================" << std::endl;
 
     for (Size j = 0; j < basket.size(); ++j) {
-        ext::shared_ptr<SwaptionHelper> helper =
-            ext::dynamic_pointer_cast<SwaptionHelper>(basket[j]);
+        auto* helper = dynamic_cast<SwaptionHelper*>(basket[j].get());
         Date expiry = helper->swaption()->exercise()->date(0);
         std::ostringstream expiryString;
         expiryString << expiry;

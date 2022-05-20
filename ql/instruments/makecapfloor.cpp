@@ -61,8 +61,7 @@ namespace QuantLib {
 
             // temporary patch...
             // should be fixed for every CapFloor::Engine
-            ext::shared_ptr<BlackCapFloorEngine> temp = 
-                ext::dynamic_pointer_cast<BlackCapFloorEngine>(engine_);
+            auto* temp = dynamic_cast<BlackCapFloorEngine*>(engine_.get());
             QL_REQUIRE(temp,
                        "cannot calculate ATM without a BlackCapFloorEngine");
             Handle<YieldTermStructure> discountCurve = temp->termStructure();

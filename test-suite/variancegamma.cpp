@@ -196,8 +196,7 @@ void VarianceGammaTest::testVarianceGamma() {
             Real expected = results[i][j];
             Real error = std::fabs(calculated-expected);
             if (error>tol) {
-                ext::shared_ptr<StrikedTypePayoff> payoff = 
-                    ext::dynamic_pointer_cast<StrikedTypePayoff>(option->payoff());
+                auto* payoff = dynamic_cast<StrikedTypePayoff*>(option->payoff().get());
                 REPORT_FAILURE("fft value", payoff, option->exercise(),
                     processes[i].s, processes[i].q, processes[i].r,
                     today, processes[i].sigma, processes[i].nu,

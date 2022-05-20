@@ -268,8 +268,7 @@ int main(int, char* []) {
         const std::vector<ext::shared_ptr<CashFlow> >& leg =
             swap->fixedLeg();
         for (i=0; i<leg.size(); i++) {
-            ext::shared_ptr<Coupon> coupon =
-                ext::dynamic_pointer_cast<Coupon>(leg[i]);
+            auto* coupon = dynamic_cast<Coupon*>(leg[i].get());
             bermudanDates.push_back(coupon->accrualStartDate());
         }
 

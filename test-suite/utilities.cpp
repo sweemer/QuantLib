@@ -25,7 +25,7 @@
 #include <ql/time/calendars/nullcalendar.hpp>
 
 #define CHECK_DOWNCAST(Derived,Description) { \
-    ext::shared_ptr<Derived> hd = ext::dynamic_pointer_cast<Derived>(h); \
+    auto* hd = dynamic_cast<Derived*>(h.get()); \
     if (hd) \
         return Description; \
 }

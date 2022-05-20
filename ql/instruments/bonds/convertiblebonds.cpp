@@ -176,8 +176,7 @@ namespace QuantLib {
                 if (callability_[i]->price().type() == Bond::Price::Clean)
                     args->callabilityPrices.back() +=
                         accruedAmount(callability_[i]->date());
-                ext::shared_ptr<SoftCallability> softCall =
-                    ext::dynamic_pointer_cast<SoftCallability>(callability_[i]);
+                auto* softCall = dynamic_cast<SoftCallability*>(callability_[i].get());
                 if (softCall != nullptr)
                     args->callabilityTriggers.push_back(softCall->trigger());
                 else

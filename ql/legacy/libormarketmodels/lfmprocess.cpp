@@ -42,12 +42,10 @@ namespace QuantLib {
         QL_REQUIRE(size_ == flows.size(), "wrong number of cashflows");
 
         Date settlement = index_->forwardingTermStructure()->referenceDate();
-        const Date startDate =
-            ext::dynamic_pointer_cast<IborCoupon>(flows[0])->fixingDate();
+        const auto startDate = dynamic_cast<IborCoupon*>(flows[0].get())->fixingDate();
 
         for (Size i = 0; i < size_; ++i) {
-            const ext::shared_ptr<IborCoupon> coupon =
-               ext::dynamic_pointer_cast<IborCoupon>(flows[i]);
+            const auto* coupon = dynamic_cast<IborCoupon*>(flows[i].get());
 
             QL_REQUIRE(coupon->date() == coupon->accrualEndDate(),
                        "irregular coupon types are not suppported");

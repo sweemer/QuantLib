@@ -39,8 +39,7 @@ namespace QuantLib {
     void CliquetOption::arguments::validate() const {
         OneAssetOption::arguments::validate();
 
-        ext::shared_ptr<PercentageStrikePayoff> moneyness =
-            ext::dynamic_pointer_cast<PercentageStrikePayoff>(payoff);
+        auto* moneyness = dynamic_cast<PercentageStrikePayoff*>(payoff.get());
         QL_REQUIRE(moneyness,
                    "wrong payoff type");
         QL_REQUIRE(moneyness->strike() > 0.0,

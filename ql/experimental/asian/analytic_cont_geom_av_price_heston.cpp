@@ -210,8 +210,7 @@ namespace QuantLib {
         QL_REQUIRE(arguments_.exercise->type() == Exercise::European,
                    "not an European Option");
 
-        ext::shared_ptr<PlainVanillaPayoff> payoff =
-            ext::dynamic_pointer_cast<PlainVanillaPayoff>(arguments_.payoff);
+        auto* payoff = dynamic_cast<PlainVanillaPayoff*>(arguments_.payoff.get());
         QL_REQUIRE(payoff, "non-plain payoff given");
 
         Real strike = payoff->strike();

@@ -149,9 +149,7 @@ namespace QuantLib {
         arguments->type = type_;
 
         for (Size i=0; i<n; ++i) {
-            ext::shared_ptr<YoYInflationCoupon> coupon =
-            ext::dynamic_pointer_cast<YoYInflationCoupon>(
-                                                            yoyLeg_[i]);
+            auto* coupon = dynamic_cast<YoYInflationCoupon*>(yoyLeg_[i].get());
             QL_REQUIRE(coupon, "non-YoYInflationCoupon given");
             arguments->startDates[i] = coupon->accrualStartDate();
             arguments->fixingDates[i] = coupon->fixingDate();

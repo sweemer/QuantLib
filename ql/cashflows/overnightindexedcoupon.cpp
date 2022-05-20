@@ -46,8 +46,7 @@ namespace QuantLib {
 
                 const Date today = Settings::instance().evaluationDate();
 
-                const ext::shared_ptr<OvernightIndex> index =
-                    ext::dynamic_pointer_cast<OvernightIndex>(coupon_->index());
+                const auto* index = dynamic_cast<OvernightIndex*>(coupon_->index().get());
                 const auto& pastFixings = IndexManager::instance().getHistory(index->name());
 
                 const vector<Date>& fixingDates = coupon_->fixingDates();
@@ -246,7 +245,7 @@ namespace QuantLib {
     Rate OvernightIndexedCoupon::averageRate(const Date& d) const {
         QL_REQUIRE(pricer_, "pricer not set");
         pricer_->initialize(*this);
-        const auto overnightIndexPricer = ext::dynamic_pointer_cast<OvernightIndexedCouponPricer>(pricer_);
+        const auto* overnightIndexPricer = dynamic_cast<OvernightIndexedCouponPricer*>(pricer_.get());
         if (overnightIndexPricer)
             return overnightIndexPricer->averageRate(d);
 
