@@ -34,13 +34,12 @@
 #include <ql/time/period.hpp>
 #include <ql/time/weekday.hpp>
 #include <ql/utilities/null.hpp>
-#include <boost/cstdint.hpp>
 
 #ifdef QL_HIGH_RESOLUTION_DATE
-#include <boost/date_time/posix_time/ptime.hpp>
-#include <boost/date_time/posix_time/posix_time_duration.hpp>
+#include <chrono>
 #endif
 
+#include <cstdint>
 #include <utility>
 #include <functional>
 #include <string>
@@ -89,25 +88,23 @@ namespace QuantLib {
 #ifdef QL_HIGH_RESOLUTION_DATE
     //! Hour number
     /*! \ingroup datetime */
-    typedef boost::posix_time::hours::hour_type Hour;
+    typedef std::chrono::hours Hour;
 
     //! Minute number
     /*! \ingroup datetime */
-    typedef boost::posix_time::minutes::min_type Minute;
+    typedef std::chrono::minutes Minute;
 
     //! Second number
     /*! \ingroup datetime */
-    typedef boost::posix_time::minutes::sec_type Second;
+    typedef std::chrono::seconds Second;
 
     //! Millisecond number
     /*! \ingroup datetime */
-    typedef boost::posix_time::time_duration::fractional_seconds_type
-        Millisecond;
+    typedef std::chrono::milliseconds Millisecond;
 
     //! Millisecond number
     /*! \ingroup datetime */
-    typedef boost::posix_time::time_duration::fractional_seconds_type
-        Microsecond;
+    typedef std::chrono::microseconds Microsecond;
 #endif
 
     //! Concrete date class
@@ -125,7 +122,7 @@ namespace QuantLib {
     class Date {
       public:
         //! serial number type
-        typedef boost::int_fast32_t serial_type;
+        typedef std::int_fast32_t serial_type;
         //! \name constructors
         //@{
         //! Default constructor returning a null date.
@@ -136,8 +133,8 @@ namespace QuantLib {
         Date(Day d, Month m, Year y);
 
 #ifdef QL_HIGH_RESOLUTION_DATE
-        //! Constructor taking boost posix date time object
-        explicit Date(const boost::posix_time::ptime& localTime);
+        //! Constructor taking time_point object
+        explicit Date(const std::chrono::high_resolution_clock::time_point& localTime);
         //! More traditional constructor.
         Date(Day d, Month m, Year y,
              Hour hours, Minute minutes, Second seconds,
@@ -165,7 +162,7 @@ namespace QuantLib {
         Time fractionOfDay() const;
         Time fractionOfSecond() const;
 
-        const boost::posix_time::ptime& dateTime() const;
+        const std::chrono::high_resolution_clock::time_point& dateTime() const;
 #endif
         //@}
 
@@ -248,7 +245,7 @@ namespace QuantLib {
         static void checkSerialNumber(Date::serial_type serialNumber);
 
 #ifdef QL_HIGH_RESOLUTION_DATE
-        boost::posix_time::ptime dateTime_;
+        std::chrono::high_resolution_clock::time_point dateTime_;
 #else
         Date::serial_type serialNumber_;
         static Date advance(const Date& d, Integer units, TimeUnit);
