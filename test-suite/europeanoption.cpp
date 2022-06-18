@@ -1707,6 +1707,7 @@ void EuropeanOptionTest::testDouglasVsCrankNicolson() {
     const Real schemeTol = 1e-12;
     const Real npvTol = 1e-2;
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real theta = 0.2; theta < 0.81; theta+=0.1) {
         option.setPricingEngine(
             ext::make_shared<FdBlackScholesVanillaEngine>(

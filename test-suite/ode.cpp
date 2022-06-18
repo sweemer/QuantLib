@@ -155,6 +155,7 @@ void OdeTest::testMatrixExponential() {
 
     const Real tol = 1e-12;
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real t=0.01; t < 11; t+=t) {
         const Matrix calculated = Expm(m, t, tol);
 

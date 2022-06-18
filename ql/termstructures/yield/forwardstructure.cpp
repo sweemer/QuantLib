@@ -49,6 +49,7 @@ namespace QuantLib {
         Rate sum = 0.5*forwardImpl(0.0);
         Size N = 1000;
         Time dt = t/N;
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Time i=dt; i<t; i+=dt)
             sum += forwardImpl(i);
         sum += 0.5*forwardImpl(t);

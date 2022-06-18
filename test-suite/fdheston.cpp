@@ -956,6 +956,7 @@ void FdHestonTest::testSpuriousOscillations() {
             Handle<HestonProcess>(process), hestonEngine->getSolverDesc(1.0), ext::get<0>(desc));
 
         std::vector<Real> gammas;
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real x=99; x < 101.001; x+=0.1) {
             gammas.push_back(solver->gammaAt(x, v0));
         }

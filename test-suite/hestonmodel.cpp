@@ -169,6 +169,7 @@ void HestonModelTest::testBlackCalibration() {
     Volatility volatility = vol->value();
 
     for (auto& optionMaturitie : optionMaturities) {
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real moneyness = -1.0; moneyness < 2.0; moneyness += 1.0) {
             // FLOATING_POINT_EXCEPTION
             const Time tau = dayCounter.yearFraction(
@@ -183,6 +184,7 @@ void HestonModelTest::testBlackCalibration() {
         }
     }
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real sigma = 0.1; sigma < 0.7; sigma += 0.2) {
         const Real v0=0.01;
         const Real kappa=0.2;
@@ -1367,6 +1369,7 @@ void HestonModelTest::testAnalyticPDFHestonEngine() {
         ext::make_shared<EuropeanExercise>(maturityDate));
 
     // 1. check a plain vanilla call option
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real strike=40; strike < 190; strike+=20) {
         const ext::shared_ptr<StrikedTypePayoff> vanillaPayoff(
             ext::make_shared<PlainVanillaPayoff>(Option::Call, strike));
@@ -1392,6 +1395,7 @@ void HestonModelTest::testAnalyticPDFHestonEngine() {
     }
 
     // 2. digital call option (approx. with a call spread)
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real strike=40; strike < 190; strike+=10) {
         VanillaOption digitalOption(
             ext::make_shared<CashOrNothingPayoff>(Option::Call, strike, 1.0),
@@ -1893,6 +1897,7 @@ void HestonModelTest::testCosHestonCumulants() {
     const NumericalDifferentiation::Scheme central(
         NumericalDifferentiation::Central);
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Time t=0.01; t < 41.0; t+=t) {
         const Real nc1 = NumericalDifferentiation(
             ext::function<Real(Real)>(
@@ -2302,6 +2307,7 @@ void HestonModelTest::testAndersenPiterbargControlVariateIntegrand() {
     for (Size i=0; i < LENGTH(variances); ++i) {
         const Real sigmaBS = std::sqrt(variances[i]/maturity);
 
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real u =0.001; u < 15; u*=1.05) {
             const std::complex<Real> z(u, -0.5);
 
@@ -2424,8 +2430,11 @@ void HestonModelTest::testPiecewiseTimeDependentChFvsHestonChF() {
                          10))));
 
     constexpr double tol = 100 * QL_EPSILON;
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real r = 0.1; r < 4; r+=0.25) {
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real phi = 0; phi < 360; phi+=60) {
+            // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
             for (Time t=0.1; t <= 1.0; t+=0.3) {
                 const std::complex<Real> z
                     = r*std::exp(std::complex<Real>(0, phi));
@@ -2828,6 +2837,7 @@ void HestonModelTest::testSmallSigmaExpansion4ExpFitting() {
         ext::make_shared<PlainVanillaPayoff>(Option::Call, strike),
         ext::make_shared<EuropeanExercise>(maturityDate));
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real sigma = 1e-4; sigma > 1e-12; sigma*=0.1) {
         option.setPricingEngine(
             ext::make_shared<ExponentialFittingHestonEngine>(
@@ -2879,6 +2889,7 @@ void HestonModelTest::testSmallSigmaExpansion4ExpFitting() {
                     const Real stdDev =
                         std::sqrt(((1-std::exp(-kappa*t))*(v0-theta)/(kappa*t) + theta)*t);
 
+                    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
                     for (Real strike = spot->value()*exp(-10*stdDev);
                             strike < spot->value()*exp(10*stdDev); strike*= 1.2) {
 

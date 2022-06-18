@@ -259,6 +259,8 @@ void BermudanSwaptionTest::testCachedG2Values() {
 
     const Rate atmRate = vars.makeSwap(0.0)->fairRate();
     std::vector<ext::shared_ptr<Swaption> > swaptions;
+
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real s=0.5; s<1.51; s+=0.25) {
         const ext::shared_ptr<VanillaSwap> swap(vars.makeSwap(s*atmRate));
 

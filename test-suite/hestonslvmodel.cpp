@@ -136,6 +136,7 @@ namespace {
         const Time dt = maturity/tGrid;
         evolver.setStep(dt);
 
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Time t=dt; t <= maturity+20*QL_EPSILON; t+=dt) {
             evolver.step(p, t);
         }
@@ -435,6 +436,7 @@ void HestonSLVModelTest::testSquareRootEvolveWithStationaryDensity() {
     const Size vGrid = 100;
     const Real eps = 1e-2;
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real sigma = 0.2; sigma < 2.01; sigma+=0.1) {
         const Real alpha = (1.0 - 2*kappa*theta/(sigma*sigma));
 
@@ -513,6 +515,7 @@ void HestonSLVModelTest::testSquareRootLogEvolveWithStationaryDensity() {
     const Size vGrid = 1000;
     const Real eps = 1e-2;
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real sigma = 0.2; sigma < 2.01; sigma+=0.1) {
         const Real lowerLimit = 0.001;
         // should not go to very large negative values, distributions flattens with sigma
@@ -608,6 +611,7 @@ void HestonSLVModelTest::testSquareRootFokkerPlanckFwdEquation() {
     DouglasScheme evolver(0.5, op);
     evolver.setStep(dt);
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Time t=(n+1)*dt; t <= maturity+20*QL_EPSILON; t+=dt) {
         evolver.step(p, t);
         evolver.step(q, t);

@@ -104,6 +104,7 @@ namespace QuantLib {
             storageValues.reserve(
                 Size(arguments_.capacity/arguments_.changeRate)+1);
 
+            // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
             for (Real level=0; level <= arguments_.capacity;
                     level+=arguments_.changeRate) {
                     storageValues.push_back(level);

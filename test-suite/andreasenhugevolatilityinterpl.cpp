@@ -621,6 +621,7 @@ void AndreasenHugeVolatilityInterplTest::testArbitrageFree() {
             ext::make_shared<AndreasenHugeVolatilityAdapter>(
                 andreasenHugeVolInterplation));
 
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real m = -0.7; m < 0.7; m+=0.05) {
 
             for (Size weeks=6; weeks < 52; ++weeks) {
@@ -860,6 +861,7 @@ void AndreasenHugeVolatilityInterplTest::testPeterAndFabiensExample() {
     const Real forward  = parameter[4];
     const Time maturity = parameter[5];
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real strike = 0.02; strike < 0.06; strike+=0.001) {
         const Volatility sabrVol = sabrVolatility(
            strike, forward, maturity, alpha, beta, nu, rho);

@@ -207,6 +207,7 @@ void NumericalDifferentiationTest::testDerivativesOfSineFunction() {
         = NumericalDifferentiation(f, 1, std::sqrt(QL_EPSILON), 3,
                                    NumericalDifferentiation::Forward);
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real x=0.0; x < 5.0; x+=0.1) {
         const Real calculatedCentral = df_central(x);
         const Real calculatedBackward = df_backward(x);
@@ -228,6 +229,7 @@ void NumericalDifferentiationTest::testDerivativesOfSineFunction() {
         = NumericalDifferentiation(f, 4, 1e-2, 7,
                                    NumericalDifferentiation::Forward);
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real x=0.0; x < 5.0; x+=0.1) {
         const Real calculatedCentral = df4_central(x);
         const Real calculatedBackward = df4_backward(x);
@@ -244,6 +246,7 @@ void NumericalDifferentiationTest::testDerivativesOfSineFunction() {
 
     checkTwoArraysAreTheSame(df3_irregular.offsets(), offsets);
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real x=0.0; x < 5.0; x+=0.1) {
         const Real calculatedIrregular = df3_irregular(x);
         const Real expected = -std::cos(x);

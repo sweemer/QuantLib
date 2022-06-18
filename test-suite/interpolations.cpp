@@ -154,6 +154,7 @@ namespace {
                        const CubicInterpolation& cubic,
                        Real xMin) {
         Real tolerance = 1.0e-15;
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real x = xMin; x < 0.0; x += 0.1) {
             Real y1 = cubic(x), y2 = cubic(-x);
             if (std::fabs(y1-y2) > tolerance) {
@@ -280,6 +281,7 @@ void InterpolationTest::testSplineOnGaussianValues() {
     std::vector<Real> x(n), y(n);
     Real x1_bad=-1.7, x2_bad=1.7;
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real start = -1.9, j=0; j<2; start+=0.2, j++) {
         x = xRange(start, start+3.6, n);
         y = gaussian(x);
@@ -2091,6 +2093,7 @@ void InterpolationTest::testFlochKennedySabrIsSmoothAroundATM() {
     Real k = 0.996*strike;
     Real v = sabrFlochKennedyVolatility(k, f0, t, alpha, beta, nu, rho);
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (; k < 1.004*strike; k += 0.0001*strike) {
         const Real vt = sabrFlochKennedyVolatility(k, f0, t, alpha, beta, nu, rho);
 
@@ -2220,6 +2223,7 @@ void InterpolationTest::testLagrangeInterpolationAtSupportPoint() {
     const Real relTol = 5e-12;
 
     for (Size i=1; i < n-1; ++i) {
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real z = x[i] - 100*QL_EPSILON;
             z < x[i] + 100*QL_EPSILON; z+=2*QL_EPSILON) {
             const Real expected = 1.0/(1.0 - x[i]);
@@ -2250,6 +2254,7 @@ void InterpolationTest::testLagrangeInterpolationDerivative() {
     LagrangeInterpolation interpl(x.begin(), x.end(), y.begin());
 
     const Real eps = std::sqrt(QL_EPSILON);
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real x=-1.0; x <= 0.9; x+=0.01) {
         const Real calculated = interpl.derivative(x, true);
         const Real expected = (interpl(x+eps, true)
@@ -2287,6 +2292,7 @@ void InterpolationTest::testLagrangeInterpolationOnChebyshevPoints() {
     const Real tol = 1e-13;
     const Real tolDeriv = 1e-11;
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real x=-1.0; x <= 1.0; x+=0.03) {
         const Real calculated = interpl(x, true);
         const Real expected = std::exp(x)/std::cos(x);

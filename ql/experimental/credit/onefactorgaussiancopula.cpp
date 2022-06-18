@@ -44,7 +44,9 @@ namespace QuantLib {
         if (c < 0.5) {
             // outer integral -> 1 for c -> 0
             // inner integral -> CumulativeNormal()(y) for c-> 0
+            // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
             for (Real m = minimum; m < maximum; m += delta)
+                // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
                 for (Real z = minimum; z < (y - std::sqrt(c) * m) / std::sqrt (1. - c);
                      z += delta)
                     cumulated += dm (m) * dz (z);
@@ -52,7 +54,9 @@ namespace QuantLib {
         else {
             // outer integral -> 1 for c -> 1
             // inner integral -> CumulativeNormal()(y) for c-> 1
+            // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
             for (Real z = minimum; z < maximum; z += delta)
+                // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
                 for (Real m = minimum; m < (y - std::sqrt(1.0 - c) * z) / std::sqrt(c);
                      m += delta)
                     cumulated += dm (m) * dz (z);

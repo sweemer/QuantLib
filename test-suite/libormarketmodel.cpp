@@ -155,6 +155,7 @@ void LiborMarketModelTest::testSimpleCovarianceModels() {
     ext::shared_ptr<LiborForwardModel> liborModel(
                         new LiborForwardModel(process, volaModel, corrModel));
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real t=0; t<4.6; t+=0.31) {
         recon = covarProxy->covariance(t)
             - covarProxy->diffusion(t)*transpose(covarProxy->diffusion(t));

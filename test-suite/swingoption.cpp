@@ -169,6 +169,7 @@ void SwingOptionTest::testFdmExponentialJump1dMesher() {
     const Real relTol2 = 2e-2;
     const Real threshold = 0.9;
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real x=1e-12; x < 1.0; x*=10) {
         const Real v = mesher.jumpSizeDistribution(x);
 

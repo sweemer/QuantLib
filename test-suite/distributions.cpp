@@ -328,6 +328,7 @@ void DistributionTest::testPoisson() {
 
     BOOST_TEST_MESSAGE("Testing Poisson distribution...");
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real mean=0.0; mean<=10.0; mean+=0.5) {
         BigNatural i = 0;
         PoissonDistribution pdf(mean);
@@ -365,6 +366,7 @@ void DistributionTest::testCumulativePoisson() {
 
     BOOST_TEST_MESSAGE("Testing cumulative Poisson distribution...");
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real mean=0.0; mean<=10.0; mean+=0.5) {
         BigNatural i = 0;
         CumulativePoissonDistribution cdf(mean);
@@ -594,6 +596,7 @@ void DistributionTest::testBivariateCumulativeStudentVsBivariate() {
     Natural n = 10000;  // for this value, the distribution should be
                         // close to a bivariate normal distribution.
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
 	for (Real rho = -1.0; rho < 1.01; rho += 0.25) {
 		BivariateCumulativeStudentDistribution T(n, rho);
 		BivariateCumulativeNormalDistribution N(rho);
@@ -601,7 +604,9 @@ void DistributionTest::testBivariateCumulativeStudentVsBivariate() {
         Real avgDiff = 0.0;
         Size m = 0;
 		Real tolerance = 4.0e-5;
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
 		for (Real x = -10; x < 10.1; x += 0.25) {
+            // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
 			for (Real y = -10; y < 10.1; y += 0.25) {
                 Real calculated = T(x, y);
                 Real expected = N(x, y);
@@ -657,6 +662,7 @@ void DistributionTest::testInvCDFviaStochasticCollocation() {
     const StochasticCollocationInvCDF scInvCDF10(invCDF, 10);
 
     // low precision
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real x=-3.0; x < 3.0; x+=0.1) {
         const Real u = normalCDF(x);
 
@@ -689,6 +695,7 @@ void DistributionTest::testInvCDFviaStochasticCollocation() {
 
     // high precision
     const StochasticCollocationInvCDF scInvCDF30(invCDF, 30, 0.9999999);
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real x=-4.0; x < 4.0; x+=0.1) {
         const Real u = normalCDF(x);
 
@@ -721,6 +728,7 @@ void DistributionTest::testSankaranApproximation() {
             const NonCentralCumulativeChiSquareDistribution d(df, ncp);
             const NonCentralCumulativeChiSquareSankaranApprox sankaran(df, ncp);
 
+            // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
             for (Real x=0.25; x < 10; x+=0.1) {
                 const Real expected = d(x);
                 const Real calculated = sankaran(x);

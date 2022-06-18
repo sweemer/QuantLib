@@ -166,6 +166,7 @@ void BlackFormulaTest::testRadoicicStefanicaLowerBound() {
     const Real forward = 1.0;
     const Real k = 1.2;
 
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real s=0.17; s < 2.9; s+=0.01) {
         const Real strike = std::exp(k)*forward;
         const Real c = blackFormula(Option::Call, strike, forward, s);

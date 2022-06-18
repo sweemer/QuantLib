@@ -408,6 +408,8 @@ void CmsTest::testParity() {
                                    infiniteCap, infiniteFloor,
                                    startDate, endDate,
                                    vars.iborIndex->dayCounter());
+
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Rate strike = .02; strike<.12; strike+=0.05) {
         CappedFlooredCmsCoupon   caplet(paymentDate, nominal,
                                         startDate, endDate,

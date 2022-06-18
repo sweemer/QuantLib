@@ -73,12 +73,14 @@ NoArbSabrModel::NoArbSabrModel(const Real expiryTime, const Real forward,
     // determine a region sufficient for integration in the normal case
 
     fmin_ = fmax_ = forward_;
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real tmp = p(fmax_);
          tmp > std::max(detail::NoArbSabrModel::i_accuracy / std::max(1.0, fmax_ - fmin_),
                         detail::NoArbSabrModel::density_threshold);
          tmp = p(fmax_)) {
         fmax_ *= 2.0;
     }
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real tmp = p(fmin_);
          tmp > std::max(detail::NoArbSabrModel::i_accuracy / std::max(1.0, fmax_ - fmin_),
                         detail::NoArbSabrModel::density_threshold);

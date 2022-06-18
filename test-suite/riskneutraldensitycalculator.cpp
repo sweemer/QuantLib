@@ -315,6 +315,7 @@ void RiskNeutralDensityCalculatorTest::testLocalVolatilityRND() {
             timeGrid, 201));
 
     const Real rTol = 0.01, atol = 0.005;
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Time t=0.1; t < 0.99; t+=0.015) {
         const Volatility stdDev = v * std::sqrt(t);
         const Real xm = - 0.5 * stdDev * stdDev +
@@ -324,6 +325,7 @@ void RiskNeutralDensityCalculatorTest::testLocalVolatilityRND() {
         const CumulativeNormalDistribution gaussianCDF(xm, stdDev);
         const InverseCumulativeNormal gaussianInvCDF(xm, stdDev);
 
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real x = xm - 3*stdDev; x < xm + 3*stdDev; x+=0.05) {
             const Real expectedPDF = gaussianPDF(x);
             const Real calculatedPDF = constVolCalc->pdf(x, t);
@@ -486,6 +488,7 @@ void RiskNeutralDensityCalculatorTest::testSquareRootProcessRND() {
         const Time tInfty = 60.0 / param.kappa;
 
         const Real tol = 1e-10;
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real v = 1e-5; v < 1.0; v += (v < param.theta) ? 0.005 : 0.1) {
 
             const Real cdfCalculated = rndCalculator.cdf(v, t);
@@ -541,6 +544,7 @@ void RiskNeutralDensityCalculatorTest::testSquareRootProcessRND() {
             }
         }
 
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real q = 1e-5; q < 1.0; q+=0.001) {
             const Real statInvCdfCalculated = rndCalculator.invcdf(q, tInfty);
             const Real statInvCdfExpected = rndCalculator.stationary_invcdf(q);
@@ -766,6 +770,7 @@ void RiskNeutralDensityCalculatorTest::testCEVCDF() {
         const ext::shared_ptr<CEVRNDCalculator> calculator =
             ext::make_shared<CEVRNDCalculator>(f0, alpha, beta);
 
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real x = 1.3; x < 3.1; x+=0.1) {
 
             const Real cdfValue = calculator->cdf(x, t);

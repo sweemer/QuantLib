@@ -83,6 +83,7 @@ void NormalCLVModelTest::testBSCumlativeDistributionFunction() {
 
     constexpr double tol = 1e5 * QL_EPSILON;
     const Time t = dc.yearFraction(today, maturity);
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real x=10; x < 400; x+=10) {
         const Real calculated = m.cdf(maturity, x);
         const Real expected = rndCalculator.cdf(std::log(x), t);
@@ -136,6 +137,7 @@ void NormalCLVModelTest::testHestonCumlativeDistributionFunction() {
 
     const Real tol = 1e-6;
     const Time t = dc.yearFraction(today, maturity);
+    // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
     for (Real x=10; x < 400; x+=25) {
         const Real calculated = m.cdf(maturity, x);
         const Real expected = rndCalculator.cdf(std::log(x), t);

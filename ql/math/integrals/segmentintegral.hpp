@@ -69,6 +69,7 @@ namespace QuantLib {
         Real dx = (b-a)/intervals_;
         Real sum = 0.5*(f(a)+f(b));
         Real end = b - 0.5*dx;
+        // NOLINTNEXTLINE(clang-analyzer-security.FloatLoopCounter)
         for (Real x = a+dx; x < end; x += dx)
             sum += f(x);
         return sum*dx;
