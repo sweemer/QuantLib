@@ -25,13 +25,11 @@
 #include <numeric>
 #include <utility>
 
-using namespace std;
-
 namespace QuantLib {
 
     Basket::Basket(const Date& refDate,
-                   const vector<string>& names,
-                   vector<Real> notionals,
+                   const std::vector<std::string>& names,
+                   std::vector<Real> notionals,
                    ext::shared_ptr<Pool> pool,
                    Real attachment,
                    Real detachment,
@@ -106,9 +104,9 @@ namespace QuantLib {
         return std::accumulate(notionals_.begin(), notionals_.end(), Real(0.0));
     }
 
-    vector<Real> Basket::probabilities(const Date& d) const {
-        vector<Real> prob(size());
-        vector<DefaultProbKey> defKeys = defaultKeys();
+    std::vector<Real> Basket::probabilities(const Date& d) const {
+        std::vector<Real> prob(size());
+        std::vector<DefaultProbKey> defKeys = defaultKeys();
         for (Size j = 0; j < size(); j++)
             prob[j] = pool_->get(pool_->names()[j]).defaultProbability(
                 defKeys[j])->defaultProbability(d);
@@ -182,7 +180,7 @@ namespace QuantLib {
 
     Real Basket::remainingNotional(const Date& endDate) const {
         Real notional = 0;
-        vector<DefaultProbKey> defKeys = defaultKeys();
+        std::vector<DefaultProbKey> defKeys = defaultKeys();
         for (Size i = 0; i < size(); i++) {
             if (!pool_->get(pool_->names()[i]).defaultedBetween(refDate_,
                                                         endDate,
@@ -192,7 +190,7 @@ namespace QuantLib {
         return notional;
     }
 
-    vector<Real> Basket::remainingNotionals(const Date& endDate) const 
+    std::vector<Real> Basket::remainingNotionals(const Date& endDate) const 
     {
         QL_REQUIRE(endDate >= refDate_, 
             "Target date lies before basket inception");
@@ -209,7 +207,7 @@ namespace QuantLib {
     std::vector<Probability> Basket::remainingProbabilities(const Date& d) const 
     {
         QL_REQUIRE(d >= refDate_, "Target date lies before basket inception");
-        vector<Real> prob;
+        std::vector<Real> prob;
         const std::vector<Size>& alive = liveList();
 
         for(Size i=0; i<alive.size(); i++)
@@ -256,13 +254,13 @@ namespace QuantLib {
         return calcBufferNames;
     }
 
-    vector<DefaultProbKey> Basket::remainingDefaultKeys(const Date& endDate) const 
+    std::vector<DefaultProbKey> Basket::remainingDefaultKeys(const Date& endDate) const 
     {
         QL_REQUIRE(endDate >= refDate_,
             "Target date lies before basket inception");
 
         const std::vector<Size>& alive = liveList(endDate);
-        vector<DefaultProbKey> defKeys;
+        std::vector<DefaultProbKey> defKeys;
         defKeys.reserve(alive.size());
         for (unsigned long i : alive)
             defKeys.push_back(pool_->defaultKeys()[i]);

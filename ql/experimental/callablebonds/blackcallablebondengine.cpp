@@ -25,8 +25,6 @@
 #include <ql/time/calendars/nullcalendar.hpp>
 #include <utility>
 
-using namespace std;
-
 namespace QuantLib {
 
     BlackCallableFixedRateBondEngine::BlackCallableFixedRateBondEngine(

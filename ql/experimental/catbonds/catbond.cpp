@@ -27,8 +27,6 @@
 #include <ql/cashflows/simplecashflow.hpp>
 #include <ql/time/daycounters/actualactual.hpp>
 
-using namespace std;
-
 namespace QuantLib {
 
     void CatBond::arguments::validate() const {

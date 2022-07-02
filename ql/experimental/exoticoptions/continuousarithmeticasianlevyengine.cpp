@@ -23,8 +23,6 @@
 #include <ql/pricingengines/blackcalculator.hpp>
 #include <utility>
 
-using namespace std;
-
 namespace QuantLib {
 
     ContinuousArithmeticAsianLevyEngine::ContinuousArithmeticAsianLevyEngine(

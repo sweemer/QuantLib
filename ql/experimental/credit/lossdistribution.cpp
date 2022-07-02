@@ -20,19 +20,17 @@
 #include <ql/experimental/credit/lossdistribution.hpp>
 #include <ql/math/randomnumbers/mt19937uniformrng.hpp>
 
-using namespace std;
-
 namespace QuantLib {
 
     //--------------------------------------------------------------------------
-    Real LossDist::binomialProbabilityOfNEvents(int n, vector<Real>& p) {
+    Real LossDist::binomialProbabilityOfNEvents(int n, std::vector<Real>& p) {
     //--------------------------------------------------------------------------
         BinomialDistribution binomial (p[0], p.size());
         return binomial(n);
     }
 
     //--------------------------------------------------------------------------
-    Real LossDist::binomialProbabilityOfAtLeastNEvents(int n, vector<Real>& p) {
+    Real LossDist::binomialProbabilityOfAtLeastNEvents(int n, std::vector<Real>& p) {
     //--------------------------------------------------------------------------
         CumulativeBinomialDistribution binomial(p[0], p.size());
         return 1.0 - binomial(n-1);
@@ -46,11 +44,11 @@ namespace QuantLib {
     }
 
     //--------------------------------------------------------------------------
-    vector<Real> LossDist::probabilityOfNEvents(vector<Real>& p) {
+    std::vector<Real> LossDist::probabilityOfNEvents(std::vector<Real>& p) {
     //--------------------------------------------------------------------------
         Size n = p.size();
-        vector<Real> probability(n+1, 0.0);
-        vector<Real> prev;
+        std::vector<Real> probability(n+1, 0.0);
+        std::vector<Real> prev;
         probability[0] = 1.0;
         for (Size j = 0; j < n; j++) {
             prev = probability;
@@ -64,7 +62,7 @@ namespace QuantLib {
     }
 
     //--------------------------------------------------------------------------
-    Real LossDist::probabilityOfNEvents(int k, vector<Real>& p) {
+    Real LossDist::probabilityOfNEvents(int k, std::vector<Real>& p) {
     //--------------------------------------------------------------------------
         return probabilityOfNEvents(p)[k];
 
@@ -109,9 +107,9 @@ namespace QuantLib {
     }
 
     //--------------------------------------------------------------------------
-    Real LossDist::probabilityOfAtLeastNEvents (int k, vector<Real>& p) {
+    Real LossDist::probabilityOfAtLeastNEvents (int k, std::vector<Real>& p) {
     //--------------------------------------------------------------------------
-        vector<Real> probability = probabilityOfNEvents(p);
+        std::vector<Real> probability = probabilityOfNEvents(p);
         Real sum = 1.0;
         for (int j = 0; j < k; j++)
             sum -= probability[j];
@@ -125,19 +123,19 @@ namespace QuantLib {
     }
 
     //--------------------------------------------------------------------------
-    Real ProbabilityOfNEvents::operator()(vector<Real> p) const {
+    Real ProbabilityOfNEvents::operator()(std::vector<Real> p) const {
     //--------------------------------------------------------------------------
         return LossDist::probabilityOfNEvents (n_, p);
     }
 
     //--------------------------------------------------------------------------
-    Real ProbabilityOfAtLeastNEvents::operator()(vector<Real> p) const {
+    Real ProbabilityOfAtLeastNEvents::operator()(std::vector<Real> p) const {
     //--------------------------------------------------------------------------
         return LossDist::probabilityOfAtLeastNEvents (n_, p);
     }
 
     //--------------------------------------------------------------------------
-    Real BinomialProbabilityOfAtLeastNEvents::operator()(vector<Real> p) const {
+    Real BinomialProbabilityOfAtLeastNEvents::operator()(std::vector<Real> p) const {
         //--------------------------------------------------------------------------
         return LossDist::binomialProbabilityOfAtLeastNEvents(n_, p);
     }
@@ -172,21 +170,21 @@ namespace QuantLib {
     }
 
     //--------------------------------------------------------------------------
-    Distribution LossDistBinomial::operator()(const vector<Real>& nominals,
-                                    const vector<Real>& probabilities) const {
+    Distribution LossDistBinomial::operator()(const std::vector<Real>& nominals,
+                                    const std::vector<Real>& probabilities) const {
     //--------------------------------------------------------------------------
         return operator()(nominals.size(), nominals[0], probabilities[0]);
     }
 
     //--------------------------------------------------------------------------
     Distribution LossDistHomogeneous::operator()(Real volume,
-                                                 const vector<Real>& p) const {
+                                                 const std::vector<Real>& p) const {
     //--------------------------------------------------------------------------
         volume_ = volume;
         n_ = p.size();
         probability_.clear();
         probability_.resize(n_+1, 0.0);
-        vector<Real> prev;
+        std::vector<Real> prev;
         probability_[0] = 1.0;
         for (Size k = 0; k < n_; k++) {
             prev = probability_;
@@ -217,22 +215,22 @@ namespace QuantLib {
     }
 
     //--------------------------------------------------------------------------
-    Distribution LossDistHomogeneous::operator()(const vector<Real>& nominals,
-                                    const vector<Real>& probabilities) const {
+    Distribution LossDistHomogeneous::operator()(const std::vector<Real>& nominals,
+                                    const std::vector<Real>& probabilities) const {
     //--------------------------------------------------------------------------
         return operator()(nominals[0], probabilities);
     }
 
     //--------------------------------------------------------------------------
-    Distribution LossDistBucketing::operator()(const vector<Real>& nominals,
-                                    const vector<Real>& probabilities) const {
+    Distribution LossDistBucketing::operator()(const std::vector<Real>& nominals,
+                                    const std::vector<Real>& probabilities) const {
     //--------------------------------------------------------------------------
         QL_REQUIRE (nominals.size() == probabilities.size(), "sizes differ: "
                     << nominals.size() << " vs " << probabilities.size());
 
-        vector<Real> p (nBuckets_, 0.0);
-        vector<Real> a (nBuckets_, 0.0);
-        vector<Real> ap (nBuckets_, 0.0);
+        std::vector<Real> p (nBuckets_, 0.0);
+        std::vector<Real> a (nBuckets_, 0.0);
+        std::vector<Real> ap (nBuckets_, 0.0);
 
         p[0] = 1.0;
         a[0] = 0.0;
@@ -299,8 +297,8 @@ namespace QuantLib {
     }
 
     //--------------------------------------------------------------------------
-    Distribution LossDistMonteCarlo::operator()(const vector<Real>& nominals,
-                                   const vector<Real>& probabilities) const {
+    Distribution LossDistMonteCarlo::operator()(const std::vector<Real>& nominals,
+                                   const std::vector<Real>& probabilities) const {
     //--------------------------------------------------------------------------
         Distribution dist (nBuckets_, 0.0, maximum_);
         // KnuthUniformRng rng(seed_);

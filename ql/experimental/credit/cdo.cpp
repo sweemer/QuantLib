@@ -21,14 +21,12 @@
 #include <ql/experimental/credit/cdo.hpp>
 #include <utility>
 
-using namespace std;
-
 namespace QuantLib {
 
     CDO::CDO(Real attachment,
              Real detachment,
-             vector<Real> nominals,
-             const vector<Handle<DefaultProbabilityTermStructure> >& basket,
+             std::vector<Real> nominals,
+             const std::vector<Handle<DefaultProbabilityTermStructure> >& basket,
              Handle<OneFactorCopula> copula,
              bool protectionSeller,
              Schedule premiumSchedule,
@@ -96,7 +94,7 @@ namespace QuantLib {
         if (d <= basket_.front()->referenceDate())
             return 0;
 
-        vector<Real> defProb (basket_.size());
+        std::vector<Real> defProb (basket_.size());
         for (Size j = 0; j < basket_.size(); j++)
             defProb[j] = basket_[j]->defaultProbability (d);
 

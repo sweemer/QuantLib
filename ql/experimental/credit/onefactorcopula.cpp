@@ -19,8 +19,6 @@
 
 #include <ql/experimental/credit/onefactorcopula.hpp>
 
-using namespace std;
-
 namespace QuantLib {
 
     //-------------------------------------------------------------------------
@@ -42,12 +40,12 @@ namespace QuantLib {
     }
 
     //-------------------------------------------------------------------------
-    vector<Real> OneFactorCopula::conditionalProbability(
-                                                     const vector<Real>& prob,
+    std::vector<Real> OneFactorCopula::conditionalProbability(
+                                                     const std::vector<Real>& prob,
                                                      Real m) const {
     //-------------------------------------------------------------------------
         calculate ();
-        vector<Real> p (prob.size(), 0);
+        std::vector<Real> p (prob.size(), 0);
         for (Size i = 0; i < p.size(); i++)
             p[i] = conditionalProbability (prob[i], m);
         return p;

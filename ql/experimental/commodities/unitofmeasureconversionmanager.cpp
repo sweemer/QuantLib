@@ -23,8 +23,6 @@
 #include <ql/errors.hpp>
 #include <algorithm>
 
-using namespace std;
-
 namespace QuantLib {
 
     namespace {
@@ -166,7 +164,7 @@ namespace QuantLib {
                               const CommodityType& commodityType,
                               const UnitOfMeasure& source,
                               const UnitOfMeasure& target,
-                              list<string> forbidden) const {
+                              std::list<std::string> forbidden) const {
 
         try {
             return directLookup(commodityType,source,target);

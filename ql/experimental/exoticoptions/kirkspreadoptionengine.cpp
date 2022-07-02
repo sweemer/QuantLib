@@ -22,8 +22,6 @@
 #include <ql/math/distributions/normaldistribution.hpp>
 #include <utility>
 
-using namespace std;
-
 namespace QuantLib {
 
     KirkSpreadOptionEngine::KirkSpreadOptionEngine(ext::shared_ptr<BlackProcess> process1,

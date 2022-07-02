@@ -29,11 +29,9 @@
 #include <cmath>
 #include <utility>
 
-using namespace std;
-
-#define SIGN(a,b) ((b) >= 0.0 ? fabs(a) : -fabs(a))
+#define SIGN(a,b) ((b) >= 0.0 ? std::fabs(a) : -std::fabs(a))
 #define ABS(x) (((x) < 0) ? -(x) : (x))
-#define POW(x,y) pow( (Real) (x), (Real) (y))
+#define POW(x,y) std::pow( (Real) (x), (Real) (y))
 #define PI 3.14159265358979324
 
 namespace QuantLib {
@@ -79,6 +77,9 @@ namespace QuantLib {
                     const ext::function<Real(Real, Real)>& integs,
                     const ext::function<Real(Real)>& alpha,
                     const ext::function<Real(Real)>& sigmaq) {
+
+        using namespace std;
+
         Real v0=0.0, v1=0.0, v1p=0.0, v2p=0.0, v2pp=0.0, gm=0.0;
         int i=0,j=0;
         Real tmp=0.0, e1=0.0, e2=0.0, e3=0.0, e4=0.0;
@@ -297,6 +298,9 @@ namespace QuantLib {
 
 
     Real PHID(Real Z){
+
+        using namespace std;
+
         /*
          *     Normal distribution probabilities accurate to 1D-15.
          *     Z = number of standard deviations from the mean.
@@ -375,6 +379,8 @@ namespace QuantLib {
       !!
     */
     Real ff(Real p,Real tt,Real a, Real b, Real gm) {
+        using namespace std;
+
         Real phid;
         Real aa, caux;
         Real ppi= 3.14159265358979324;
@@ -396,6 +402,8 @@ namespace QuantLib {
     */
     Real v(Real p, Real tt,Real a,Real b,Real gm)
     {
+        using namespace std;
+
         Real result;
         Real aa,caux;
 
@@ -414,6 +422,8 @@ namespace QuantLib {
       !!
     */
     Real llold(Real p,Real tt, Real a, Real b,Real c, Real gm){
+        using namespace std;
+
         Real bvnd;
         Real xx,yy,rho,caux;
         Real ppi= 3.14159265358979324;
@@ -445,6 +455,8 @@ namespace QuantLib {
     */
     Real dvv(Real s,Real p,Real tt,Real a,Real b,Real gm)
     {
+        using namespace std;
+
         double ppi= 3.14159265358979324;
         Real result;
         Real aa,caux,caux1,caux2;
@@ -481,6 +493,8 @@ namespace QuantLib {
     */
     Real dff(Real s, Real p,Real tt,Real a,Real b,Real gm)
     {
+        using namespace std;
+
         Real result;
         Real aa,caux,caux1,caux2;
         Real xx,yy,rho;
@@ -514,6 +528,8 @@ namespace QuantLib {
     */
     Real dll(Real s,Real p,Real tt,Real a,Real b,Real c,Real gm)
     {
+        using namespace std;
+
         Real result;
         Real aa,caux,caux1;
         Real sigmarho[4],limit[4],epsi;
@@ -552,6 +568,8 @@ namespace QuantLib {
     */
     Real ddff(Real s, Real p,Real tt,Real a,Real b,Real gm)
     {
+        using namespace std;
+
         Real aa,caux,caux1,caux2,caux3,caux4;
         Real xx,yy,rho;
         Real result;
@@ -608,6 +626,8 @@ namespace QuantLib {
     */
     Real ddll(Real s,Real p,Real tt, Real ax, Real bx,Real c, Real gm)
     {
+        using namespace std;
+
         static Real result;
         static Real aa,caux,caux1;
         static Real sigmarho[4],limit[4];
@@ -671,6 +691,8 @@ namespace QuantLib {
     */
     Real ddvv(Real s, Real p, Real tt, Real a, Real b, Real gm)
     {
+        using namespace std;
+
         static Real result;
         static Real aa,caux,caux1,caux2,caux6;
         static Real caux3,caux4,caux5,aux;
@@ -736,6 +758,8 @@ namespace QuantLib {
     */
     Real derivn3(Real limit[4],Real sigmarho[4], int idx)
     {
+        using namespace std;
+
         static Real aa;
         static Real xx,yy,rho,sc;
         static double  ppi= 3.14159265358979324;
@@ -827,6 +851,8 @@ namespace QuantLib {
 
         */
 
+        using namespace std;
+
         static Real result;
         static Real  ONE=1.0, ZRO=0.0, EPS,  TVT;
         static Real PT, R12, R13;
@@ -907,6 +933,8 @@ namespace QuantLib {
           Computes Plackett formula integrands
         */
 
+        using namespace std;
+
         static Real R12=0.0, RR2=0, R13=0.0, RR3=0.0, R=0.0, RR=0.0;
         const Real ZRO = 0.0;
         Real result = 0.0;
@@ -931,6 +959,9 @@ namespace QuantLib {
         /*
           Computes SIN(X), COS(X)^2, with series approx. for |X| near PI/2
         */
+
+        using namespace std;
+
         static Real PT, EE;
         PT = 1.57079632679489661923132169163975;
         EE = POW(( PT - fabs(X) ),2);
@@ -957,6 +988,9 @@ namespace QuantLib {
         //
         //     One Dimensional Globally Adaptive Integration Function
         //
+
+        using namespace std;
+
         int NL=100, I, IM, IP;
         static Real EI[101], AI[101], BI[101], FI[101], FIN;
         static Real result,ERR;
@@ -993,6 +1027,7 @@ namespace QuantLib {
     //
 
     Real KRNRDT(Real A, Real B,Real(*TVTMFN)(Real X, Real H1, Real H2, Real H3, Real R23, Real RUA, Real RUB, Real AR, Real RUC, int NUC),Real& ERR ){
+        using namespace std;
 
         //
         //     Kronrod Rule
@@ -1082,6 +1117,9 @@ namespace QuantLib {
         /*
           Student t Distribution Function
         */
+
+        using namespace std;
+
         static int J;
         static Real  ZRO=0.0, ONE=1.0;
         static Real  CSSTHE, SNTHE, POLYN, TT, TS, RN;
@@ -1146,6 +1184,9 @@ namespace QuantLib {
           DK 2nd lower integration limit
           R   correlation coefficient
         */
+
+        using namespace std;
+
         static int  J, HS, KS;
         static Real  TPI, ORS, HRK, KRH, BVT, SNU;
         static Real  GMPH, GMPK, XNKH, XNHK, QHRK, HKN, HPK, HKRN;
@@ -1245,6 +1286,9 @@ namespace QuantLib {
           /*
             Computes Plackett formula integrand
           */
+
+          using namespace std;
+
           static Real DT, FT, BT,result;
 
           result = 0.0;
@@ -1296,6 +1340,9 @@ namespace QuantLib {
          *   DK  DOUBLE PRECISION, integration limit
          *   R   DOUBLE PRECISION, correlation coefficient
          */
+
+        using namespace std;
+
         static double TWOPI = 6.283185307179586;
         static Real result, DK, DH, R;
         static int I, IS, LG, NG;

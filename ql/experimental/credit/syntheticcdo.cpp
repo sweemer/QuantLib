@@ -28,8 +28,6 @@
 #include <ql/experimental/credit/gaussianlhplossmodel.hpp>
 #include <ql/experimental/credit/midpointcdoengine.hpp>
 
-using namespace std;
-
 namespace QuantLib {
 
     SyntheticCDO::SyntheticCDO(const ext::shared_ptr<Basket>& basket,

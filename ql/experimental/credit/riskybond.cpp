@@ -26,8 +26,6 @@
 #include <ql/time/daycounters/actualactual.hpp>
 #include <utility>
 
-using namespace std;
-
 namespace QuantLib {
 
     QL_DEPRECATED_DISABLE_WARNING
@@ -65,7 +63,7 @@ namespace QuantLib {
         for (auto& i : cf) {
             Date d2 = i->date();
             if (d2 > npvDate) {
-                d1 = max(npvDate , d1);
+                d1 = std::max(npvDate , d1);
                 Date defaultDate = d1 + (d2-d1)/2;
 
                 Real coupon = i->amount() * defaultTS_->survivalProbability(d2);
@@ -114,7 +112,7 @@ namespace QuantLib {
         for (auto& i : cf) {
             Date d2 = i->date();
             if (d2 > npvDate) {
-                d1 = max(npvDate, d1);
+                d1 = std::max(npvDate, d1);
                 Date defaultDate = d1 + (d2-d1)/2;
 
                 Real coupon = i->amount() * defaultTS_->survivalProbability(d2);

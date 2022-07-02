@@ -22,8 +22,6 @@
 #include <ql/pricingengines/blackformula.hpp>
 #include <utility>
 
-using namespace std;
-
 namespace QuantLib {
 
     AnalyticWriterExtensibleOptionEngine::AnalyticWriterExtensibleOptionEngine(

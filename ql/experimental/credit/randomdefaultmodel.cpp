@@ -22,8 +22,6 @@
 #include <ql/math/solvers1d/brent.hpp>
 #include <utility>
 
-using namespace std;
-
 namespace QuantLib {
 
     namespace {
@@ -64,7 +62,7 @@ namespace QuantLib {
         const std::vector<Real>& values = rsg_.nextSequence().value;
         Real a = sqrt(copula_->correlation());
         for (Size j = 0; j < pool_->size(); j++) {
-            const string name = pool_->names()[j];
+            const std::string name = pool_->names()[j];
             const Handle<DefaultProbabilityTermStructure>&
                 dts = pool_->get(name).defaultProbability(defaultKeys_[j]);
 
