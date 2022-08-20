@@ -190,7 +190,7 @@ namespace QuantLib {
         const ext::function<Real (const std::vector<Real>& v1)>& f) const
     {
         // integration entry level is selected now
-        return integral_([&](Real x){ return integrationEntries_[dimension_-1](ext::cref(f), x); });
+        return integral_([&](Real x){ return integrationEntries_[dimension_-1](f, x); });
     }
 
     // Scalar integrand version (merge with vector case?)
@@ -202,7 +202,7 @@ namespace QuantLib {
         // call vector quadrature integration with the function and start 
         // values, kicks in recursion over the dimensions of the integration
         // variable.
-        return integral_([&](Real x){ return integrationEntries_[dimension_-1](ext::cref(f), x); });
+        return integral_([&](Real x){ return integrationEntries_[dimension_-1](f, x); });
     }
 
     // Vector integrand version
@@ -210,7 +210,7 @@ namespace QuantLib {
     inline std::vector<Real> GaussianQuadMultidimIntegrator::integrate<std::vector<Real>>(
         const ext::function<std::vector<Real> (const std::vector<Real>& v1)>& f) const
     {
-        return integralV_([&](Real x){ return integrationEntriesVR_[dimension_-1](ext::cref(f), x); });
+        return integralV_([&](Real x){ return integrationEntriesVR_[dimension_-1](f, x); });
     } 
 
     //! Terminal integrand; scalar function version
