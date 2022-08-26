@@ -418,9 +418,9 @@ void DigitalOptionTest::testCashAtExpiryOrNothingAmericanValues() {
                                       Handle<BlackVolTermStructure>(volTS)));
         ext::shared_ptr<PricingEngine> engine;
         if (value.knockin)
-            engine.reset(new AnalyticDigitalAmericanEngine(stochProcess));
+            engine = ext::make_shared<AnalyticDigitalAmericanEngine>(stochProcess);
         else
-           engine.reset(new AnalyticDigitalAmericanKOEngine(stochProcess));
+           engine = ext::make_shared<AnalyticDigitalAmericanKOEngine>(stochProcess);
 
         VanillaOption opt(payoff, amExercise);
         opt.setPricingEngine(engine);
@@ -490,9 +490,9 @@ void DigitalOptionTest::testAssetAtExpiryOrNothingAmericanValues() {
                                       Handle<BlackVolTermStructure>(volTS)));
         ext::shared_ptr<PricingEngine> engine;
         if (value.knockin)
-            engine.reset(new AnalyticDigitalAmericanEngine(stochProcess));
+            engine = ext::make_shared<AnalyticDigitalAmericanEngine>(stochProcess);
         else
-           engine.reset(new AnalyticDigitalAmericanKOEngine(stochProcess));
+           engine = ext::make_shared<AnalyticDigitalAmericanKOEngine>(stochProcess);
 
         VanillaOption opt(payoff, amExercise);
         opt.setPricingEngine(engine);

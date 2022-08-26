@@ -258,8 +258,7 @@ namespace QuantLib {
 
         auto* controlArguments = dynamic_cast<VanillaOption::arguments*>(controlPE->getArguments());
         *controlArguments = this->arguments_;
-        controlArguments->exercise = ext::shared_ptr<Exercise>(
-             new EuropeanExercise(this->arguments_.exercise->lastDate()));
+        controlArguments->exercise = ext::make_shared<EuropeanExercise>(this->arguments_.exercise->lastDate());
 
         controlPE->calculate();
 

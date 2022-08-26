@@ -238,8 +238,7 @@ namespace QuantLib {
 
         // using the discounting curve
         // swap.iborIndex() might be using a different forwarding curve
-        swap.setPricingEngine(ext::shared_ptr<PricingEngine>(new
-            DiscountingSwapEngine(discountCurve_, false)));
+        swap.setPricingEngine(ext::make_shared<DiscountingSwapEngine>(discountCurve_, false));
         Rate atmForward = swap.fairRate();
 
         // Volatilities are quoted for zero-spreaded swaps.
@@ -258,8 +257,7 @@ namespace QuantLib {
         results_.additionalResults["atmForward"] = atmForward;
 
         // using the discounting curve
-        swap.setPricingEngine(ext::shared_ptr<PricingEngine>(
-                           new DiscountingSwapEngine(discountCurve_, false)));
+        swap.setPricingEngine(ext::make_shared<DiscountingSwapEngine>(discountCurve_, false));
         Real annuity;
         if (arguments_.settlementType == Settlement::Physical ||
             (arguments_.settlementType == Settlement::Cash &&

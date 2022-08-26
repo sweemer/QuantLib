@@ -191,9 +191,9 @@ void DoubleBinaryOptionTest::testHaugValues() {
         Date exDate = today + timeToDays(value.t);
         ext::shared_ptr<Exercise> exercise;
         if (value.barrierType == DoubleBarrier::KIKO || value.barrierType == DoubleBarrier::KOKI)
-            exercise.reset(new AmericanExercise(today, exDate));
+            exercise = ext::make_shared<AmericanExercise>(today, exDate);
         else
-            exercise.reset(new EuropeanExercise(exDate));
+            exercise = ext::make_shared<EuropeanExercise>(exDate);
 
         spot->setValue(value.s);
         qRate->setValue(value.q);

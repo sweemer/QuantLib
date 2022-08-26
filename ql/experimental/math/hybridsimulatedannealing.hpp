@@ -97,7 +97,7 @@ namespace QuantLib {
           localOptimizer_(localOptimizer),
           optimizeScheme_(localOptimizer != nullptr ? optimizeScheme : NoLocalOptimize) {
             if (!localOptimizer)
-                localOptimizer.reset(new LevenbergMarquardt);
+                localOptimizer = ext::make_shared<LevenbergMarquardt>();
         }
 
         EndCriteria::Type minimize(Problem& P, const EndCriteria& endCriteria) override;

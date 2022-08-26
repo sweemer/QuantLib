@@ -100,14 +100,13 @@ namespace QuantLib {
 
         Real nominal = 1000000.0; // has to be something but doesn't matter what
         Date start = nominalTS->referenceDate();
-        zciis_.reset(new ZeroCouponInflationSwap(Swap::Payer, nominal, start,
+        zciis_ = ext::make_shared<ZeroCouponInflationSwap>(Swap::Payer, nominal, start,
                                                  maturity_, calendar_, paymentConvention_,
                                                  dayCounter_, K, // fixed side & fixed rate
-                                                 new_zii, swapObsLag_, observationInterpolation_));
+                                                 new_zii, swapObsLag_, observationInterpolation_);
         // Because very simple instrument only takes
         // standard discounting swap engine.
-        zciis_->setPricingEngine(
-            ext::shared_ptr<PricingEngine>(new DiscountingSwapEngine(nominalTS)));
+        zciis_->setPricingEngine(ext::make_shared<DiscountingSwapEngine>(nominalTS));
     }
 
 
@@ -194,11 +193,11 @@ namespace QuantLib {
         Rate fixedRate = quote()->value();
 
         Real nominal = 1000000.0; // has to be something but doesn't matter what
-        yyiis_.reset(new YearOnYearInflationSwap(
+        yyiis_ = ext::make_shared<YearOnYearInflationSwap>(
             Swap::Payer, nominal, fixedSchedule, fixedRate, dayCounter_,
             yoySchedule, new_yii, swapObsLag_, spread, dayCounter_,
             calendar_, // inflation index does not have a calendar
-            paymentConvention_));
+            paymentConvention_);
 
         // The instrument takes a standard discounting swap engine.
         // The inflation-related work is done by the coupons.

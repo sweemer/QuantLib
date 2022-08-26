@@ -83,16 +83,15 @@ namespace QuantLib {
                 QL_REQUIRE(coupon, "dynamic cast of float leg coupon failed.");
 
                 if (coupon->date() <= expiries_[i]) {
-                    ext::shared_ptr<IborCoupon> newCpn = ext::shared_ptr<IborCoupon>(new IborCoupon(
+                    ext::shared_ptr<IborCoupon> newCpn = ext::make_shared<IborCoupon>(
                         coupon->date(), 1.0, coupon->accrualStartDate(), coupon->accrualEndDate(),
                         coupon->fixingDays(), coupon->iborIndex(), 1.0, coupon->spread(),
                         coupon->referencePeriodStart(), coupon->referencePeriodEnd(),
-                        coupon->dayCounter(), coupon->isInArrears()));
+                        coupon->dayCounter(), coupon->isInArrears());
 
 
                     if (!newCpn->isInArrears())
-                        newCpn->setPricer(
-                            ext::shared_ptr<FloatingRateCouponPricer>(new BlackIborCouponPricer()));
+                        newCpn->setPricer(ext::make_shared<BlackIborCouponPricer>());
 
                     floatCFS.push_back(newCpn);
                 }
@@ -263,8 +262,8 @@ namespace QuantLib {
             ext::shared_ptr<IborCoupon> coupon = ext::dynamic_pointer_cast<IborCoupon>(j);
             QL_REQUIRE(coupon,"dynamic cast of float leg coupon failed.");
 
-            ext::shared_ptr<IborCoupon> newCpn = ext::shared_ptr<IborCoupon> (
-                new  IborCoupon(coupon->date(),
+            ext::shared_ptr<IborCoupon> newCpn = ext::make_shared<IborCoupon>(
+                coupon->date(),
                 coupon->nominal(),
                 coupon->accrualStartDate(),
                 coupon->accrualEndDate(),
@@ -275,13 +274,11 @@ namespace QuantLib {
                 coupon->referencePeriodStart(),
                 coupon->referencePeriodEnd(),
                 coupon->dayCounter(),
-                coupon->isInArrears())); 
+                coupon->isInArrears());
 
 
             if (!newCpn->isInArrears())
-                newCpn->setPricer(
-                             ext::shared_ptr<FloatingRateCouponPricer>(
-                                      new BlackIborCouponPricer()));
+                newCpn->setPricer(ext::make_shared<BlackIborCouponPricer>());
 
             floatCFS.push_back(newCpn);
         }
@@ -299,7 +296,7 @@ namespace QuantLib {
             ext::shared_ptr<FixedRateCoupon> coupon = ext::dynamic_pointer_cast<FixedRateCoupon>(i);
             QL_REQUIRE(coupon,"dynamic cast of fixed leg coupon failed.");
 
-            ext::shared_ptr<FixedRateCoupon> newCpn = ext::make_shared<FixedRateCoupon> (
+            ext::shared_ptr<FixedRateCoupon> newCpn = ext::make_shared<FixedRateCoupon>(
                 coupon->date(),
                 coupon->nominal(),
                 coupon->rate()-cpn_adjustment,
@@ -349,7 +346,7 @@ namespace QuantLib {
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // Computes irregular swaption price according to P.J. Hunt, J.E. Kennedy:             //
-    // "Implied interest rate pricing models", Finance Stochast. 2, 275–293 (1998)      //
+    // "Implied interest rate pricing models", Finance Stochast. 2, 275ï¿½293 (1998)      //
     /////////////////////////////////////////////////////////////////////////////////////////
 
     Real  HaganIrregularSwaptionEngine::HKPrice(Basket& basket,ext::shared_ptr<Exercise>& exercise) const {
