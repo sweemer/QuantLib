@@ -27,8 +27,8 @@ namespace QuantLib {
                         const ext::shared_ptr<StochasticProcess1D>& process,
                         const TimeGrid& timeGrid,
                         bool isPositive)
-    : Tree<TrinomialTree>(timeGrid.size()), dx_(1, 0.0), timeGrid_(timeGrid) {
-        x0_ = process->x0();
+    : Tree<TrinomialTree>(timeGrid.size()), x0_(process->x0()),
+      dx_(1, 0.0), timeGrid_(timeGrid) {
 
         Size nTimeSteps = timeGrid.size() - 1;
         QL_REQUIRE(nTimeSteps > 0, "null time steps for trinomial tree");

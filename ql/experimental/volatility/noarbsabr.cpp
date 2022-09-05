@@ -187,9 +187,8 @@ D0Interpolator::D0Interpolator(const Real forward, const Real expiryTime,
                                const Real alpha, const Real beta, const Real nu,
                                const Real rho)
     : forward_(forward), expiryTime_(expiryTime), alpha_(alpha), beta_(beta),
-      nu_(nu), rho_(rho), gamma_(1.0 / (2.0 * (1.0 - beta_))) {
-
-    sigmaI_ = alpha_ * std::pow(forward_, beta_ - 1.0);
+      nu_(nu), rho_(rho), gamma_(1.0 / (2.0 * (1.0 - beta_))),
+      sigmaI_(alpha_ * std::pow(forward_, beta_ - 1.0)) {
 
     tauG_ = {
         0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0,

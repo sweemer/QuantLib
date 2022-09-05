@@ -71,8 +71,8 @@ namespace QuantLib {
         : pathGenerator_(std::move(pathGenerator)), pathPricer_(std::move(pathPricer)),
           sampleAccumulator_(std::move(sampleAccumulator)), isAntitheticVariate_(antitheticVariate),
           cvPathPricer_(std::move(cvPathPricer)), cvOptionValue_(cvOptionValue),
+          isControlVariate_(static_cast<bool>(cvPathPricer_)),
           cvPathGenerator_(std::move(cvPathGenerator)) {
-            isControlVariate_ = static_cast<bool>(cvPathPricer_);
         }
         void addSamples(Size samples);
         const stats_type& sampleAccumulator() const;

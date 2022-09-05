@@ -116,11 +116,13 @@ namespace QuantLib {
 
         Real r = std::exp(this->driftStep(0.0))*std::sqrt(q);
 
+        // NOLINTBEGIN(cppcoreguidelines-prefer-member-initializer)
         up_ = 0.5 * r * q * (q + 1 + std::sqrt(q * q + 2 * q - 3));
         down_ = 0.5 * r * q * (q + 1 - std::sqrt(q * q + 2 * q - 3));
 
         pu_ = (r - down_) / (up_ - down_);
         pd_ = 1.0 - pu_;
+        // NOLINTEND(cppcoreguidelines-prefer-member-initializer)
 
         // doesn't work
         //     treeCentering_ = (up_+down_)/2.0;

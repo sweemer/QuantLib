@@ -40,10 +40,10 @@ namespace QuantLib {
             Real operator()(Volatility x) const;
             Real derivative(Volatility x) const;
           private:
-            ext::shared_ptr<PricingEngine> engine_;
             Handle<YieldTermStructure> discountCurve_;
             Real targetValue_;
             ext::shared_ptr<SimpleQuote> vol_;
+            ext::shared_ptr<PricingEngine> engine_;
             const Instrument::results* results_;
         };
 
@@ -52,15 +52,10 @@ namespace QuantLib {
             Handle<YieldTermStructure> discountCurve,
             Real targetValue)
         : discountCurve_(std::move(discountCurve)), targetValue_(targetValue),
-          vol_(ext::make_shared<SimpleQuote>(-1.0)) {
-
-            Handle<Quote> h(vol_);
-            engine_ = ext::shared_ptr<PricingEngine>(new
-                                    BlackSwaptionEngine(discountCurve_, h));
+          vol_(ext::make_shared<SimpleQuote>(-1.0)),
+          engine_(ext::make_shared<BlackSwaptionEngine>(discountCurve_, Handle<Quote>(vol_))),
+          results_(dynamic_cast<const Instrument::results*>(engine_->getResults())) {
             swaption.setupArguments(engine_->getArguments());
-
-            results_ =
-                dynamic_cast<const Instrument::results*>(engine_->getResults());
         }
 
         Real IrregularImpliedVolHelper::operator()(Volatility x) const {

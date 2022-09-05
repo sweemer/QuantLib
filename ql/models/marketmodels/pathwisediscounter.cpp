@@ -25,12 +25,10 @@ namespace QuantLib
 
 MarketModelPathwiseDiscounter::MarketModelPathwiseDiscounter(Time paymentTime,
                               const std::vector<Time>& rateTimes)
+    : before_(std::lower_bound(rateTimes.begin(), rateTimes.end(), paymentTime) - rateTimes.begin()),
+      numberRates_(rateTimes.size() - 1)
 {
     checkIncreasingTimes(rateTimes);
-
-    numberRates_ = rateTimes.size()-1;
-        before_ = std::lower_bound(rateTimes.begin(), rateTimes.end(),
-                                   paymentTime) - rateTimes.begin();
 
         // handle the case where the payment is in the last
         // period or after the last period

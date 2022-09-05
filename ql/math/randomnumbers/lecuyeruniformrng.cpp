@@ -40,9 +40,9 @@ namespace QuantLib {
     const long double LecuyerUniformRng::maxRandom = 1.0-QL_EPSILON;
 
     LecuyerUniformRng::LecuyerUniformRng(long seed)
-    : buffer(LecuyerUniformRng::bufferSize) {
+        : temp1(seed != 0 ? seed : SeedGenerator::instance().get()),
+          temp2(temp1), buffer(LecuyerUniformRng::bufferSize) {
         // Need to prevent seed=0, so use seed=0 to have a "random" seed
-        temp2 = temp1 = (seed != 0 ? seed : SeedGenerator::instance().get());
         // Load the shuffle table (after 8 warm-ups)
         for (int j=bufferSize+7; j>=0; j--) {
             long k = temp1/q1;

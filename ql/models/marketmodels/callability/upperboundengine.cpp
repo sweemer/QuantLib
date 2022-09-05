@@ -125,6 +125,7 @@ namespace QuantLib {
                            hedge,hedgeStrategy,ExerciseAdapter(hedgeRebate))));
         composite_.finalize();
 
+        // NOLINTBEGIN(cppcoreguidelines-prefer-member-initializer)
         underlyingOffset_ = 0;
         underlyingSize_ = underlying.numberOfProducts();
         rebateOffset_ = underlyingSize_;
@@ -136,6 +137,7 @@ namespace QuantLib {
 
 
         numberOfProducts_ = composite_.numberOfProducts();
+        // NOLINTEND(cppcoreguidelines-prefer-member-initializer)
 
         const std::vector<Time>& evolutionTimes =
             composite_.evolution().evolutionTimes();

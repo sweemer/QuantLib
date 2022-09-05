@@ -358,8 +358,8 @@ namespace QuantLib {
                                   Real fAverage, Real eta4,
                                   Real prevPrimitive)
             : xPrev_(xPrev), xScaling_(xNext-xPrev), gPrev_(gPrev),
-              gNext_(gNext), fAverage_(fAverage), eta4_(eta4), prevPrimitive_(prevPrimitive) {
-                A_ = -0.5*(eta4_*gPrev_ + (1-eta4_)*gNext_);
+              gNext_(gNext), fAverage_(fAverage), eta4_(eta4), prevPrimitive_(prevPrimitive),
+              A_(-0.5*(eta4_*gPrev_ + (1-eta4_)*gNext_)) {
             }
 
             Real value(Real x) const override {
@@ -486,11 +486,10 @@ namespace QuantLib {
                                Real prevPrimitive)
             : xPrev_(xPrev), xNext_(xNext), fPrev_(fPrev),
               fNext_(fNext), fAverage_(fAverage),
-              prevPrimitive_(prevPrimitive) {
-                a_ = 3*fPrev_ + 3*fNext_ - 6*fAverage_;
-                b_ = -(4*fPrev_ + 2*fNext_ - 6*fAverage_);
-                c_ = fPrev_;
-                xScaling_ = xNext_-xPrev_;
+              prevPrimitive_(prevPrimitive),
+              a_(3*fPrev_ + 3*fNext_ - 6*fAverage_),
+              b_(-(4*fPrev_ + 2*fNext_ - 6*fAverage_)),
+              c_(fPrev_), xScaling_(xNext_-xPrev_) {
             }
 
             Real value(Real x) const override {
@@ -515,12 +514,11 @@ namespace QuantLib {
             QuadraticMinHelper(
                 Real xPrev, Real xNext, Real fPrev, Real fNext, Real fAverage, Real prevPrimitive)
             : x1_(xPrev), x4_(xNext), primitive1_(prevPrimitive), fAverage_(fAverage),
-              fPrev_(fPrev), fNext_(fNext) {
-                a_ = 3*fPrev_ + 3*fNext_ - 6*fAverage_;
-                b_ = -(4*fPrev_ + 2*fNext_ - 6*fAverage_);
-                c_ = fPrev_;
+              fPrev_(fPrev), fNext_(fNext),
+              a_(3*fPrev_ + 3*fNext_ - 6*fAverage_),
+              b_(-(4*fPrev_ + 2*fNext_ - 6*fAverage_)),
+              c_(fPrev_), xScaling_(x4_-x1_) {
                 Real d = b_*b_-4*a_*c_;
-                xScaling_ = x4_-x1_;
                 if (d > 0) {
                     Real aAv = 36;
                     Real bAv = -24*(fPrev_+fNext_);

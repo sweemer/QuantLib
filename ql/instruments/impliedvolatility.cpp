@@ -41,9 +41,8 @@ namespace QuantLib {
         PriceError::PriceError(const PricingEngine& engine,
                                SimpleQuote& vol,
                                Real targetValue)
-        : engine_(engine), vol_(vol), targetValue_(targetValue) {
-            results_ =
-                dynamic_cast<const Instrument::results*>(engine_.getResults());
+        : engine_(engine), vol_(vol), targetValue_(targetValue),
+          results_(dynamic_cast<const Instrument::results*>(engine_.getResults())) {
             QL_REQUIRE(results_ != nullptr, "pricing engine does not supply needed results");
         }
 

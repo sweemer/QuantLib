@@ -35,9 +35,9 @@ namespace QuantLib {
     : name_(indexName), commodityType_(std::move(commodityType)),
       unitOfMeasure_(std::move(unitOfMeasure)), currency_(std::move(currency)),
       calendar_(std::move(calendar)), lotQuantity_(lotQuantity),
+      quotes_(IndexManager::instance().getHistory(indexName)),
       forwardCurve_(std::move(forwardCurve)), exchangeContracts_(std::move(exchangeContracts)),
       nearbyOffset_(nearbyOffset) {
-        quotes_ = IndexManager::instance().getHistory(indexName);
         IndexManager::instance().setHistory(indexName, quotes_);
         registerWith(Settings::instance().evaluationDate());
         registerWith(IndexManager::instance().notifier(name()));

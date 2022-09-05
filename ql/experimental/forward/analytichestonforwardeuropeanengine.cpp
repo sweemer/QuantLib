@@ -93,15 +93,10 @@ namespace QuantLib {
 
     AnalyticHestonForwardEuropeanEngine::AnalyticHestonForwardEuropeanEngine(
         ext::shared_ptr<HestonProcess> process, Size integrationOrder)
-    : process_(std::move(process)), integrationOrder_(integrationOrder), outerIntegrator_(128) {
-
-        v0_ = process_->v0();
-        rho_ = process_->rho();
-        kappa_ = process_->kappa();
-        theta_ = process_->theta();
-        sigma_ = process_->sigma();
-        s0_ = process_->s0();
-
+    : process_(std::move(process)), integrationOrder_(integrationOrder), 
+      v0_(process_->v0()), rho_(process_->rho()), kappa_(process_->kappa()),
+      theta_(process_->theta()), sigma_(process_->sigma()), s0_(process_->s0()),
+      outerIntegrator_(128) {
         QL_REQUIRE(sigma_ > 0.1,
                    "Very low values (<~10%) for Heston Vol-of-Vol cause numerical issues" \
                    "in this implementation of the propagator function, try using" \

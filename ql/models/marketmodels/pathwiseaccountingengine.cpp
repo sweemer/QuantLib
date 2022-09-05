@@ -36,13 +36,12 @@ namespace QuantLib {
     : evolver_(std::move(evolver)), product_(product),
       pseudoRootStructure_(std::move(pseudoRootStructure)),
       initialNumeraireValue_(initialNumeraireValue), numberProducts_(product->numberOfProducts()),
+      numberRates_(pseudoRootStructure_->numberOfRates()),
+      numberSteps_(pseudoRootStructure_->numberOfSteps()),
       doDeflation_(!product->alreadyDeflated()), numerairesHeld_(product->numberOfProducts()),
       numberCashFlowsThisStep_(product->numberOfProducts()),
       cashFlowsGenerated_(product->numberOfProducts()),
       deflatorAndDerivatives_(pseudoRootStructure_->numberOfRates() + 1) {
-
-        numberRates_ = pseudoRootStructure_->numberOfRates();
-        numberSteps_ = pseudoRootStructure_->numberOfSteps();
 
         Matrix VModel(numberSteps_+1,numberRates_);
 
@@ -719,6 +718,9 @@ namespace QuantLib {
     : evolver_(std::move(evolver)), product_(product),
       pseudoRootStructure_(std::move(pseudoRootStructure)), vegaBumps_(vegaBumps),
       initialNumeraireValue_(initialNumeraireValue), numberProducts_(product->numberOfProducts()),
+      numberRates_(pseudoRootStructure_->numberOfRates()),
+      numberSteps_(pseudoRootStructure_->numberOfSteps()),
+      factors_(pseudoRootStructure_->numberOfFactors()),
       doDeflation_(!product->alreadyDeflated()), numerairesHeld_(product->numberOfProducts()),
       numberCashFlowsThisStep_(product->numberOfProducts()),
       cashFlowsGenerated_(product->numberOfProducts()),
@@ -728,9 +730,6 @@ namespace QuantLib {
 
         stepsDiscounts_[0]=1.0;
 
-        numberRates_ = pseudoRootStructure_->numberOfRates();
-        numberSteps_ = pseudoRootStructure_->numberOfSteps();
-        factors_ = pseudoRootStructure_->numberOfFactors();
         fullDerivatives_.resize(numberRates_);
 
 

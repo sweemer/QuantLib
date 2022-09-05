@@ -49,7 +49,7 @@ namespace QuantLib {
 
         // store swap npv
         swap_->setPricingEngine(engine_);
-        targetNPV_ = swap_->NPV();
+        targetNPV_ = swap_->NPV(); // NOLINT(cppcoreguidelines-prefer-member-initializer)
 
         // build standard swaps
 
@@ -349,7 +349,7 @@ namespace QuantLib {
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // Computes irregular swaption price according to P.J. Hunt, J.E. Kennedy:             //
-    // "Implied interest rate pricing models", Finance Stochast. 2, 275–293 (1998)      //
+    // "Implied interest rate pricing models", Finance Stochast. 2, 275ï¿½293 (1998)      //
     /////////////////////////////////////////////////////////////////////////////////////////
 
     Real  HaganIrregularSwaptionEngine::HKPrice(Basket& basket,ext::shared_ptr<Exercise>& exercise) const {

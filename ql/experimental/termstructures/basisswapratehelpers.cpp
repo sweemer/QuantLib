@@ -132,12 +132,11 @@ namespace QuantLib {
         Handle<YieldTermStructure> discountHandle)
     : RelativeDateRateHelper(basis), tenor_(tenor), settlementDays_(settlementDays),
       calendar_(std::move(calendar)), convention_(convention), endOfMonth_(endOfMonth),
+      baseIndex_(baseIndex), otherIndex_(otherIndex->clone(termStructureHandle_)),
       discountHandle_(std::move(discountHandle)) {
 
         // we need to clone the index whose forecast curve we want to bootstrap
         // and copy the other one
-        baseIndex_ = baseIndex;
-        otherIndex_ = otherIndex->clone(termStructureHandle_);
         otherIndex_->unregisterWith(termStructureHandle_);
 
         registerWith(baseIndex_);

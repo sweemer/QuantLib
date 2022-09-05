@@ -91,8 +91,8 @@ namespace QuantLib {
 
         // Some of the required constant intermediate variables can be calculated now
         // (although anything depending on T will need to be calculated dynamically later)
-        a1_ = 2.0 * v0_ / (sigma_*sigma_);
-        a2_ = 2.0 * kappa_ * theta_ / (sigma_*sigma_);
+        a1_ = 2.0 * v0_ / (sigma_*sigma_); // NOLINT(cppcoreguidelines-prefer-member-initializer)
+        a2_ = 2.0 * kappa_ * theta_ / (sigma_*sigma_); // NOLINT(cppcoreguidelines-prefer-member-initializer)
     }
 
     std::complex<Real> AnalyticContinuousGeometricAveragePriceAsianHestonEngine::z1_f(

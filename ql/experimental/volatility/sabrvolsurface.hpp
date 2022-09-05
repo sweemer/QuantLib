@@ -92,11 +92,11 @@ namespace QuantLib {
         std::vector<Spread> atmRateSpreads_;
         std::vector<std::vector<Handle<Quote> > > volSpreads_;
         //
-        bool isAlphaFixed_;
-        bool isBetaFixed_;
-        bool isNuFixed_;
-        bool isRhoFixed_;
-        bool vegaWeighted_;
+        bool isAlphaFixed_ = false;
+        bool isBetaFixed_ = false;
+        bool isNuFixed_ = false;
+        bool isRhoFixed_ = false;
+        bool vegaWeighted_ = false;
         //
         mutable std::vector<std::array<Real,4>> sabrGuesses_;
     };

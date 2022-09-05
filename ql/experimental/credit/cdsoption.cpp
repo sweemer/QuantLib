@@ -39,17 +39,12 @@ namespace QuantLib {
                    Real recoveryRate,
                    const Handle<YieldTermStructure>& termStructure,
                    Real targetValue)
-            : targetValue_(targetValue), vol_(ext::make_shared<SimpleQuote>(0.0)) {
-
-                Handle<Quote> h(vol_);
-                engine_ = ext::shared_ptr<PricingEngine>(
-                           new BlackCdsOptionEngine(probability, recoveryRate,
-                                                    termStructure, h));
+            : targetValue_(targetValue),
+              vol_(ext::make_shared<SimpleQuote>(0.0)),
+              engine_(ext::make_shared<BlackCdsOptionEngine>(
+                      probability, recoveryRate, termStructure, Handle<Quote>(vol_))),
+              results_(dynamic_cast<const Instrument::results*>(engine_->getResults())) {
                 cdsoption.setupArguments(engine_->getArguments());
-
-                results_ =
-                    dynamic_cast<const Instrument::results*>(
-                                                       engine_->getResults());
             }
             Real operator()(Volatility x) const {
                 vol_->setValue(x);
@@ -57,9 +52,9 @@ namespace QuantLib {
                 return results_->value-targetValue_;
             }
           private:
-            ext::shared_ptr<PricingEngine> engine_;
             Real targetValue_;
             ext::shared_ptr<SimpleQuote> vol_;
+            ext::shared_ptr<PricingEngine> engine_;
             const Instrument::results* results_;
         };
 

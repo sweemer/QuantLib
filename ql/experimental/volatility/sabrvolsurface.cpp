@@ -40,13 +40,6 @@ namespace QuantLib {
 
         // Creation of reference smile sections
 
-        // Hard coded
-        isAlphaFixed_ = false;
-        isBetaFixed_ = false;
-        isNuFixed_ = false;
-        isRhoFixed_ = false;
-        vegaWeighted_ = true;
-
         sabrGuesses_.resize(optionTenors_.size());
 
         for (Size i=0; i<optionTenors_.size(); ++i) {

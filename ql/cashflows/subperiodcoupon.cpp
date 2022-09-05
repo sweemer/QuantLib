@@ -55,7 +55,7 @@ namespace QuantLib {
                            .endOfMonth(index->endOfMonth());
         valueDates_ = sch.dates();
 
-        // fixing dates
+        // NOLINTNEXTLINE(cppcoreguidelines-prefer-member-initializer)
         n_ = valueDates_.size() - 1;
         if (fixingDays_ == 0) {
             fixingDates_ = std::vector<Date>(valueDates_.begin(), valueDates_.end() - 1);

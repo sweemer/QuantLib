@@ -37,6 +37,7 @@ namespace QuantLib {
       numberOfRates_(marketModel->numberOfRates()),
       numberOfFactors_(marketModel_->numberOfFactors()),
       curveState_(marketModel->evolution().rateTimes()),
+      currentStep_(initialStep_),
       forwards_(marketModel->initialRates()),
       initialForwards_(marketModel->initialRates()),
       drifts1_(numberOfRates_), drifts2_(numberOfRates_),
@@ -49,8 +50,6 @@ namespace QuantLib {
         Size steps = marketModel->evolution().numberOfSteps();
 
         generator_ = factory.create(numberOfFactors_, steps-initialStep_);
-
-        currentStep_ = initialStep_;
 
         calculators_.reserve(steps);
         for (Size j=0; j<steps; ++j) {

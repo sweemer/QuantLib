@@ -362,10 +362,8 @@ namespace QuantLib {
                                  const Interpolator& factory = Interpolator())
             : Interpolation::templateImpl<I1,I2>(xBegin, xEnd, yBegin,
                                                  Interpolator::requiredPoints),
-              logY_(xEnd-xBegin) {
-                interpolation_ = factory.interpolate(this->xBegin_,
-                                                     this->xEnd_,
-                                                     logY_.begin());
+              logY_(xEnd-xBegin),
+              interpolation_(factory.interpolate(this->xBegin_, this->xEnd_, logY_.begin())) {
             }
             void update() override {
                 for (Size i=0; i<logY_.size(); ++i) {

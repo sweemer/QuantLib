@@ -38,6 +38,7 @@ namespace QuantLib {
     : basisSystem_(std::move(basisSystem)), basisCoefficients_(std::move(basisCoefficients)),
       exercise_(std::move(exercise)), control_(std::move(control)), numeraires_(numeraires) {
 
+        // NOLINTBEGIN(cppcoreguidelines-prefer-member-initializer)
         checkCompatibility(evolution, numeraires);
         relevantTimes_ = evolution.evolutionTimes();
 
@@ -66,6 +67,7 @@ namespace QuantLib {
                 }
             }
         }
+        // NOLINTEND(cppcoreguidelines-prefer-member-initializer)
 
         const std::vector<Time>& rateTimes = evolution.rateTimes();
         std::vector<Time> rebateTimes = exercise_->possibleCashFlowTimes();

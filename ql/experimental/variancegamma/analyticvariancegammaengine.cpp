@@ -41,8 +41,8 @@ namespace QuantLib {
                     Real nu,
                     Real theta)
           : payoff_(std::move(payoff)), s0_(s0), t_(t), riskFreeDiscount_(riskFreeDiscount),
-            dividendDiscount_(dividendDiscount), sigma_(sigma), nu_(nu), theta_(theta) {
-              omega_ = std::log(1.0 - theta_ * nu_ - (sigma_ * sigma_ * nu_) / 2.0) / nu_;
+            dividendDiscount_(dividendDiscount), sigma_(sigma), nu_(nu), theta_(theta),
+            omega_(std::log(1.0 - theta_ * nu_ - (sigma_ * sigma_ * nu_) / 2.0) / nu_) {
               // We can precompute the denominator of the gamma pdf (does not depend on x)
               // shape = t_/nu_, scale = nu_
               GammaFunction gf;

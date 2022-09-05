@@ -33,9 +33,7 @@ namespace QuantLib {
                                    const Real unit)
     : exposure_(std::move(exposure)), pd_(std::move(defaultProbability)),
       sector_(std::move(sector)), relativeDefaultVariance_(std::move(relativeDefaultVariance)),
-      correlation_(std::move(correlation)), unit_(unit) {
-
-        m_ = exposure_.size();
+      correlation_(std::move(correlation)), unit_(unit), m_(exposure_.size()) {
 
         QL_REQUIRE(m_ > 0, "no exposures given");
         QL_REQUIRE(m_ == pd_.size(), "number of exposures ("

@@ -100,10 +100,7 @@ namespace QuantLib {
     RandomizedLDS<LDS, PRS>::RandomizedLDS(const LDS& ldsg)
     : ldsg_(ldsg), pristineldsg_(ldsg),
       prsg_(ldsg_.dimension()), dimension_(ldsg_.dimension()),
-      x(std::vector<Real> (dimension_), 1.0), randomizer_(std::vector<Real> (dimension_), 1.0) {
-
-        randomizer_ = prsg_.nextSequence();
-
+      x(std::vector<Real> (dimension_), 1.0), randomizer_(prsg_.nextSequence()) {
     }
 
     template <class LDS, class PRS>
@@ -112,9 +109,7 @@ namespace QuantLib {
                                            BigNatural prsSeed)
     : ldsg_(dimensionality, ldsSeed), pristineldsg_(dimensionality, ldsSeed),
       prsg_(dimensionality, prsSeed), dimension_(dimensionality),
-      x(std::vector<Real> (dimensionality), 1.0), randomizer_(std::vector<Real> (dimensionality), 1.0) {
-
-        randomizer_ = prsg_.nextSequence();
+      x(std::vector<Real> (dimensionality), 1.0), randomizer_(prsg_.nextSequence()) {
     }
 
     template <class LDS, class PRS>

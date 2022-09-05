@@ -672,6 +672,7 @@ namespace QuantLib {
         for (Real factorWeight : factorWeights)
             idiosyncFctrs_.push_back(std::sqrt(1. - factorWeight * factorWeight));
         //convert row to column vector....
+        // NOLINTNEXTLINE(cppcoreguidelines-prefer-member-initializer)
         copula_ = copulaType(factorWeights_, ini);
     }
 
