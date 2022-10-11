@@ -48,6 +48,7 @@ namespace QuantLib {
         for (Size k=n-1; k >=1; --k) {
             while (!offDiagIsZero(k, e)) {
                 Size l = k;
+                // NOLINTNEXTLINE(bugprone-inc-dec-in-conditions)
                 while (--l > 0 && !offDiagIsZero(l,e));
                 iter_++;
 
