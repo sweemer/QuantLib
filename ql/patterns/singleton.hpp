@@ -75,13 +75,12 @@ namespace QuantLib {
 #ifdef QL_ENABLE_SESSIONS
 
 #if defined(__GNUC__) && (((__GNUC__ == 8) && (__GNUC_MINOR__ < 4)) || (__GNUC__ < 8))
-
 #pragma message("Singleton::instance() is always compiled with `-O0` for versions of GCC below 8.4 when sessions are enabled.")
 #pragma message("This is to work around the following compiler bug: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91757")
 #pragma message("If possible, please update your compiler to a more recent version.")
-
 #pragma GCC push_options
 #pragma GCC optimize("-O0")
+#endif
 
     template <class T, class Global>
     T& Singleton<T, Global>::instance() {
@@ -94,6 +93,7 @@ namespace QuantLib {
         }
     }
 
+#if defined(__GNUC__) && (((__GNUC__ == 8) && (__GNUC_MINOR__ < 4)) || (__GNUC__ < 8))
 #pragma GCC pop_options
 #endif
 
