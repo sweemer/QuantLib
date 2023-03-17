@@ -333,8 +333,8 @@ test_suite* init_unit_test_suite(int, char* []) {
            << (settings.includeTodaysCashFlows()
                ? (*settings.includeTodaysCashFlows()
                     ? "today's cashflows are included,\n"
-                    : "today's cashflows are excluded,\n"))
-               : ""
+                    : "today's cashflows are excluded,\n")
+               : "")
            << (settings.enforcesTodaysHistoricFixings()
                ? "today's historic fixings are enforced."
                : "today's historic fixings are not enforced.")
