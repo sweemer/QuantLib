@@ -73,7 +73,7 @@ namespace QuantLib {
                 passedDividends,
                 process_->riskFreeRate(),
                 process_->dividendYield(),
-                [&](Date d){ return process_->time(d); },
+                [this](Date d){ return process_->time(d); },
                 maturity);
 
         const Real divAdj = escrowedDividendAdj

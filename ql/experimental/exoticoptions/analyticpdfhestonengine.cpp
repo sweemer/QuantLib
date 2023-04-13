@@ -54,7 +54,7 @@ namespace QuantLib {
         const Real drift = x0 + std::log(rD/qD);
 
         results_.value = GaussLobattoIntegral(maxIntegrationIterations_, integrationEps_)(
-            [&](Real _x){ return weightedPayoff(_x, t); },
+            [t, this](Real _x){ return weightedPayoff(_x, t); },
             -xMax+drift, xMax+drift);
     }
 

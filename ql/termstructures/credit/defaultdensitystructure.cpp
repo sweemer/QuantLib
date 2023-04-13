@@ -72,7 +72,7 @@ namespace QuantLib {
         static GaussChebyshevIntegration integral(48);
         // the Gauss-Chebyshev quadratures integrate over [-1,1],
         // hence the remapping (and the Jacobian term t/2)
-        Probability P = 1.0 - integral(remap_t([&](Time tau){ return defaultDensityImpl(tau); }, t)) * t / 2.0;
+        Probability P = 1.0 - integral(remap_t([this](Time tau){ return defaultDensityImpl(tau); }, t)) * t / 2.0;
         //QL_ENSURE(P >= 0.0, "negative survival probability");
         return std::max<Real>(P, 0.0);
     }

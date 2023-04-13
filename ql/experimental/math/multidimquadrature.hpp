@@ -60,7 +60,7 @@ namespace QuantLib {
                 Integer i = order()-1;
                 std::vector<Real> term = f(x_[i]);// potential copy! @#$%^!!!
                 std::for_each(term.begin(), term.end(),
-                              [&](Real x) -> Real { return x * w_[i]; });
+                              [i, this](Real x) -> Real { return x * w_[i]; });
                 std::vector<Real> sum = term;
            
                 for (i--; i >= 0; --i) {
@@ -68,7 +68,7 @@ namespace QuantLib {
                     // sum[j] += term[j] * w_[i];
                     std::transform(term.begin(), term.end(), sum.begin(), 
                                    sum.begin(),
-                                   [&](Real x, Real y) -> Real { return w_[i]*x + y; });
+                                   [i, this](Real x, Real y) -> Real { return w_[i]*x + y; });
                 }
                 return sum;
             }
@@ -128,11 +128,11 @@ namespace QuantLib {
         template<Size levelSpawn>
         void spawnFcts() const {
             integrationEntries_[levelSpawn-1] =
-                [&](ext::function<Real (const std::vector<Real>&)> f, Real x){
+                [this](ext::function<Real (const std::vector<Real>&)> f, Real x){
                     return scalarIntegrator<levelSpawn>(f, x);
                 };
             integrationEntriesVR_[levelSpawn-1] =
-                [&](const ext::function<std::vector<Real>(const std::vector<Real>&)>& f, Real x){
+                [this](const ext::function<std::vector<Real>(const std::vector<Real>&)>& f, Real x){
                     return vectorIntegratorVR<levelSpawn>(f, x);
                 };
             spawnFcts<levelSpawn-1>();
@@ -147,7 +147,7 @@ namespace QuantLib {
             const Real mFctr) const 
         {
             varBuffer_[intgDepth-1] = mFctr;
-            return integral_([&](Real x){ return scalarIntegrator<intgDepth-1>(f, x); });
+            return integral_([&f, this](Real x){ return scalarIntegrator<intgDepth-1>(f, x); });
         }
 
         template <int intgDepth>
@@ -156,7 +156,7 @@ namespace QuantLib {
             const Real mFctr) const 
         {
             varBuffer_[intgDepth-1] = mFctr;
-            return integralV_([&](Real x){ return vectorIntegratorVR<intgDepth-1>(f, x); });
+            return integralV_([&f, this](Real x){ return vectorIntegratorVR<intgDepth-1>(f, x); });
         }
 
         // Same object for all dimensions poses problems when using the 
@@ -190,7 +190,7 @@ namespace QuantLib {
         const ext::function<Real (const std::vector<Real>& v1)>& f) const
     {
         // integration entry level is selected now
-        return integral_([&](Real x){ return integrationEntries_[dimension_-1](ext::cref(f), x); });
+        return integral_([&f, this](Real x){ return integrationEntries_[dimension_-1](ext::cref(f), x); });
     }
 
     // Scalar integrand version (merge with vector case?)
@@ -202,7 +202,7 @@ namespace QuantLib {
         // call vector quadrature integration with the function and start 
         // values, kicks in recursion over the dimensions of the integration
         // variable.
-        return integral_([&](Real x){ return integrationEntries_[dimension_-1](ext::cref(f), x); });
+        return integral_([&f, this](Real x){ return integrationEntries_[dimension_-1](ext::cref(f), x); });
     }
 
     // Vector integrand version
@@ -210,7 +210,7 @@ namespace QuantLib {
     inline std::vector<Real> GaussianQuadMultidimIntegrator::integrate<std::vector<Real>>(
         const ext::function<std::vector<Real> (const std::vector<Real>& v1)>& f) const
     {
-        return integralV_([&](Real x){ return integrationEntriesVR_[dimension_-1](ext::cref(f), x); });
+        return integralV_([&f, this](Real x){ return integrationEntriesVR_[dimension_-1](ext::cref(f), x); });
     } 
 
     //! Terminal integrand; scalar function version
@@ -237,10 +237,10 @@ namespace QuantLib {
     //! Terminal level:
     template<>
     inline void GaussianQuadMultidimIntegrator::spawnFcts<1>() const {
-        integrationEntries_[0] = [&](const ext::function<Real(const std::vector<Real>&)>& f,
+        integrationEntries_[0] = [this](const ext::function<Real(const std::vector<Real>&)>& f,
                                      Real x) { return scalarIntegrator<1>(f, x); };
         integrationEntriesVR_[0] =
-            [&](const ext::function<std::vector<Real>(const std::vector<Real>&)>& f, Real x) {
+            [this](const ext::function<std::vector<Real>(const std::vector<Real>&)>& f, Real x) {
                 return vectorIntegratorVR<1>(f, x);
             };
     }

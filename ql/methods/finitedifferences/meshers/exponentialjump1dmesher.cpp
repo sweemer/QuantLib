@@ -78,7 +78,7 @@ namespace QuantLib {
         const Real xmin = std::min(x, 1.0e-100);
 
         return GaussLobattoIntegral(1000000, 1e-12)(
-            [&](Real _x){ return jumpSizeDensity(_x, t); },
+            [t, this](Real _x){ return jumpSizeDensity(_x, t); },
             xmin, std::max(x, xmin));
     }
 
@@ -92,7 +92,7 @@ namespace QuantLib {
             (std::pow(xmin, a)/a - std::pow(xmin, a+1)/(a+1))/gammaValue;
         
         return lowerEps + GaussLobattoIntegral(10000, 1e-12)(
-            [&](Real _x){ return jumpSizeDensity(_x); },
+            [this](Real _x){ return jumpSizeDensity(_x); },
             xmin/eta_, std::max(x, xmin/eta_));
     }
 }

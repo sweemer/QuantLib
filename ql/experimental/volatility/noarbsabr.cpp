@@ -100,7 +100,7 @@ NoArbSabrModel::NoArbSabrModel(const Real expiryTime, const Real forward,
         Brent b;
         Real start = std::sqrt(externalForward_ - detail::NoArbSabrModel::strike_min);
         Real tmp =
-            b.solve([&](Real x){ return forwardError(x); },
+            b.solve([this](Real x){ return forwardError(x); },
                     detail::NoArbSabrModel::forward_accuracy, start,
                     std::min(detail::NoArbSabrModel::forward_search_step, start / 2.0));
         forward_ = tmp * tmp + detail::NoArbSabrModel::strike_min;

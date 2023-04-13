@@ -218,7 +218,7 @@ namespace QuantLib {
             if (pUncond < 1.e-10) return 0.;
 
             return integratedExpectedValue(
-                [&](const std::vector<Real>& v1) {
+                [pUncond, iName, this](const std::vector<Real>& v1) {
                     return conditionalDefaultProbabilityInvP(
                         inverseCumulativeY(pUncond, iName), iName, v1);
                 });
@@ -236,7 +236,7 @@ namespace QuantLib {
         */
         Probability probAtLeastNEvents(Size n, const Date& date) const {
             return integratedExpectedValue(
-                [&](const std::vector<Real>& v1) {
+                [n, date, this](const std::vector<Real>& v1) {
                     return conditionalProbAtLeastNEvents(n, date, v1);
                 });
         }
@@ -266,7 +266,7 @@ namespace QuantLib {
         Real E1i1j; // joint default covariance term
         if(iNamei !=iNamej) {
             E1i1j = integratedExpectedValue(
-                [&](const std::vector<Real>& v1) {
+                [invPi, invPj, iNamei, iNamej, this](const std::vector<Real>& v1) {
                     return condProbProduct(invPi, invPj, iNamei, iNamej, v1); });
         }else{
             E1i1j = pi;

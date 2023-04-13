@@ -87,7 +87,7 @@ namespace QuantLib {
                     copula_->inverseCumulativeY(invProbs[iName], iName);
 
             return copula_->integratedExpectedValueV(
-                [&](const std::vector<Real>& v1) {
+                [&date, &notionals, &invProbs, this](const std::vector<Real>& v1) {
                     return lossProbability(date, notionals, invProbs, v1);
                 });
         }
@@ -274,7 +274,7 @@ namespace QuantLib {
         std::vector<Real> notionals = basket_->remainingNotionals(d);
 
         Real aveLossFrct = copula_->integratedExpectedValue(
-            [&](const std::vector<Real>& v1) {
+            [&d, &notionals, this](const std::vector<Real>& v1) {
                 return averageLoss(d, notionals, v1);
             });
 
@@ -317,9 +317,9 @@ namespace QuantLib {
         for(Size iName=0; iName<invProbs.size(); iName++)
             invProbs[iName] = 
                 copula_->inverseCumulativeY(invProbs[iName], iName);
-            
+
         return copula_->integratedExpectedValue(
-            [&](const std::vector<Real>& v1) {
+            [&d, &lossVals, &notionals, &invProbs, this](const std::vector<Real>& v1) {
                 return condTrancheLoss(d, lossVals, notionals, invProbs, v1);
             });
     }

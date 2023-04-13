@@ -75,10 +75,10 @@ namespace QuantLib {
         Size indexSystemic = 0;
         std::transform(probs.begin(), probs.begin() + varianceFactors_.size()-1,
                        result.begin(),
-                       [&](Probability p) { return inverseCumulativeDensity(p, indexSystemic++); });
+                       [&indexSystemic, this](Probability p) { return inverseCumulativeDensity(p, indexSystemic++); });
         std::transform(probs.begin() + varianceFactors_.size()-1, probs.end(),
                        result.begin()+ varianceFactors_.size()-1,
-                       [&](Probability p) { return inverseCumulativeZ(p); });
+                       [this](Probability p) { return inverseCumulativeZ(p); });
         return result;
     }
 

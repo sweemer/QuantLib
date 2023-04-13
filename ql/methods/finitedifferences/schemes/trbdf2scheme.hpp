@@ -122,8 +122,8 @@ namespace QuantLib {
             fn = map_->solve_splitting(0, f, -beta_);
         }
         else {
-            auto preconditioner = [&](const Array& _a){ return map_->preconditioner(_a, -beta_); };
-            auto applyF = [&](const Array& _a){ return apply(_a); };
+            auto preconditioner = [this](const Array& _a){ return map_->preconditioner(_a, -beta_); };
+            auto applyF = [this](const Array& _a){ return apply(_a); };
 
             if (solverType_ == BiCGstab) {
                 const BiCGStabResult result =

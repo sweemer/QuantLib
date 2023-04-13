@@ -228,7 +228,7 @@ namespace QuantLib {
                     K3 += w_i[i] * stv*std::exp(r*tau-r*m)*phi(dpm.second);
                 }
             } else {
-                K12 = (*integrator)([&, this](Real y) -> Real {
+                K12 = (*integrator)([tau, stv, b, this](Real y) -> Real {
                     const Real m = 0.25*tau*squared(1+y);
                     const Real df = std::exp(q*tau - q*m);
 
@@ -244,7 +244,7 @@ namespace QuantLib {
                     }
                 }, -1, 1);
 
-                K3 = (*integrator)([&, this](Real y) -> Real {
+                K3 = (*integrator)([tau, stv, b, this](Real y) -> Real {
                     const Real m = 0.25*tau*squared(1+y);
                     const Real df = std::exp(r*tau-r*m);
 
@@ -343,7 +343,7 @@ namespace QuantLib {
                 ni *= c;
                 di *= c;
             } else {
-                ni = (*integrator)([&, this](Real u) -> Real {
+                ni = (*integrator)([tau, b, this](Real u) -> Real {
                 	const Real df = std::exp(r*u);
                     if (u >= tau*(1 - 5*QL_EPSILON)) {
                         if (close_enough(b, B(u)))
@@ -354,7 +354,7 @@ namespace QuantLib {
                     else
                         return df*Phi(d(tau - u, b/B(u)).second);
                 }, 0, tau);
-                di = (*integrator)([&, this](Real u) -> Real {
+                di = (*integrator)([tau, b, this](Real u) -> Real {
                 	const Real df = std::exp(q*u);
                     if (u >= tau*(1 - 5*QL_EPSILON)) {
                         if (close_enough(b, B(u)))

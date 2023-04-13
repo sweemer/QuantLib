@@ -46,7 +46,7 @@ namespace QuantLib {
         Real operator()(const ext::function<Real (Real, Real)>& f,
                         const std::pair<Real, Real>& a,
                         const std::pair<Real, Real>& b) const {
-            return (*integratorX_)([&](Real x) { return g(f, x, a.second, b.second); },
+            return (*integratorX_)([&f, &a, &b, this](Real x) { return g(f, x, a.second, b.second); },
                                    a.first, b.first);
         }
 

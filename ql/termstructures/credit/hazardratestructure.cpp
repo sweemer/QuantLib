@@ -78,7 +78,7 @@ namespace QuantLib {
         static GaussChebyshevIntegration integral(48);
         // the Gauss-Chebyshev quadratures integrate over [-1,1],
         // hence the remapping (and the Jacobian term t/2)
-        return std::exp(-integral(remap([&](Time tau){ return hazardRateImpl(tau); }, t)) * t/2.0);
+        return std::exp(-integral(remap([this](Time tau){ return hazardRateImpl(tau); }, t)) * t/2.0);
     }
 
 }

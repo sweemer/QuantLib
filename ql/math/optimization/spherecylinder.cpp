@@ -122,7 +122,7 @@ namespace QuantLib {
 
          y1 = BrentMinimize(
                 bottomValue_, x1, topValue_,tolerance, maxIterations,
-                [&](Real x){ return objectiveFunction(x); });
+                [this](Real x){ return objectiveFunction(x); });
          y2 =std::sqrt(s_*s_ - (y1-alpha_)*(y1-alpha_));
          y3= std::sqrt(r_*r_ - y1*y1-y2*y2);
     }

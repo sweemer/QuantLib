@@ -53,8 +53,8 @@ namespace QuantLib {
             a = map_->solve_splitting(0, a, -theta*dt_);
         }
         else {
-            auto preconditioner = [&](const Array& _a){ return map_->preconditioner(_a, -theta*dt_); };
-            auto applyF = [&](const Array& _a){ return apply(_a, theta); };
+            auto preconditioner = [theta, this](const Array& _a){ return map_->preconditioner(_a, -theta*dt_); };
+            auto applyF = [theta, this](const Array& _a){ return apply(_a, theta); };
 
             if (solverType_ == BiCGstab) {
                 const BiCGStabResult result =

@@ -49,7 +49,7 @@ namespace QuantLib {
             scalingValue_/=strikePayoff->strike();
         }
 
-        v_.emplace_back([&](const Array& state) { return this->payoff(state); });
+        v_.emplace_back([this](const Array& state) { return this->payoff(state); });
     }
 
     Array AmericanBasketPathPricer::state(const MultiPath& path,

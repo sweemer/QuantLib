@@ -383,7 +383,7 @@ namespace QuantLib {
          upper = 2.0*cornishFisherEps(*this, v0_, v, t,1e-3);
 
          return SegmentIntegral(100)(
-               [&](Real xi){ return int_ph(*this, a, x, xi, v0_, v, t); },
+               [a, x, v, t, this](Real xi){ return int_ph(*this, a, x, xi, v0_, v, t); },
                QL_EPSILON, upper)
                * boost::math::pdf(
                      boost::math::non_central_chi_squared_distribution<Real>(
@@ -525,7 +525,7 @@ namespace QuantLib {
                 std::max(0.0, CumulativeNormalDistribution()(dw[2])));
 
             const Real vds = Brent().solve(
-                [&](Real xi){ return cdf_nu_ds_minus_x(*this, xi, nu_0, nu_t, dt, discretization_, x); },
+                [nu_0, nu_t, dt, x, this](Real xi){ return cdf_nu_ds_minus_x(*this, xi, nu_0, nu_t, dt, discretization_, x); },
                 1e-5, theta_*dt, 0.1*theta_*dt);
 
             const Real vdw

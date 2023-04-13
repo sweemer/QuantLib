@@ -329,7 +329,7 @@ namespace QuantLib {
         Real invRR = inverseCumulativeY(recoveries_[iName], iName + numNames_);
 
         return integratedExpectedValue(
-            [&](const std::vector<Real>& v){
+            [invP, invRR, iName, this](const std::vector<Real>& v){
                 return conditionalExpLossRRInv(invP, invRR, iName, v);
             });
     }

@@ -151,7 +151,7 @@ namespace QuantLib {
             }
 
             return 1.0-GaussLobattoIntegral(maxIter_, 0.1*localVolProbEps_)(
-                [&](Real _x){ return pdf(_x, t); }, x, xr);
+                [t, this](Real _x){ return pdf(_x, t); }, x, xr);
         }
         else {
             while (pdf(xl, t) > 0.01*localVolProbEps_)
@@ -161,7 +161,7 @@ namespace QuantLib {
             }
 
             return GaussLobattoIntegral(maxIter_, 0.1*localVolProbEps_)(
-                [&](Real _x){ return pdf(_x, t); }, xl, x);
+                [t, this](Real _x){ return pdf(_x, t); }, xl, x);
         }
     }
 

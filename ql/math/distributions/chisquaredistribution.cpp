@@ -125,7 +125,7 @@ namespace QuantLib {
         // use a Brent solver for the rest
         Brent solver;
         solver.setMaxEvaluations(evaluations);
-        return solver.solve([&](Real y) { return nonCentralDist_(y) - x; },
+        return solver.solve([x, this](Real y) { return nonCentralDist_(y) - x; },
                             accuracy_, 0.75*upper, 
                             (evaluations == maxEvaluations_)? 0.0: Real(0.5*upper),
                             upper);

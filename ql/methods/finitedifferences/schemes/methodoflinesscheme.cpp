@@ -45,7 +45,7 @@ namespace QuantLib {
 
         const std::vector<Real> v =
            AdaptiveRungeKutta<Real>(eps_, relInitStepSize_*dt_)(
-               [&](Time _t, const std::vector<Real>& _u){ return apply(_t, _u); },
+               [this](Time _t, const std::vector<Real>& _u){ return apply(_t, _u); },
                std::vector<Real>(a.begin(), a.end()),
                t, std::max(0.0, t-dt_));
 

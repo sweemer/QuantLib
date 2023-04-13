@@ -114,7 +114,7 @@ namespace QuantLib {
           : rk_(tol), points_(points), betas_(betas) {}
 
             Real solve(Real a, Real y0, Real x0, Real x1) {
-                AdaptiveRungeKutta<>::OdeFct1d odeFct([&](Real x, Real y){ return jac(a, x, y); });
+                AdaptiveRungeKutta<>::OdeFct1d odeFct([a, this](Real x, Real y){ return jac(a, x, y); });
                 return rk_(odeFct, y0, x0, x1);
             }
 

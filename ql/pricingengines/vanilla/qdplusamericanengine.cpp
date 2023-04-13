@@ -350,7 +350,7 @@ namespace QuantLib {
 
         return ext::make_shared<ChebyshevInterpolation>(
             interpolationPoints_,
-            [&, this](Real z) {
+            [S, K, r, q, vol, T, xmax, this](Real z) {
                 const Real x_sq = 0.25*T*squared(1+z);
                 return squared(std::log(
                     this->putExerciseBoundaryAtTau(S, K, r, q, vol, T, x_sq)

@@ -70,7 +70,7 @@ std::vector<Real> ZabrModel::lognormalVolatility(const std::vector<Real> &strike
     std::vector<Real> x_ = x(strikes);
     std::vector<Real> result(strikes.size());
     std::transform(strikes.begin(), strikes.end(), x_.begin(), result.begin(),
-                   [&](Real _k, Real _x) { return lognormalVolatilityHelper(_k, _x); });
+                   [this](Real _k, Real _x) { return lognormalVolatilityHelper(_k, _x); });
     return result;
 }
 
@@ -89,7 +89,7 @@ std::vector<Real> ZabrModel::normalVolatility(const std::vector<Real> &strikes) 
     std::vector<Real> x_ = x(strikes);
     std::vector<Real> result(strikes.size());
     std::transform(strikes.begin(), strikes.end(), x_.begin(), result.begin(),
-                   [&](Real _k, Real _x) { return normalVolatilityHelper(_k, _x); });
+                   [this](Real _k, Real _x) { return normalVolatilityHelper(_k, _x); });
     return result;
 }
 
@@ -108,7 +108,7 @@ std::vector<Real> ZabrModel::localVolatility(const std::vector<Real> &f) const {
     std::vector<Real> x_ = x(f);
     std::vector<Real> result(f.size());
     std::transform(f.begin(), f.end(), x_.begin(), result.begin(),
-                   [&](Real _f, Real _x) { return localVolatilityHelper(_f, _x); });
+                   [this](Real _f, Real _x) { return localVolatilityHelper(_f, _x); });
     return result;
 }
 
@@ -319,7 +319,7 @@ std::vector<Real> ZabrModel::x(const std::vector<Real> &strikes) const {
                                       // the constructor
     std::vector<Real> y(strikes.size()), result(strikes.size());
     std::transform(strikes.rbegin(), strikes.rend(), y.begin(),
-                   [&](Real _k) { return this->y(_k); });
+                   [this](Real _k) { return this->y(_k); });
 
     if (close(gamma_, 1.0)) {
         for (Size m = 0; m < y.size(); m++) {
@@ -340,7 +340,7 @@ std::vector<Real> ZabrModel::x(const std::vector<Real> &strikes) const {
             Real y0 = 0.0, u0 = 0.0;
             for (int m = ynz + (dir == -1 ? -1 : 0);
                  dir == -1 ? m >= 0 : m < (int)y.size(); m += dir) {
-                Real u = rk([&](Real _y, Real _u){ return F(_y, _u); },
+                Real u = rk([this](Real _y, Real _u){ return F(_y, _u); },
                             u0, y0, y[m]);
                 result[y.size() - 1 - m] = u * pow(alpha_, 1.0 - gamma_);
                 u0 = u;

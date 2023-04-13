@@ -49,10 +49,10 @@ namespace QuantLib {
             const Size j = i % (2*tMinUp_ + tMinDown_);
 
             if (j < tMinUp_) {
-                stateEvolveFcts_[i] = [&](Real x){ return evolveAtPMin(x); };
+                stateEvolveFcts_[i] = [this](Real x){ return evolveAtPMin(x); };
             }
             else if (j < 2*tMinUp_){
-                stateEvolveFcts_[i] = [&](Real x) { return evolveAtPMax(x); };
+                stateEvolveFcts_[i] = [this](Real x) { return evolveAtPMax(x); };
             }
         }
     }
