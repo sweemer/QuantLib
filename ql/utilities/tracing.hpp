@@ -24,45 +24,6 @@
 #ifndef quantlib_tracing_hpp
 #define quantlib_tracing_hpp
 
-#include <ql/types.hpp>
-#include <ql/errors.hpp>
-#include <ql/patterns/singleton.hpp>
-#include <boost/current_function.hpp>
-#include <iosfwd>
-
-namespace QuantLib {
-
-    namespace detail {
-
-        class Tracing : public Singleton<Tracing> {
-            friend class QuantLib::Singleton<Tracing>;
-          private:
-            Tracing();  // NOLINT(modernize-use-equals-delete)
-          public:
-            void enable() {
-                #if defined(QL_ENABLE_TRACING)
-                enabled_ = true;
-                #else
-                QL_FAIL("tracing support not available");
-                #endif
-            }
-            void disable() { enabled_ = false; }
-            void setStream(std::ostream& stream) { out_ = &stream; }
-            bool enabled() const { return enabled_; }
-            std::ostream& stream() { return *out_; }
-            Integer depth() const { return depth_; }
-            void down() { depth_++; }
-            void up() { depth_--; }
-          private:
-            std::ostream* out_;
-            bool enabled_ = false;
-            Integer depth_ = 0;
-        };
-
-    }
-
-}
-
 /*! \addtogroup macros
     @{
 */
@@ -216,6 +177,45 @@ namespace QuantLib {
 /*! @} */
 
 #if defined(QL_ENABLE_TRACING)
+
+#include <ql/types.hpp>
+#include <ql/errors.hpp>
+#include <ql/patterns/singleton.hpp>
+#include <boost/current_function.hpp>
+#include <iosfwd>
+
+namespace QuantLib {
+
+    namespace detail {
+
+        class Tracing : public Singleton<Tracing> {
+            friend class QuantLib::Singleton<Tracing>;
+          private:
+            Tracing();  // NOLINT(modernize-use-equals-delete)
+          public:
+            void enable() {
+                #if defined(QL_ENABLE_TRACING)
+                enabled_ = true;
+                #else
+                QL_FAIL("tracing support not available");
+                #endif
+            }
+            void disable() { enabled_ = false; }
+            void setStream(std::ostream& stream) { out_ = &stream; }
+            bool enabled() const { return enabled_; }
+            std::ostream& stream() { return *out_; }
+            Integer depth() const { return depth_; }
+            void down() { depth_++; }
+            void up() { depth_--; }
+          private:
+            std::ostream* out_;
+            bool enabled_ = false;
+            Integer depth_ = 0;
+        };
+
+    }
+
+}
 
 #define QL_DEFAULT_TRACER   QuantLib::detail::Tracing::instance()
 

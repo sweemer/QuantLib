@@ -27,7 +27,6 @@
 
 #include <ql/qldefines.hpp>
 #include <ql/shared_ptr.hpp>
-#include <boost/assert.hpp>
 #include <boost/current_function.hpp>
 #include <exception>
 #include <sstream>
