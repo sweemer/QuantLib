@@ -37,4 +37,15 @@ if (MSVC)
         # In c++17 std::iterator is deprecated. As of boost 1.81 boost::ublas has not provided a fix for this.
         add_compile_definitions(_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING)
     endif()
+
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "NVHPC")
+
+    # Display the error message number in any diagnostic messages that are generated. The option may be used to determine the error number to be used when overriding the severity of a diagnostic message.
+    add_compile_options(--display_error_number)
+
+    # warning #111-D: statement is unreachable
+    # warning #612-D: overloaded virtual function is only partially overridden in class
+    # warning #998-D: function is hidden -- virtual function override intended?
+    add_compile_options(--diag_suppress=111,612,998)
+
 endif()

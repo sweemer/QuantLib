@@ -733,13 +733,14 @@ namespace QuantLib {
                                  settlementDate, npvDate);
         }
 
+#if defined(QL_EXTRA_SAFETY_CHECKS)
         struct CashFlowLater {
             bool operator()(const ext::shared_ptr<CashFlow> &c,
                             const ext::shared_ptr<CashFlow> &d) {
                 return c->date() > d->date();
             }
         };
-
+#endif
     } // anonymous namespace ends here
 
     CashFlows::IrrFinder::IrrFinder(const Leg& leg,
