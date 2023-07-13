@@ -30,6 +30,11 @@
 #include <ql/qldefines.hpp>
 #include <iosfwd>
 
+#if (defined(__GNUC__) && !defined(__clang__)) && (((__GNUC__ == 6) && (__GNUC_MINOR__ < 1)) || (__GNUC__ < 6))
+#include <functional>
+#include <type_traits>
+#endif
+
 namespace QuantLib {
 
     //! Units used to describe time periods
@@ -50,5 +55,21 @@ namespace QuantLib {
                              const TimeUnit&);
 
 }
+
+#if (defined(__GNUC__) && !defined(__clang__)) && (((__GNUC__ == 6) && (__GNUC_MINOR__ < 1)) || (__GNUC__ < 6))
+
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60970
+
+namespace std {
+    template<>
+    struct hash<QuantLib::TimeUnit> {
+        using underlying_type = std::underlying_type_t<QuantLib::TimeUnit>;
+        std::size_t operator()(const QuantLib::TimeUnit& timeUnit) const noexcept {
+            return std::hash<underlying_type>{}(static_cast<underlying_type>(timeUnit));
+        }
+    };
+}
+
+#endif
 
 #endif

@@ -8,8 +8,9 @@ this_include_HEADERS = \
     dataformatters.hpp \
     dataparsers.hpp \
     disposable.hpp \
+    hash_combine.hpp \
     null.hpp \
-	null_deleter.hpp \
+    null_deleter.hpp \
     observablevalue.hpp \
     steppingiterator.hpp \
     tracing.hpp \

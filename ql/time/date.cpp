@@ -28,17 +28,13 @@
 #include <ql/utilities/dataformatters.hpp>
 #include <ql/errors.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <functional>
 #include <iomanip>
 #include <ctime>
 
 #ifdef QL_HIGH_RESOLUTION_DATE
-#if BOOST_VERSION < 106700
-#include <boost/functional/hash.hpp>
-#else
-#include <boost/container_hash/hash.hpp>
-#endif
+#include <ql/utilities/hash_combine.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 #endif
 
 #if defined(BOOST_NO_STDC_NAMESPACE)
@@ -846,8 +842,8 @@ namespace QuantLib {
     std::size_t hash_value(const Date& d) {
 #ifdef QL_HIGH_RESOLUTION_DATE
         std::size_t seed = 0;
-        boost::hash_combine(seed, d.serialNumber());
-        boost::hash_combine(seed, d.dateTime().time_of_day().total_nanoseconds());
+        hash_combine(seed, d.serialNumber());
+        hash_combine(seed, d.dateTime().time_of_day().total_nanoseconds());
         return seed;
 #else
         return std::hash<Date::serial_type>()(d.serialNumber());

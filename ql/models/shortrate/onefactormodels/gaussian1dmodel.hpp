@@ -36,17 +36,12 @@
 #include <ql/time/period.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/stochasticprocess.hpp>
+#include <ql/utilities/hash_combine.hpp>
 #include <ql/utilities/null.hpp>
 #include <ql/patterns/lazyobject.hpp>
 
 #ifdef GAUSS1D_ENABLE_NTL
 #include <boost/math/bindings/rr.hpp>
-#endif
-
-#if BOOST_VERSION < 106700
-#include <boost/functional/hash.hpp>
-#else
-#include <boost/container_hash/hash.hpp>
 #endif
 
 #include <unordered_map>
@@ -166,10 +161,10 @@ class Gaussian1dModel : public TermStructureConsistentModel, public LazyObject {
     struct CachedSwapKeyHasher {
         std::size_t operator()(CachedSwapKey const &x) const {
             std::size_t seed = 0;
-            boost::hash_combine(seed, x.index->name());
-            boost::hash_combine(seed, x.fixing.serialNumber());
-            boost::hash_combine(seed, x.tenor.length());
-            boost::hash_combine(seed, x.tenor.units());
+            hash_combine(seed, x.index->name());
+            hash_combine(seed, x.fixing.serialNumber());
+            hash_combine(seed, x.tenor.length());
+            hash_combine(seed, x.tenor.units());
             return seed;
         }
     };

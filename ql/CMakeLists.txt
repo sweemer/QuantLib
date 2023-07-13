@@ -2208,6 +2208,7 @@ set(QL_HEADERS
     utilities/dataformatters.hpp
     utilities/dataparsers.hpp
     utilities/disposable.hpp
+    utilities/hash_combine.hpp
     utilities/null.hpp
     utilities/null_deleter.hpp
     utilities/observablevalue.hpp

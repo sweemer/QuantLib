@@ -1848,6 +1848,7 @@
     <ClInclude Include="ql\utilities\dataformatters.hpp" />
     <ClInclude Include="ql\utilities\dataparsers.hpp" />
     <ClInclude Include="ql\utilities\disposable.hpp" />
+    <ClInclude Include="ql\utilities\hash_combine.hpp" />
     <ClInclude Include="ql\utilities\null.hpp" />
     <ClInclude Include="ql\utilities\null_deleter.hpp" />
     <ClInclude Include="ql\utilities\observablevalue.hpp" />
