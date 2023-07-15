@@ -74,7 +74,8 @@ namespace QuantLib {
                         Real requiredTolerance,
                         Size maxSamples,
                         bool isBiased,
-                        BigNatural seed);
+                        BigNatural seed,
+                        bool cachePaths = false);
         void calculate() const override {
             Real spot = process_->x0();
             QL_REQUIRE(spot > 0.0, "negative or null underlying given");
@@ -126,6 +127,7 @@ namespace QuantLib {
         MakeMCBarrierEngine& withMaxSamples(Size samples);
         MakeMCBarrierEngine& withBias(bool b = true);
         MakeMCBarrierEngine& withSeed(BigNatural seed);
+        MakeMCBarrierEngine& withCachePaths(bool cachePaths = true);
         // conversion to pricing engine
         operator ext::shared_ptr<PricingEngine>() const;
       private:
@@ -134,6 +136,7 @@ namespace QuantLib {
         Size steps_, stepsPerYear_, samples_, maxSamples_;
         Real tolerance_;
         BigNatural seed_ = 0;
+        bool cachePaths_ = false;
     };
 
 
@@ -193,8 +196,9 @@ namespace QuantLib {
         Real requiredTolerance,
         Size maxSamples,
         bool isBiased,
-        BigNatural seed)
-    : McSimulation<SingleVariate, RNG, S>(antitheticVariate, false), process_(std::move(process)),
+        BigNatural seed,
+        bool cachePaths)
+    : McSimulation<SingleVariate, RNG, S>(antitheticVariate, false, cachePaths), process_(std::move(process)),
       timeSteps_(timeSteps), timeStepsPerYear_(timeStepsPerYear), requiredSamples_(requiredSamples),
       maxSamples_(maxSamples), requiredTolerance_(requiredTolerance), isBiased_(isBiased),
       brownianBridge_(brownianBridge), seed_(seed) {
@@ -347,6 +351,13 @@ namespace QuantLib {
     }
 
     template <class RNG, class S>
+    inline MakeMCBarrierEngine<RNG,S>&
+    MakeMCBarrierEngine<RNG,S>::withCachePaths(bool cachePaths) {
+        cachePaths_ = cachePaths;
+        return *this;
+    }
+
+    template <class RNG, class S>
     inline
     MakeMCBarrierEngine<RNG,S>::operator ext::shared_ptr<PricingEngine>()
                                                                       const {
@@ -363,7 +374,8 @@ namespace QuantLib {
                                    samples_, tolerance_,
                                    maxSamples_,
                                    biased_,
-                                   seed_));
+                                   seed_,
+                                   cachePaths_));
     }
 
 }

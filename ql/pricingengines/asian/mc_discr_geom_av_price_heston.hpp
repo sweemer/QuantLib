@@ -59,7 +59,8 @@ namespace QuantLib {
                                           Size maxSamples,
                                           BigNatural seed,
                                           Size timeSteps = Null<Size>(),
-                                          Size timeStepsPerYear = Null<Size>());
+                                          Size timeStepsPerYear = Null<Size>(),
+                                          bool cachePaths = false);
       protected:
         ext::shared_ptr<path_pricer_type> pathPricer() const override;
     };
@@ -78,11 +79,12 @@ namespace QuantLib {
         MakeMCDiscreteGeometricAPHestonEngine& withAntitheticVariate(bool b = true);
         MakeMCDiscreteGeometricAPHestonEngine& withSteps(Size steps);
         MakeMCDiscreteGeometricAPHestonEngine& withStepsPerYear(Size steps);
+        MakeMCDiscreteGeometricAPHestonEngine& withCachePaths(bool cachePaths = true);
         // conversion to pricing engine
         operator ext::shared_ptr<PricingEngine>() const;
       private:
         ext::shared_ptr<P> process_;
-        bool antithetic_ = false;
+        bool antithetic_ = false, cachePaths_ = false;
         Size samples_, maxSamples_, steps_, stepsPerYear_;
         Real tolerance_;
         BigNatural seed_ = 0;
@@ -119,7 +121,8 @@ namespace QuantLib {
              Size maxSamples,
              BigNatural seed,
              Size timeSteps,
-             Size timeStepsPerYear)
+             Size timeStepsPerYear,
+             bool cachePaths)
     : MCDiscreteAveragingAsianEngineBase<MultiVariate,RNG,S>(process,
                                                              false,
                                                              antitheticVariate,
@@ -129,7 +132,8 @@ namespace QuantLib {
                                                              maxSamples,
                                                              seed,
                                                              timeSteps,
-                                                             timeStepsPerYear) {
+                                                             timeStepsPerYear,
+                                                             cachePaths) {
         QL_REQUIRE(timeSteps == Null<Size>() || timeStepsPerYear == Null<Size>(),
                    "both time steps and time steps per year were provided");
     }
@@ -240,6 +244,13 @@ namespace QuantLib {
         return *this;
     }
 
+    template<class RNG, class S, class P>
+    inline MakeMCDiscreteGeometricAPHestonEngine<RNG,S,P>&
+    MakeMCDiscreteGeometricAPHestonEngine<RNG,S,P>::withCachePaths(bool cachePaths) {
+        cachePaths_ = cachePaths;
+        return *this;
+    }
+
     template <class RNG, class S, class P>
     inline MakeMCDiscreteGeometricAPHestonEngine<RNG,S,P>::operator ext::shared_ptr<PricingEngine>() const {
         return ext::shared_ptr<PricingEngine>(new
@@ -250,7 +261,8 @@ namespace QuantLib {
                                                        maxSamples_,
                                                        seed_,
                                                        steps_,
-                                                       stepsPerYear_));
+                                                       stepsPerYear_,
+                                                       cachePaths_));
     }
 }
 

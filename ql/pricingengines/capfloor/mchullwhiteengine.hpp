@@ -77,8 +77,9 @@ namespace QuantLib {
                                   Size requiredSamples,
                                   Real requiredTolerance,
                                   Size maxSamples,
-                                  BigNatural seed)
-        : McSimulation<SingleVariate, RNG, S>(antitheticVariate, false), model_(std::move(model)),
+                                  BigNatural seed,
+                                  bool cachePaths = false)
+        : McSimulation<SingleVariate, RNG, S>(antitheticVariate, false, cachePaths), model_(std::move(model)),
           requiredSamples_(requiredSamples), maxSamples_(maxSamples),
           requiredTolerance_(requiredTolerance), brownianBridge_(brownianBridge), seed_(seed) {
             registerWith(model_);
@@ -164,6 +165,7 @@ namespace QuantLib {
         MakeMCHullWhiteCapFloorEngine& withMaxSamples(Size samples);
         MakeMCHullWhiteCapFloorEngine& withSeed(BigNatural seed);
         MakeMCHullWhiteCapFloorEngine& withAntitheticVariate(bool b = true);
+        MakeMCHullWhiteCapFloorEngine& withCachePaths(bool cachePaths = true);
         // conversion to pricing engine
         operator ext::shared_ptr<PricingEngine>() const;
       private:
@@ -173,6 +175,7 @@ namespace QuantLib {
         Real tolerance_;
         bool brownianBridge_ = false;
         BigNatural seed_ = 0;
+        bool cachePaths_ = false;
     };
 
 
@@ -235,13 +238,20 @@ namespace QuantLib {
     }
 
     template <class RNG, class S>
+    inline MakeMCHullWhiteCapFloorEngine<RNG,S>&
+    MakeMCHullWhiteCapFloorEngine<RNG,S>::withCachePaths(bool cachePaths) {
+        cachePaths_ = cachePaths;
+        return *this;
+    }
+
+    template <class RNG, class S>
     inline MakeMCHullWhiteCapFloorEngine<RNG,S>::
     operator ext::shared_ptr<PricingEngine>() const {
         return ext::shared_ptr<PricingEngine>(new
             MCHullWhiteCapFloorEngine<RNG,S>(model_,
                                              brownianBridge_, antithetic_,
                                              samples_, tolerance_,
-                                             maxSamples_, seed_));
+                                             maxSamples_, seed_, cachePaths_));
     }
 
 }

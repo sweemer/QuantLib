@@ -60,7 +60,8 @@ namespace QuantLib {
                                BigNatural seed,
                                Size nCalibrationSamples = Null<Size>(),
                                Size polynomialOrder = 2,
-                               LsmBasisSystem::PolynomialType polynomialType = LsmBasisSystem::Monomial);
+                               LsmBasisSystem::PolynomialType polynomialType = LsmBasisSystem::Monomial,
+                               bool cachePaths = false);
       protected:
         ext::shared_ptr<LongstaffSchwartzPathPricer<MultiPath> > lsmPathPricer() const override;
 
@@ -87,12 +88,13 @@ namespace QuantLib {
         MakeMCAmericanBasketEngine& withCalibrationSamples(Size samples);
         MakeMCAmericanBasketEngine& withPolynomialOrder(Size polynmOrder);
         MakeMCAmericanBasketEngine& withBasisSystem(LsmBasisSystem::PolynomialType polynomialType);
+        MakeMCAmericanBasketEngine& withCachePaths(bool cachePaths = true);
 
         // conversion to pricing engine
         operator ext::shared_ptr<PricingEngine>() const;
       private:
         ext::shared_ptr<StochasticProcessArray> process_;
-        bool brownianBridge_ = false, antithetic_ = false;
+        bool brownianBridge_ = false, antithetic_ = false, cachePaths_ = false;
         Size steps_, stepsPerYear_, samples_, maxSamples_, calibrationSamples_,
             polynomialOrder_ = 2;
         LsmBasisSystem::PolynomialType polynomialType_ = LsmBasisSystem::Monomial;
@@ -138,7 +140,8 @@ namespace QuantLib {
                    BigNatural seed,
                    Size nCalibrationSamples,
                    Size polynomialOrder,
-                   LsmBasisSystem::PolynomialType polynomialType)
+                   LsmBasisSystem::PolynomialType polynomialType,
+                   bool cachePaths)
         : MCLongstaffSchwartzEngine<BasketOption::engine,
                                     MultiVariate,RNG>(processes,
                                                       timeSteps,
@@ -150,7 +153,8 @@ namespace QuantLib {
                                                       requiredTolerance,
                                                       maxSamples,
                                                       seed,
-                                                      nCalibrationSamples),
+                                                      nCalibrationSamples,
+                                                      cachePaths),
           polynomialOrder_(polynomialOrder), polynomialType_(polynomialType) {}
 
     template <class RNG>
@@ -281,6 +285,13 @@ namespace QuantLib {
     }
 
     template <class RNG>
+    inline MakeMCAmericanBasketEngine<RNG>&
+    MakeMCAmericanBasketEngine<RNG>::withCachePaths(bool cachePaths) {
+        cachePaths_ = cachePaths;
+        return *this;
+    }
+
+    template <class RNG>
     inline
     MakeMCAmericanBasketEngine<RNG>::operator
     ext::shared_ptr<PricingEngine>() const {
@@ -300,7 +311,8 @@ namespace QuantLib {
                                         seed_,
                                         calibrationSamples_,
                                         polynomialOrder_,
-                                        polynomialType_));
+                                        polynomialType_,
+                                        cachePaths_));
     }
 
 }

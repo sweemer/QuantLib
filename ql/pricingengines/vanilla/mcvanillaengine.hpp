@@ -66,7 +66,8 @@ namespace QuantLib {
                         Size requiredSamples,
                         Real requiredTolerance,
                         Size maxSamples,
-                        BigNatural seed);
+                        BigNatural seed,
+                        bool cachePaths = false);
         // McSimulation implementation
         TimeGrid timeGrid() const override;
         ext::shared_ptr<path_generator_type> pathGenerator() const override {
@@ -103,8 +104,9 @@ namespace QuantLib {
         Size requiredSamples,
         Real requiredTolerance,
         Size maxSamples,
-        BigNatural seed)
-    : McSimulation<MC, RNG, S>(antitheticVariate, controlVariate), process_(std::move(process)),
+        BigNatural seed,
+        bool cachePaths)
+    : McSimulation<MC, RNG, S>(antitheticVariate, controlVariate, cachePaths), process_(std::move(process)),
       timeSteps_(timeSteps), timeStepsPerYear_(timeStepsPerYear), requiredSamples_(requiredSamples),
       maxSamples_(maxSamples), requiredTolerance_(requiredTolerance),
       brownianBridge_(brownianBridge), seed_(seed) {

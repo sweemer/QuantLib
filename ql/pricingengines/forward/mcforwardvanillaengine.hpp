@@ -53,7 +53,8 @@ namespace QuantLib {
                                Real requiredTolerance,
                                Size maxSamples,
                                BigNatural seed,
-                               bool controlVariate = false);
+                               bool controlVariate = false,
+                               bool cachePaths = false);
         void calculate() const override {
             McSimulation<MC,RNG,S>::calculate(requiredTolerance_,
                                               requiredSamples_,
@@ -97,8 +98,9 @@ namespace QuantLib {
         Real requiredTolerance,
         Size maxSamples,
         BigNatural seed,
-        bool controlVariate)
-    : McSimulation<MC, RNG, S>(antitheticVariate, controlVariate), process_(std::move(process)),
+        bool controlVariate,
+        bool cachePaths)
+    : McSimulation<MC, RNG, S>(antitheticVariate, controlVariate, cachePaths), process_(std::move(process)),
       timeSteps_(timeSteps), timeStepsPerYear_(timeStepsPerYear), requiredSamples_(requiredSamples),
       maxSamples_(maxSamples), requiredTolerance_(requiredTolerance),
       brownianBridge_(brownianBridge), seed_(seed) {

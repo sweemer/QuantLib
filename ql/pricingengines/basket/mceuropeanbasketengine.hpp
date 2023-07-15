@@ -59,7 +59,8 @@ namespace QuantLib {
                                Size requiredSamples,
                                Real requiredTolerance,
                                Size maxSamples,
-                               BigNatural seed);
+                               BigNatural seed,
+                               bool cachePaths = false);
         void calculate() const override {
             McSimulation<MultiVariate,RNG,S>::calculate(requiredTolerance_,
                                                         requiredSamples_,
@@ -116,6 +117,7 @@ namespace QuantLib {
         MakeMCEuropeanBasketEngine& withAbsoluteTolerance(Real tolerance);
         MakeMCEuropeanBasketEngine& withMaxSamples(Size samples);
         MakeMCEuropeanBasketEngine& withSeed(BigNatural seed);
+        MakeMCEuropeanBasketEngine& withCachePaths(bool cachePaths = true);
         // conversion to pricing engine
         operator ext::shared_ptr<PricingEngine>() const;
       private:
@@ -124,6 +126,7 @@ namespace QuantLib {
         Size steps_, stepsPerYear_, samples_, maxSamples_;
         Real tolerance_;
         BigNatural seed_ = 0;
+        bool cachePaths_ = false;
     };
 
 
@@ -150,8 +153,9 @@ namespace QuantLib {
         Size requiredSamples,
         Real requiredTolerance,
         Size maxSamples,
-        BigNatural seed)
-    : McSimulation<MultiVariate, RNG, S>(antitheticVariate, false),
+        BigNatural seed,
+        bool cachePaths)
+    : McSimulation<MultiVariate, RNG, S>(antitheticVariate, false, cachePaths),
       processes_(std::move(processes)), timeSteps_(timeSteps), timeStepsPerYear_(timeStepsPerYear),
       requiredSamples_(requiredSamples), maxSamples_(maxSamples),
       requiredTolerance_(requiredTolerance), brownianBridge_(brownianBridge), seed_(seed) {
@@ -277,6 +281,13 @@ namespace QuantLib {
     }
 
     template <class RNG, class S>
+    inline MakeMCEuropeanBasketEngine<RNG,S>&
+    MakeMCEuropeanBasketEngine<RNG,S>::withCachePaths(bool cachePaths) {
+        cachePaths_ = cachePaths;
+        return *this;
+    }
+
+    template <class RNG, class S>
     inline
     MakeMCEuropeanBasketEngine<RNG,S>::operator
     ext::shared_ptr<PricingEngine>() const {
@@ -292,7 +303,8 @@ namespace QuantLib {
                                           antithetic_,
                                           samples_, tolerance_,
                                           maxSamples_,
-                                          seed_));
+                                          seed_,
+                                          cachePaths_));
     }
 
 }

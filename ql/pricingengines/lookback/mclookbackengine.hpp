@@ -50,7 +50,8 @@ namespace QuantLib {
                          Size requiredSamples,
                          Real requiredTolerance,
                          Size maxSamples,
-                         BigNatural seed);
+                         BigNatural seed,
+                         bool cachePaths = false);
         void calculate() const override {
             Real spot = process_->x0();
             QL_REQUIRE(spot > 0.0, "negative or null underlying given");
@@ -100,6 +101,7 @@ namespace QuantLib {
         MakeMCLookbackEngine& withAbsoluteTolerance(Real tolerance);
         MakeMCLookbackEngine& withMaxSamples(Size samples);
         MakeMCLookbackEngine& withSeed(BigNatural seed);
+        MakeMCLookbackEngine& withCachePaths(bool cachePaths = true);
         // conversion to pricing engine
         operator ext::shared_ptr<PricingEngine>() const;
       private:
@@ -108,6 +110,7 @@ namespace QuantLib {
         Size steps_, stepsPerYear_, samples_, maxSamples_;
         Real tolerance_;
         BigNatural seed_ = 0;
+        bool cachePaths_ = false;
     };
 
 
@@ -123,8 +126,9 @@ namespace QuantLib {
         Size requiredSamples,
         Real requiredTolerance,
         Size maxSamples,
-        BigNatural seed)
-    : McSimulation<SingleVariate, RNG, S>(antitheticVariate, false), process_(std::move(process)),
+        BigNatural seed,
+        bool cachePaths)
+    : McSimulation<SingleVariate, RNG, S>(antitheticVariate, false, cachePaths), process_(std::move(process)),
       timeSteps_(timeSteps), timeStepsPerYear_(timeStepsPerYear), requiredSamples_(requiredSamples),
       maxSamples_(maxSamples), requiredTolerance_(requiredTolerance),
       brownianBridge_(brownianBridge), seed_(seed) {
@@ -272,6 +276,13 @@ namespace QuantLib {
     }
 
     template <class I, class RNG, class S>
+    inline MakeMCLookbackEngine<I,RNG,S>&
+    MakeMCLookbackEngine<I,RNG,S>::withCachePaths(bool cachePaths) {
+        cachePaths_ = cachePaths;
+        return *this;
+    }
+
+    template <class I, class RNG, class S>
     inline MakeMCLookbackEngine<I,RNG,S>::operator ext::shared_ptr<PricingEngine>() const {
         QL_REQUIRE(steps_ != Null<Size>() || stepsPerYear_ != Null<Size>(),
                    "number of steps not given");
@@ -287,7 +298,8 @@ namespace QuantLib {
                                           samples_,
                                           tolerance_,
                                           maxSamples_,
-                                          seed_));
+                                          seed_,
+                                          cachePaths_));
     }
 
 }

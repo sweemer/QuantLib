@@ -66,7 +66,8 @@ namespace QuantLib {
              Real requiredTolerance,
              Size maxSamples,
              BigNatural seed,
-             bool controlVariate = false);
+             bool controlVariate = false,
+             bool cachePaths = false);
       protected:
         ext::shared_ptr<path_pricer_type> pathPricer() const override;
 
@@ -98,6 +99,7 @@ namespace QuantLib {
         MakeMCForwardEuropeanHestonEngine& withSeed(BigNatural seed);
         MakeMCForwardEuropeanHestonEngine& withAntitheticVariate(bool b = true);
         MakeMCForwardEuropeanHestonEngine& withControlVariate(bool b = false);
+        MakeMCForwardEuropeanHestonEngine& withCachePaths(bool cachePaths = true);
         // conversion to pricing engine
         operator ext::shared_ptr<PricingEngine>() const;
       private:
@@ -106,6 +108,7 @@ namespace QuantLib {
         Size steps_, stepsPerYear_, samples_, maxSamples_;
         Real tolerance_;
         BigNatural seed_ = 0;
+        bool cachePaths_ = false;
     };
 
 
@@ -137,7 +140,8 @@ namespace QuantLib {
              Real requiredTolerance,
              Size maxSamples,
              BigNatural seed,
-             bool controlVariate)
+             bool controlVariate,
+             bool cachePaths)
     : MCForwardVanillaEngine<MultiVariate,RNG,S>(process,
                                                  timeSteps,
                                                  timeStepsPerYear,
@@ -147,7 +151,8 @@ namespace QuantLib {
                                                  requiredTolerance,
                                                  maxSamples,
                                                  seed,
-                                                 controlVariate) {}
+                                                 controlVariate,
+                                                 cachePaths) {}
 
 
     template <class RNG, class S, class P>
@@ -287,6 +292,13 @@ namespace QuantLib {
     }
 
     template <class RNG, class S, class P>
+    inline MakeMCForwardEuropeanHestonEngine<RNG,S,P>&
+    MakeMCForwardEuropeanHestonEngine<RNG,S,P>::withCachePaths(bool cachePaths) {
+        cachePaths_ = cachePaths;
+        return *this;
+    }
+
+    template <class RNG, class S, class P>
     inline MakeMCForwardEuropeanHestonEngine<RNG,S,P>::operator ext::shared_ptr<PricingEngine>()
                                                                       const {
         QL_REQUIRE(steps_ != Null<Size>() || stepsPerYear_ != Null<Size>(),
@@ -302,7 +314,8 @@ namespace QuantLib {
                                                    tolerance_,
                                                    maxSamples_,
                                                    seed_,
-                                                   controlVariate_));
+                                                   controlVariate_,
+                                                   cachePaths_));
     }
 }
 

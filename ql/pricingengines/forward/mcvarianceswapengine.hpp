@@ -65,7 +65,8 @@ namespace QuantLib {
                              Size requiredSamples,
                              Real requiredTolerance,
                              Size maxSamples,
-                             BigNatural seed);
+                             BigNatural seed,
+                             bool cachePaths = false);
         // calculate variance via Monte Carlo
         void calculate() const override {
             McSimulation<SingleVariate,RNG,S>::calculate(requiredTolerance_,
@@ -140,6 +141,7 @@ namespace QuantLib {
         MakeMCVarianceSwapEngine& withMaxSamples(Size samples);
         MakeMCVarianceSwapEngine& withSeed(BigNatural seed);
         MakeMCVarianceSwapEngine& withAntitheticVariate(bool b = true);
+        MakeMCVarianceSwapEngine& withCachePaths(bool cachePaths = true);
         // conversion to pricing engine
         operator ext::shared_ptr<PricingEngine>() const;
       private:
@@ -149,6 +151,7 @@ namespace QuantLib {
         Real tolerance_;
         bool brownianBridge_ = false;
         BigNatural seed_ = 0;
+        bool cachePaths_ = false;
     };
 
     class VariancePathPricer : public PathPricer<Path> {
@@ -173,8 +176,9 @@ namespace QuantLib {
         Size requiredSamples,
         Real requiredTolerance,
         Size maxSamples,
-        BigNatural seed)
-    : McSimulation<SingleVariate, RNG, S>(antitheticVariate, false), process_(std::move(process)),
+        BigNatural seed,
+        bool cachePaths)
+    : McSimulation<SingleVariate, RNG, S>(antitheticVariate, false, cachePaths), process_(std::move(process)),
       timeSteps_(timeSteps), timeStepsPerYear_(timeStepsPerYear), requiredSamples_(requiredSamples),
       maxSamples_(maxSamples), requiredTolerance_(requiredTolerance),
       brownianBridge_(brownianBridge), seed_(seed) {
@@ -291,6 +295,13 @@ namespace QuantLib {
     }
 
     template <class RNG, class S>
+    inline MakeMCVarianceSwapEngine<RNG,S>&
+    MakeMCVarianceSwapEngine<RNG,S>::withCachePaths(bool cachePaths) {
+        cachePaths_ = cachePaths;
+        return *this;
+    }
+
+    template <class RNG, class S>
     inline MakeMCVarianceSwapEngine<RNG,S>::
     operator ext::shared_ptr<PricingEngine>() const {
         QL_REQUIRE(steps_ != Null<Size>() || stepsPerYear_ != Null<Size>(),
@@ -305,7 +316,8 @@ namespace QuantLib {
                                                          antithetic_,
                                                          samples_, tolerance_,
                                                          maxSamples_,
-                                                         seed_));
+                                                         seed_,
+                                                         cachePaths_));
     }
 
 

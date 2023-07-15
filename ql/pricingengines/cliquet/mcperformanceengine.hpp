@@ -47,7 +47,8 @@ namespace QuantLib {
                             Size requiredSamples,
                             Real requiredTolerance,
                             Size maxSamples,
-                            BigNatural seed);
+                            BigNatural seed,
+                            bool cachePaths = false);
         void calculate() const override {
             McSimulation<SingleVariate,RNG,S>::calculate(requiredTolerance_,
                                                          requiredSamples_,
@@ -92,6 +93,7 @@ namespace QuantLib {
         MakeMCPerformanceEngine& withAbsoluteTolerance(Real tolerance);
         MakeMCPerformanceEngine& withMaxSamples(Size samples);
         MakeMCPerformanceEngine& withSeed(BigNatural seed);
+        MakeMCPerformanceEngine& withCachePaths(bool cachePaths = true);
         // conversion to pricing engine
         operator ext::shared_ptr<PricingEngine>() const;
       private:
@@ -100,6 +102,7 @@ namespace QuantLib {
         Size samples_, maxSamples_;
         Real tolerance_;
         BigNatural seed_ = 0;
+        bool cachePaths_ = false;
     };
 
 
@@ -128,8 +131,9 @@ namespace QuantLib {
         Size requiredSamples,
         Real requiredTolerance,
         Size maxSamples,
-        BigNatural seed)
-    : McSimulation<SingleVariate, RNG, S>(antitheticVariate, false), process_(std::move(process)),
+        BigNatural seed,
+        bool cachePaths)
+    : McSimulation<SingleVariate, RNG, S>(antitheticVariate, false, cachePaths), process_(std::move(process)),
       requiredSamples_(requiredSamples), maxSamples_(maxSamples),
       requiredTolerance_(requiredTolerance), brownianBridge_(brownianBridge), seed_(seed) {
         registerWith(process_);
@@ -236,6 +240,13 @@ namespace QuantLib {
     }
 
     template <class RNG, class S>
+    inline MakeMCPerformanceEngine<RNG,S>&
+    MakeMCPerformanceEngine<RNG,S>::withCachePaths(bool cachePaths) {
+        cachePaths_ = cachePaths;
+        return *this;
+    }
+
+    template <class RNG, class S>
     inline
     MakeMCPerformanceEngine<RNG,S>::operator ext::shared_ptr<PricingEngine>()
                                                                       const {
@@ -246,7 +257,8 @@ namespace QuantLib {
                                        samples_,
                                        tolerance_,
                                        maxSamples_,
-                                       seed_));
+                                       seed_,
+                                       cachePaths_));
     }
 
 }

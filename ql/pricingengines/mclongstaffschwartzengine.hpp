@@ -82,7 +82,8 @@ namespace QuantLib {
                                   Size nCalibrationSamples = Null<Size>(),
                                   ext::optional<bool> brownianBridgeCalibration = ext::nullopt,
                                   ext::optional<bool> antitheticVariateCalibration = ext::nullopt,
-                                  BigNatural seedCalibration = Null<Size>());
+                                  BigNatural seedCalibration = Null<Size>(),
+                                  bool cachePaths = false);
 
         void calculate() const override;
 
@@ -106,6 +107,7 @@ namespace QuantLib {
         const bool brownianBridgeCalibration_;
         const bool antitheticVariateCalibration_;
         const BigNatural seedCalibration_;
+        const bool cachePaths_;
 
         mutable ext::shared_ptr<LongstaffSchwartzPathPricer<path_type> >
             pathPricer_;
@@ -133,8 +135,9 @@ namespace QuantLib {
                                   Size nCalibrationSamples,
                                   ext::optional<bool> brownianBridgeCalibration,
                                   ext::optional<bool> antitheticVariateCalibration,
-                                  BigNatural seedCalibration)
-    : McSimulation<MC, RNG, S>(antitheticVariate, controlVariate), process_(std::move(process)),
+                                  BigNatural seedCalibration,
+                                  bool cachePaths)
+    : McSimulation<MC, RNG, S>(antitheticVariate, controlVariate, cachePaths), process_(std::move(process)),
       timeSteps_(timeSteps), timeStepsPerYear_(timeStepsPerYear), brownianBridge_(brownianBridge),
       requiredSamples_(requiredSamples), requiredTolerance_(requiredTolerance),
       maxSamples_(maxSamples), seed_(seed),
@@ -146,7 +149,8 @@ namespace QuantLib {
           // NOLINTNEXTLINE(readability-implicit-bool-conversion)
           antitheticVariateCalibration ? *antitheticVariateCalibration : antitheticVariate),
       seedCalibration_(seedCalibration != Null<Real>() ? seedCalibration :
-                                                         (seed == 0 ? 0 : seed + 1768237423L)) {
+                                                         (seed == 0 ? 0 : seed + 1768237423L)),
+      cachePaths_(cachePaths) {
         QL_REQUIRE(timeSteps != Null<Size>() ||
                    timeStepsPerYear != Null<Size>(),
                    "no time steps provided");
@@ -192,7 +196,8 @@ namespace QuantLib {
             ext::shared_ptr<MonteCarloModel<MC, RNG_Calibration, S> >(
                 new MonteCarloModel<MC, RNG_Calibration, S>(
                     pathGeneratorCalibration, pathPricer_, stats_type(),
-                    this->antitheticVariateCalibration_));
+                    this->antitheticVariateCalibration_,
+                    {}, {}, {}, this->cachePaths_));
 
         mcModelCalibration_->addSamples(nCalibrationSamples_);
         pathPricer_->calibrate();

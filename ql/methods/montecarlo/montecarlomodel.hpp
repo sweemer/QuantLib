@@ -27,6 +27,8 @@
 
 #include <ql/math/statistics/statistics.hpp>
 #include <ql/methods/montecarlo/mctraits.hpp>
+#include <ql/patterns/singleton.hpp>
+#include <ql/optional.hpp>
 #include <ql/shared_ptr.hpp>
 #include <utility>
 
@@ -64,19 +66,29 @@ namespace QuantLib {
             ext::shared_ptr<path_pricer_type> pathPricer,
             stats_type sampleAccumulator,
             bool antitheticVariate,
-            ext::shared_ptr<path_pricer_type> cvPathPricer = ext::shared_ptr<path_pricer_type>(),
-            result_type cvOptionValue = result_type(),
-            ext::shared_ptr<path_generator_type> cvPathGenerator =
-                ext::shared_ptr<path_generator_type>())
+            ext::shared_ptr<path_pricer_type> cvPathPricer = {},
+            result_type cvOptionValue = {},
+            ext::shared_ptr<path_generator_type> cvPathGenerator = {},
+            bool cachePaths = false)
         : pathGenerator_(std::move(pathGenerator)), pathPricer_(std::move(pathPricer)),
           sampleAccumulator_(std::move(sampleAccumulator)), isAntitheticVariate_(antitheticVariate),
           cvPathPricer_(std::move(cvPathPricer)), cvOptionValue_(cvOptionValue),
-          cvPathGenerator_(std::move(cvPathGenerator)) {
-            isControlVariate_ = static_cast<bool>(cvPathPricer_);
-        }
+          isControlVariate_(static_cast<bool>(cvPathPricer_)),
+          cvPathGenerator_(std::move(cvPathGenerator)),
+          cachePaths_(cachePaths) {}
         void addSamples(Size samples);
         const stats_type& sampleAccumulator() const;
       private:
+        struct CachedPaths {
+            ext::optional<sample_type> path;
+            ext::optional<sample_type> atPath;
+            ext::optional<sample_type> cvPath;
+            ext::optional<sample_type> atCvPath;
+        };
+        std::vector<CachedPaths>& getCachedPaths() {
+            static std::vector<CachedPaths> cache;
+            return cache;
+        }
         ext::shared_ptr<path_generator_type> pathGenerator_;
         ext::shared_ptr<path_pricer_type> pathPricer_;
         stats_type sampleAccumulator_;
@@ -85,14 +97,28 @@ namespace QuantLib {
         result_type cvOptionValue_;
         bool isControlVariate_;
         ext::shared_ptr<path_generator_type> cvPathGenerator_;
+        bool cachePaths_;
     };
 
     // inline definitions
     template <template <class> class MC, class RNG, class S>
     inline void MonteCarloModel<MC,RNG,S>::addSamples(Size samples) {
-        for(Size j = 1; j <= samples; j++) {
+        auto& cachedPaths = getCachedPaths();
 
-            const sample_type& path = pathGenerator_->next();
+        if (cachePaths_) {
+            cachedPaths.resize(cachedPaths.size() + samples);
+        }
+
+        for (Size j = 0; j < samples; ++j) {
+
+            const auto isPathCached = cachePaths_ && cachedPaths[j].path;
+            const auto& path = isPathCached
+                ? *cachedPaths[j].path
+                : pathGenerator_->next();
+
+            if (cachePaths_ && !isPathCached)
+                cachedPaths[j].path = path;
+
             result_type price = (*pathPricer_)(path.value);
 
             if (isControlVariate_) {
@@ -100,20 +126,35 @@ namespace QuantLib {
                     price += cvOptionValue_-(*cvPathPricer_)(path.value);
                 }
                 else {
-                    const sample_type& cvPath = cvPathGenerator_->next();
+                    const auto isCvPathCached = cachePaths_ && cachedPaths[j].cvPath;
+                    const auto& cvPath = isCvPathCached
+                        ? *cachedPaths[j].cvPath
+                        : cvPathGenerator_->next();
+                    if (cachePaths_ && !isCvPathCached)
+                        cachedPaths[j].cvPath = cvPath;
                     price += cvOptionValue_-(*cvPathPricer_)(cvPath.value);
                 }
             }
 
             if (isAntitheticVariate_) {
-                const sample_type& atPath = pathGenerator_->antithetic();
+                const auto isAtPathCached = cachePaths_ && cachedPaths[j].atPath;
+                const auto& atPath = isAtPathCached
+                    ? *cachedPaths[j].atPath
+                    : pathGenerator_->antithetic();
+                if (cachePaths_ && !isAtPathCached)
+                    cachedPaths[j].atPath = atPath;
                 result_type price2 = (*pathPricer_)(atPath.value);
                 if (isControlVariate_) {
                     if (!cvPathGenerator_)
                         price2 += cvOptionValue_-(*cvPathPricer_)(atPath.value);
                     else {
-                        const sample_type& cvPath = cvPathGenerator_->antithetic();
-                        price2 += cvOptionValue_-(*cvPathPricer_)(cvPath.value);
+                        const auto isAtCvPathCached = cachePaths_ && cachedPaths[j].atCvPath;
+                        const auto& atCvPath = isAtCvPathCached
+                            ? *cachedPaths[j].atCvPath
+                            : cvPathGenerator_->antithetic();
+                        if (cachePaths_ && !isAtCvPathCached)
+                            cachedPaths[j].atCvPath = atCvPath;
+                        price2 += cvOptionValue_-(*cvPathPricer_)(atCvPath.value);
                     }
                 }
 

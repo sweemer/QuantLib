@@ -59,7 +59,8 @@ namespace QuantLib {
                                       Real requiredTolerance,
                                       Size maxSamples,
                                       BigNatural seed,
-                                      Size nCalibrationSamples = Null<Size>());
+                                      Size nCalibrationSamples = Null<Size>(),
+                                      bool cachePaths = false);
 
         void calculate() const;
 
@@ -96,8 +97,9 @@ namespace QuantLib {
         Real requiredTolerance,
         Size maxSamples,
         BigNatural seed,
-        Size nCalibrationSamples)
-    : McSimulation<MC, RNG, S>(antitheticVariate, controlVariate), process_(std::move(process)),
+        Size nCalibrationSamples,
+        bool cachePaths)
+    : McSimulation<MC, RNG, S>(antitheticVariate, controlVariate, cachePaths), process_(std::move(process)),
       timeSteps_(timeSteps), timeStepsPerYear_(timeStepsPerYear), brownianBridge_(brownianBridge),
       requiredSamples_(requiredSamples), requiredTolerance_(requiredTolerance),
       maxSamples_(maxSamples), seed_(seed),
@@ -138,7 +140,8 @@ namespace QuantLib {
         this->mcModel_ = ext::shared_ptr<MonteCarloModel<MC,RNG,S> >(
                           new MonteCarloModel<MC,RNG,S>
                               (pathGenerator(), pathPricer_,
-                               stats_type(), this->antitheticVariate_));
+                               stats_type(), this->antitheticVariate_,
+                               this->cachePaths_));
 
         this->mcModel_->addSamples(nCalibrationSamples_);
         this->pathPricer_->calibrate();

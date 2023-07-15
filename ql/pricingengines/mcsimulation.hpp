@@ -67,9 +67,11 @@ namespace QuantLib {
                        Size maxSamples) const;
       protected:
         McSimulation(bool antitheticVariate,
-                     bool controlVariate)
+                     bool controlVariate,
+                     bool cachePaths = false)
         : antitheticVariate_(antitheticVariate),
-          controlVariate_(controlVariate) {}
+          controlVariate_(controlVariate),
+          cachePaths_(cachePaths) {}
         virtual ext::shared_ptr<path_pricer_type> pathPricer() const = 0;
         virtual ext::shared_ptr<path_generator_type> pathGenerator()
                                                                    const = 0;
@@ -96,7 +98,7 @@ namespace QuantLib {
         }
         
         mutable ext::shared_ptr<MonteCarloModel<MC,RNG,S> > mcModel_;
-        bool antitheticVariate_, controlVariate_;
+        bool antitheticVariate_, controlVariate_, cachePaths_;
     };
 
 
@@ -186,13 +188,13 @@ namespace QuantLib {
                     new MonteCarloModel<MC,RNG,S>(
                            pathGenerator(), this->pathPricer(), stats_type(),
                            this->antitheticVariate_, controlPP,
-                           controlVariateValue, controlPG));
+                           controlVariateValue, controlPG, cachePaths_));
         } else {
             this->mcModel_ =
                 ext::shared_ptr<MonteCarloModel<MC,RNG,S> >(
                     new MonteCarloModel<MC,RNG,S>(
                            pathGenerator(), this->pathPricer(), S(),
-                           this->antitheticVariate_));
+                           this->antitheticVariate_, {}, {}, {}, cachePaths_));
         }
 
         if (requiredTolerance != Null<Real>()) {
