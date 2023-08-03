@@ -53,7 +53,7 @@
 #include <ql/qldefines.hpp>
 #include <ql/types.hpp>
 #include <ql/math/integrals/gausslobattointegral.hpp>
-
+#include <ql/shared_ptr.hpp>
 #include <vector>
 
 namespace QuantLib {

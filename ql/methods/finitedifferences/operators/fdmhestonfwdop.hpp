@@ -29,6 +29,7 @@
 #include <ql/methods/finitedifferences/operators/fdmsquarerootfwdop.hpp>
 #include <ql/methods/finitedifferences/operators/fdmlinearopcomposite.hpp>
 #include <ql/termstructures/volatility/equityfx/localvoltermstructure.hpp>
+#include <ql/shared_ptr.hpp>
 
 namespace QuantLib {
 

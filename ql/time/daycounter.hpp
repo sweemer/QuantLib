@@ -27,6 +27,7 @@
 
 #include <ql/errors.hpp>
 #include <ql/time/date.hpp>
+#include <ql/shared_ptr.hpp>
 #include <utility>
 
 namespace QuantLib {

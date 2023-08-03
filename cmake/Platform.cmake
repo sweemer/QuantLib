@@ -20,6 +20,8 @@ if (MSVC)
     # caused by ql\time\date.cpp: warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead.
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 
+    add_compile_definitions(WIN32_LEAN_AND_MEAN)
+
     # /wd4267
     # Suppress warnings: assignment of 64-bit value to 32-bit QuantLib::Integer (x64)
 

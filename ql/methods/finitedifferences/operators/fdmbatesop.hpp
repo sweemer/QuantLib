@@ -27,6 +27,7 @@
 #include <ql/math/integrals/gaussianquadratures.hpp>
 #include <ql/methods/finitedifferences/operators/fdmhestonop.hpp>
 #include <ql/methods/finitedifferences/utilities/fdmboundaryconditionset.hpp>
+#include <ql/shared_ptr.hpp>
 
 namespace QuantLib {
 

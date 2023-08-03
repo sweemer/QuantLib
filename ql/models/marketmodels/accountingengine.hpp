@@ -26,8 +26,8 @@
 #include <ql/models/marketmodels/multiproduct.hpp>
 #include <ql/models/marketmodels/discounter.hpp>
 #include <ql/math/statistics/sequencestatistics.hpp>
-
 #include <ql/utilities/clone.hpp>
+#include <ql/shared_ptr.hpp>
 #include <ql/types.hpp>
 #include <vector>
 

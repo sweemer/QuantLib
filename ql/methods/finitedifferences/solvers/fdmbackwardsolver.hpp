@@ -26,6 +26,7 @@
 #define quantlib_fdm_backward_solver_hpp
 
 #include <ql/methods/finitedifferences/utilities/fdmboundaryconditionset.hpp>
+#include <ql/shared_ptr.hpp>
 
 namespace QuantLib {
 
