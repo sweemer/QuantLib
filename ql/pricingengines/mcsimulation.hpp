@@ -82,7 +82,7 @@ namespace QuantLib {
             return ext::shared_ptr<path_generator_type>();
         }
         virtual ext::shared_ptr<PricingEngine> controlPricingEngine() const {
-            return ext::shared_ptr<PricingEngine>();
+            return {};
         }
         virtual result_type controlVariateValue() const {
             return Null<result_type>();

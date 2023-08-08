@@ -26,9 +26,9 @@ namespace QuantLib {
         switch (type_) {
           case Direct:
             if (amount.currency() == source_)
-                return Money(amount.value()*rate_, target_);
+                return {amount.value()*rate_, target_};
             else if (amount.currency() == target_)
-                return Money(amount.value()/rate_, source_);
+                return {amount.value()/rate_, source_};
             else
                 QL_FAIL("exchange rate not applicable");
           case Derived:

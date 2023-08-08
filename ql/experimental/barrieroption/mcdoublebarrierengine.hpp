@@ -166,10 +166,10 @@ namespace QuantLib {
 
         Time residualTime = process_->time(arguments_.exercise->lastDate());
         if (timeSteps_ != Null<Size>()) {
-            return TimeGrid(residualTime, timeSteps_);
+            return {residualTime, timeSteps_};
         } else if (timeStepsPerYear_ != Null<Size>()) {
             Size steps = static_cast<Size>(timeStepsPerYear_*residualTime);
-            return TimeGrid(residualTime, std::max<Size>(steps, 1));
+            return {residualTime, std::max<Size>(steps, 1)};
         } else {
             QL_FAIL("time steps not specified");
         }

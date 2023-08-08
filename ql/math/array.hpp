@@ -161,7 +161,7 @@ namespace QuantLib {
     class Null<Array> {
       public:
         Null() = default;
-        operator Array() const { return Array(); }
+        operator Array() const { return {}; }
     };
 
     #endif

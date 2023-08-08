@@ -179,7 +179,7 @@ namespace QuantLib {
     }
 
     inline Money Money::rounded() const {
-        return Money(currency_.rounding()(value_), currency_);
+        return {currency_.rounding()(value_), currency_};
     }
 
     inline Money Money::operator+() const {
@@ -187,7 +187,7 @@ namespace QuantLib {
     }
 
     inline Money Money::operator-() const {
-        return Money(-value_, currency_);
+        return {-value_, currency_};
     }
 
     inline Money& Money::operator*=(Decimal x) {
@@ -242,11 +242,11 @@ namespace QuantLib {
     }
 
     inline Money operator*(Decimal value, const Currency& c) {
-        return Money(value,c);
+        return {value,c};
     }
 
     inline Money operator*(const Currency& c, Decimal value) {
-        return Money(value,c);
+        return {value,c};
     }
 
 }

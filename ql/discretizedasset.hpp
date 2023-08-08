@@ -148,7 +148,7 @@ namespace QuantLib {
       public:
         DiscretizedDiscountBond() = default;
         void reset(Size size) override { values_ = Array(size, 1.0); }
-        std::vector<Time> mandatoryTimes() const override { return std::vector<Time>(); }
+        std::vector<Time> mandatoryTimes() const override { return {}; }
     };
 
 

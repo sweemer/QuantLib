@@ -55,7 +55,7 @@ namespace QuantLib {
                                              ExchangeRate::Type type) const {
 
         if (source == target)
-            return ExchangeRate(source,target,1.0);
+            return {source,target,1.0};
 
         if (date == Date())
             date = Settings::instance().evaluationDate();
