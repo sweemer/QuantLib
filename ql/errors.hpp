@@ -30,10 +30,43 @@
 #include <boost/assert.hpp>
 #include <boost/current_function.hpp>
 #include <exception>
+#ifdef __cpp_lib_format
+#include <format>
+#else
 #include <sstream>
+#endif
 #include <string>
 
 namespace QuantLib {
+
+#ifdef __cpp_lib_format
+
+    namespace detail {
+
+        class Formatter {
+          public:
+            template<typename T>
+            Formatter& operator<<(const T& message) {
+                message_ += std::format("{}", message);
+            }
+
+            const std::string& str() const {
+                return message_;
+            }
+
+          private:
+            std::string message_;
+        };
+
+    }
+
+    using ql_msg_stream_t = detail::Formatter;
+
+#else
+
+    using ql_msg_stream_t = std::ostringstream;
+
+#endif
 
     //! Base error class
     class Error : public std::exception {
@@ -91,7 +124,7 @@ namespace QuantLib {
 */
 #define QL_FAIL(message) \
 QL_MULTILINE_FAILURE_BEGIN \
-    std::ostringstream _ql_msg_stream; \
+    QuantLib::ql_msg_stream_t _ql_msg_stream; \
     _ql_msg_stream << message; \
     throw QuantLib::Error(__FILE__,__LINE__, \
                           BOOST_CURRENT_FUNCTION,_ql_msg_stream.str()); \
@@ -104,7 +137,7 @@ QL_MULTILINE_FAILURE_END
 #define QL_ASSERT(condition,message) \
 QL_MULTILINE_ASSERTION_BEGIN \
 if (!(condition)) { \
-    std::ostringstream _ql_msg_stream; \
+    QuantLib::ql_msg_stream_t _ql_msg_stream; \
     _ql_msg_stream << message; \
     throw QuantLib::Error(__FILE__,__LINE__, \
                           BOOST_CURRENT_FUNCTION,_ql_msg_stream.str()); \
@@ -117,7 +150,7 @@ QL_MULTILINE_ASSERTION_END
 #define QL_REQUIRE(condition,message) \
 QL_MULTILINE_ASSERTION_BEGIN \
 if (!(condition)) { \
-    std::ostringstream _ql_msg_stream; \
+    QuantLib::ql_msg_stream_t _ql_msg_stream; \
     _ql_msg_stream << message; \
     throw QuantLib::Error(__FILE__,__LINE__, \
                           BOOST_CURRENT_FUNCTION,_ql_msg_stream.str()); \
@@ -130,7 +163,7 @@ QL_MULTILINE_ASSERTION_END
 #define QL_ENSURE(condition,message) \
 QL_MULTILINE_ASSERTION_BEGIN \
 if (!(condition)) { \
-    std::ostringstream _ql_msg_stream; \
+    QuantLib::ql_msg_stream_t _ql_msg_stream; \
     _ql_msg_stream << message; \
     throw QuantLib::Error(__FILE__,__LINE__, \
                           BOOST_CURRENT_FUNCTION,_ql_msg_stream.str()); \
@@ -139,4 +172,3 @@ QL_MULTILINE_ASSERTION_END
 
 
 #endif
-
