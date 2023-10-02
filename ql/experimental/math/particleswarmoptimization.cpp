@@ -19,8 +19,13 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 #include <ql/experimental/math/particleswarmoptimization.hpp>
 #include <ql/math/randomnumbers/sobolrsg.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <utility>
+#endif
 
 using std::sqrt;
 
@@ -399,4 +404,3 @@ namespace QuantLib {
         }
     }
 }
-

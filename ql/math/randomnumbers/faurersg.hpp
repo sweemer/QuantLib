@@ -27,8 +27,12 @@
 
 #include <ql/math/matrix.hpp>
 #include <ql/methods/montecarlo/sample.hpp>
-#include <vector>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -80,5 +84,3 @@ namespace QuantLib {
 }
 
 #endif
-
-

@@ -25,7 +25,12 @@
 #define quantlib_k_interpolated_yoy_optionlet_volatility_surface_hpp
 
 #include <ql/experimental/inflation/yoyoptionletstripper.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -205,4 +210,3 @@ namespace QuantLib {
 }
 
 #endif
-

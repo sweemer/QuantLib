@@ -31,8 +31,12 @@
 #include <ql/pricingengines/vanilla/analyticeuropeanengine.hpp>
 #include <ql/processes/blackscholesprocess.hpp>
 #include <ql/processes/ornsteinuhlenbeckprocess.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
 

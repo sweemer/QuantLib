@@ -25,7 +25,12 @@
 #include <ql/pricingengines/basket/stulzengine.hpp>
 #include <ql/pricingengines/blackcalculator.hpp>
 #include <ql/pricingengines/blackformula.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -205,4 +210,3 @@ namespace QuantLib {
     }
 
 }
-

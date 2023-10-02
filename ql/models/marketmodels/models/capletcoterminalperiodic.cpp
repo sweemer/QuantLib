@@ -31,7 +31,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/models/marketmodels/models/fwdperiodadapter.hpp>
 #include <ql/models/marketmodels/models/fwdtocotswapadapter.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib
 {

@@ -3,7 +3,7 @@
 /*
  Copyright (C) 2006 Klaus Spanderen
  Copyright (C) 2010 Kakhkhor Abdijalilov
- 
+
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
 
@@ -24,9 +24,14 @@
 
 #include <ql/math/integrals/gaussianquadratures.hpp>
 #include <ql/methods/montecarlo/lsmbasissystem.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <numeric>
 #include <set>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -102,7 +107,7 @@ namespace QuantLib {
             return ret;
         }
 
-    } 
+    }
 
     // LsmBasisSystem static methods
 

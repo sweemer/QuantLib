@@ -20,7 +20,12 @@
 #include <ql/legacy/libormarketmodels/liborforwardmodel.hpp>
 #include <ql/pricingengines/blackformula.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <limits>
+#endif
 
 namespace QuantLib {
 

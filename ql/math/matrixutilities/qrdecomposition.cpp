@@ -23,7 +23,12 @@
 
 #include <ql/math/optimization/lmdif.hpp>
 #include <ql/math/matrixutilities/qrdecomposition.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <memory>
+#endif
 
 namespace QuantLib {
 

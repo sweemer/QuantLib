@@ -25,7 +25,12 @@
 #define quantlib_pool_hpp
 
 #include <ql/experimental/credit/issuer.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 namespace QuantLib {
 
@@ -35,7 +40,7 @@ namespace QuantLib {
         Size size() const;
         void clear();
         bool has (const std::string& name) const;
-        void add (const std::string& name, const Issuer& issuer, 
+        void add (const std::string& name, const Issuer& issuer,
             const DefaultProbKey& contractTrigger = NorthAmericaCorpDefaultKey(
                 Currency(), SeniorSec, Period(), 1.));
         const Issuer& get (const std::string& name) const;
@@ -50,7 +55,7 @@ namespace QuantLib {
         std::map<std::string,Issuer> data_;
         std::map<std::string,Real> time_;
         std::vector<std::string> names_;
-        /*! default events seniority and currency this name enters the basket 
+        /*! default events seniority and currency this name enters the basket
         with. Determines to which event/probability this pool referes to. */
         std::map<std::string, DefaultProbKey> defaultKeys_;
     };

@@ -33,7 +33,12 @@
 #include <ql/methods/finitedifferences/stepconditions/fdmbermudanstepcondition.hpp>
 #include <ql/methods/finitedifferences/stepconditions/fdmstepconditioncomposite.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

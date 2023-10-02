@@ -21,7 +21,12 @@
 #include <ql/math/distributions/normaldistribution.hpp>
 #include <ql/math/integrals/simpsonintegral.hpp>
 #include <ql/pricingengines/vanilla/analyticeuropeanvasicekengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -91,4 +96,3 @@ namespace QuantLib {
     }
 
 }
-

@@ -26,9 +26,14 @@
 #include <ql/currencies/europe.hpp>
 #include <ql/time/calendars/target.hpp>
 #include <ql/time/daycounters/actual365fixed.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <string>
 #include <iostream>
 #include <iomanip>
+#endif
 
 using namespace std;
 using namespace QuantLib;
@@ -67,7 +72,7 @@ int main(int, char* []) {
                 ext::make_shared<FlatHazardRate>(0, TARGET(), hazardRate, Actual365Fixed()));
         std::vector<Issuer> issuers;
         for(Size i=0; i<hazardRates.size(); i++) {
-            std::vector<QuantLib::Issuer::key_curve_pair> curves(1, 
+            std::vector<QuantLib::Issuer::key_curve_pair> curves(1,
                 std::make_pair(NorthAmericaCorpDefaultKey(
                     EURCurrency(), QuantLib::SeniorSec,
                     Period(), 1. // amount threshold
@@ -80,15 +85,15 @@ int main(int, char* []) {
             thePool->add(names[i], issuers[i], NorthAmericaCorpDefaultKey(
                     EURCurrency(), QuantLib::SeniorSec, Period(), 1.));
 
-        std::vector<DefaultProbKey> defaultKeys(hazardRates.size(), 
+        std::vector<DefaultProbKey> defaultKeys(hazardRates.size(),
             NorthAmericaCorpDefaultKey(EURCurrency(), SeniorSec, Period(), 1.));
-        // Recoveries are irrelevant in this example but must be given as the 
+        // Recoveries are irrelevant in this example but must be given as the
         //   lib stands.
         std::vector<ext::shared_ptr<RecoveryRateModel>> rrModels(
             hazardRates.size(), ext::make_shared<ConstantRecoveryModel>(
             ConstantRecoveryModel(0.5, SeniorSec)));
         auto theBskt = ext::make_shared<Basket>(
-            todaysDate, names, std::vector<Real>(hazardRates.size(), 100.), 
+            todaysDate, names, std::vector<Real>(hazardRates.size(), 100.),
             thePool);
         /* --------------------------------------------------------------
                         SET UP JOINT DEFAULT EVENT LATENT MODELS
@@ -131,7 +136,7 @@ int main(int, char* []) {
         /* --------------------------------------------------------------
                         DUMP SOME RESULTS
         -------------------------------------------------------------- */
-        /* Default correlations in a T copula should be below those of the 
+        /* Default correlations in a T copula should be below those of the
         gaussian for the same factors.
         The calculations on the MC show dispersion on both copulas (thats
         ok) and too large values with very large dispersions on the T case.
@@ -140,7 +145,7 @@ int main(int, char* []) {
         However the T does converge to the gaussian value for large value of
         the parameters.
         */
-        Date calcDate(TARGET().advance(Settings::instance().evaluationDate(), 
+        Date calcDate(TARGET().advance(Settings::instance().evaluationDate(),
             Period(120, Months)));
         std::vector<Probability> probEventsTLatent, probEventsTRandLoss;
         #ifndef QL_PATCH_SOLARIS
@@ -149,26 +154,26 @@ int main(int, char* []) {
         //
         lmT->resetBasket(theBskt);
         for(Size numEvts=0; numEvts <=theBskt->size(); numEvts++) {
-            probEventsTLatent.push_back(lmT->probAtLeastNEvents(numEvts, 
+            probEventsTLatent.push_back(lmT->probAtLeastNEvents(numEvts,
                 calcDate));
          }
         //
         theBskt->setLossModel(rdlmT);
         for(Size numEvts=0; numEvts <=theBskt->size(); numEvts++) {
-            probEventsTRandLoss.push_back(theBskt->probAtLeastNEvents(numEvts, 
+            probEventsTRandLoss.push_back(theBskt->probAtLeastNEvents(numEvts,
                 calcDate));
          }
         //
         #ifndef QL_PATCH_SOLARIS
         lmG->resetBasket(theBskt);
         for(Size numEvts=0; numEvts <=theBskt->size(); numEvts++) {
-            probEventsGLatent.push_back(lmG->probAtLeastNEvents(numEvts, 
+            probEventsGLatent.push_back(lmG->probAtLeastNEvents(numEvts,
                 calcDate));
          }
         //
         theBskt->setLossModel(rdlmG);
         for(Size numEvts=0; numEvts <=theBskt->size(); numEvts++) {
-            probEventsGRandLoss.push_back(theBskt->probAtLeastNEvents(numEvts, 
+            probEventsGRandLoss.push_back(theBskt->probAtLeastNEvents(numEvts,
                 calcDate));
          }
         #endif
@@ -182,7 +187,7 @@ int main(int, char* []) {
         for(Size iName1=0; iName1 <theBskt->size(); iName1++) {
             std::vector<Real> tmp;
             for(Size iName2=0; iName2 <theBskt->size(); iName2++)
-                tmp.push_back(lmT->defaultCorrelation(correlDate, 
+                tmp.push_back(lmT->defaultCorrelation(correlDate,
                     iName1, iName2));
             correlsTlm.push_back(tmp);
         }
@@ -191,7 +196,7 @@ int main(int, char* []) {
         for(Size iName1=0; iName1 <theBskt->size(); iName1++) {
             std::vector<Real> tmp;
             for(Size iName2=0; iName2 <theBskt->size(); iName2++)
-                tmp.push_back(theBskt->defaultCorrelation(correlDate, 
+                tmp.push_back(theBskt->defaultCorrelation(correlDate,
                     iName1, iName2));
             correlsTrand.push_back(tmp);
         }
@@ -201,7 +206,7 @@ int main(int, char* []) {
         for(Size iName1=0; iName1 <theBskt->size(); iName1++) {
             std::vector<Real> tmp;
             for(Size iName2=0; iName2 <theBskt->size(); iName2++)
-                tmp.push_back(lmG->defaultCorrelation(correlDate, 
+                tmp.push_back(lmG->defaultCorrelation(correlDate,
                     iName1, iName2));
             correlsGlm.push_back(tmp);
         }
@@ -210,15 +215,15 @@ int main(int, char* []) {
         for(Size iName1=0; iName1 <theBskt->size(); iName1++) {
             std::vector<Real> tmp;
             for(Size iName2=0; iName2 <theBskt->size(); iName2++)
-                tmp.push_back(theBskt->defaultCorrelation(correlDate, 
+                tmp.push_back(theBskt->defaultCorrelation(correlDate,
                     iName1, iName2));
             correlsGrand.push_back(tmp);
         }
         #endif
 
 
-        std::cout << 
-            " Gaussian versus T prob of extreme event (random and integrable)-" 
+        std::cout <<
+            " Gaussian versus T prob of extreme event (random and integrable)-"
             << std::endl;
         for(Size numEvts=0; numEvts <=theBskt->size(); numEvts++) {
             std::cout << "-Prob of " << numEvts << " events... " <<
@@ -227,13 +232,13 @@ int main(int, char* []) {
                 #else
                 "n/a" << " ** " <<
                 #endif
-                probEventsTLatent[numEvts] << " ** " << 
+                probEventsTLatent[numEvts] << " ** " <<
                 #ifndef QL_PATCH_SOLARIS
                 probEventsGRandLoss[numEvts]<< " ** " <<
                 #else
                 "n/a" << " ** " <<
                 #endif
-                probEventsTRandLoss[numEvts] 
+                probEventsTRandLoss[numEvts]
             << std::endl;
         }
 
@@ -242,7 +247,7 @@ int main(int, char* []) {
         cout << "-----------------------------------------" << endl;
         for(Size iName1=0; iName1 <theBskt->size(); iName1++) {
             for(Size iName2=0; iName2 <theBskt->size(); iName2++)
-                cout << 
+                cout <<
                 #ifndef QL_PATCH_SOLARIS
                     correlsGlm[iName1][iName2] << " , ";
                 #else
@@ -253,7 +258,7 @@ int main(int, char* []) {
         cout << endl;
         for(Size iName1=0; iName1 <theBskt->size(); iName1++) {
             for(Size iName2=0; iName2 <theBskt->size(); iName2++)
-                cout << 
+                cout <<
                     correlsTlm[iName1][iName2] << " , ";
             ;
                 cout << endl;
@@ -261,7 +266,7 @@ int main(int, char* []) {
         cout << endl;
         for(Size iName1=0; iName1 <theBskt->size(); iName1++) {
             for(Size iName2=0; iName2 <theBskt->size(); iName2++)
-                cout << 
+                cout <<
                 #ifndef QL_PATCH_SOLARIS
                     correlsGrand[iName1][iName2] << " , ";
                 #else
@@ -272,7 +277,7 @@ int main(int, char* []) {
         cout << endl;
         for(Size iName1=0; iName1 <theBskt->size(); iName1++) {
             for(Size iName2=0; iName2 <theBskt->size(); iName2++)
-                cout << 
+                cout <<
                     correlsTrand[iName1][iName2] << " , ";
             ;
                 cout << endl;
@@ -287,4 +292,3 @@ int main(int, char* []) {
         return 1;
     }
 }
-

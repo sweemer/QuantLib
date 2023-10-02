@@ -26,7 +26,12 @@
 #define quantlib_types_hpp
 
 #include <ql/qldefines.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cstddef>
+#endif
 
 namespace QuantLib {
 

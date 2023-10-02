@@ -26,12 +26,17 @@
 
 #include <ql/types.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <random>
+#endif
 
 namespace QuantLib {
 
     //! Levy Flight distribution
-    /*! The levy flight distribution is a random distribution with 
+    /*! The levy flight distribution is a random distribution with
         the following form:
         \f[
         p(x) = \frac{\alpha x_m^{\alpha}}{x^{\alpha+1}}
@@ -60,7 +65,7 @@ namespace QuantLib {
 
             //! Returns the xm parameter of the distribution
             Real xm() const { return xm_; }
-            
+
             //! Returns the alpha parameter of the distribution
             Real alpha() const { return alpha_; }
 
@@ -88,7 +93,7 @@ namespace QuantLib {
         //@{
         //! Returns the xm parameter of the distribution
         Real xm() const { return xm_; }
-            
+
         //! Returns the alpha parameter of the distribution
         Real alpha() const { return alpha_; }
 
@@ -102,9 +107,9 @@ namespace QuantLib {
         //! Returns the parameters of the distribution
         param_type param() const { return {xm_, alpha_}; }
         //@}
-        
+
         //! Sets the parameters of the distribution
-        void param(const param_type& parm) { 
+        void param(const param_type& parm) {
             xm_ = parm.xm();
             alpha_ = parm.alpha();
         }
@@ -113,14 +118,14 @@ namespace QuantLib {
             on values produced by any engine prior to invoking reset.
         */
         void reset() { }
-        
+
         //! Returns the value of the pdf for x
         Real operator()(Real x) const{
             using std::pow;
             if(x < xm_) return 0.0;
             return alpha_*pow(xm_/x, alpha_)/x;
         }
-        
+
         /*!    Returns a random variate distributed according to the
             levy flight distribution.
         */

@@ -31,7 +31,12 @@
 #define quantlib_optimization_simplex_hpp
 
 #include <ql/math/optimization/problem.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -42,10 +47,10 @@ namespace QuantLib {
         it is quite easily implemented. First, we choose N+1
         starting points, given here by a starting point \f$
         \mathbf{P}_{0} \f$ and N points such that
-        \f[ 
+        \f[
             \mathbf{P}_{\mathbf{i}}=\mathbf{P}_{0}+\lambda \mathbf{e}_{\mathbf{i}},
         \f]
-        where \f$ \lambda \f$ is the problem's characteristic length scale). These 
+        where \f$ \lambda \f$ is the problem's characteristic length scale). These
         points will form a geometrical form called simplex.
         The principle of the downhill simplex method is, at each
         iteration, to move the worst point (highest cost function value)

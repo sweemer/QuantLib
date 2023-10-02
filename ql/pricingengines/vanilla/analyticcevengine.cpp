@@ -24,7 +24,12 @@
 #include <ql/pricingengines/vanilla/analyticcevengine.hpp>
 #include <boost/math/distributions/non_central_chi_squared.hpp>
 #include <boost/math/special_functions/gamma.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

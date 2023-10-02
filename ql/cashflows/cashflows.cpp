@@ -29,7 +29,12 @@
 #include <ql/quotes/simplequote.hpp>
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/termstructures/yield/zerospreadedtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -409,7 +414,7 @@ namespace QuantLib {
                 bps_ += bps;
             }
             void visit(CashFlow& cf) override {
-                nonSensNPV_ += cf.amount() * 
+                nonSensNPV_ += cf.amount() *
                                discountCurve_.discount(cf.date());
             }
             Real bps() const { return bps_; }

@@ -19,7 +19,12 @@
 
 #include <ql/exercise.hpp>
 #include <ql/pricingengines/barrier/analyticdoublebarrierbinaryengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using std::fabs;
 
@@ -28,10 +33,10 @@ namespace QuantLib {
    // number of iterations ...
    static Real PI= 3.14159265358979323846264338327950;
 
-    // calc helper object 
+    // calc helper object
     class AnalyticDoubleBarrierBinaryEngine_helper
     {
-    
+
     public:
         AnalyticDoubleBarrierBinaryEngine_helper(
              const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
@@ -91,8 +96,8 @@ namespace QuantLib {
         Real beta = -0.25 * std::pow(( 2*b/sigmaq - 1), 2) - 2 * r/sigmaq;
         Real Z = std::log(barrier_hi / barrier_lo);
         Real factor = ((2*PI*cash)/std::pow(Z,2)); // common factor
-        Real lo_alpha = std::pow(spot/barrier_lo, alpha); 
-        Real hi_alpha = std::pow(spot/barrier_hi, alpha); 
+        Real lo_alpha = std::pow(spot/barrier_lo, alpha);
+        Real hi_alpha = std::pow(spot/barrier_hi, alpha);
 
         Real tot = 0, term = 0;
         for (Size i = 1 ; i < maxIteration ; ++i)
@@ -304,4 +309,3 @@ namespace QuantLib {
     }
 
 }
-

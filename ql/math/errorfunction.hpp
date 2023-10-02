@@ -25,7 +25,12 @@
 #define quantlib_error_function_h
 
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <functional>
+#endif
 
 namespace QuantLib {
 

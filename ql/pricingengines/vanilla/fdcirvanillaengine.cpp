@@ -28,7 +28,12 @@
 #include <ql/pricingengines/vanilla/fdcirvanillaengine.hpp>
 #include <ql/processes/blackscholesprocess.hpp>
 #include <ql/processes/coxingersollrossprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -87,7 +92,7 @@ namespace QuantLib {
                 std::pair<Real, Real>(payoff->strike(), 0.1),
                 passedDividends, quantoHelper_,
                 0.0));
-        
+
         const ext::shared_ptr<FdmMesher> mesher(
             new FdmMesherComposite(equityMesher, shortRateMesher));
 
@@ -96,9 +101,9 @@ namespace QuantLib {
                           new FdmLogInnerValue(arguments_.payoff, mesher, 0));
 
         // Step conditions
-        const ext::shared_ptr<FdmStepConditionComposite> conditions = 
+        const ext::shared_ptr<FdmStepConditionComposite> conditions =
              FdmStepConditionComposite::vanillaComposite(
-                                 passedDividends, arguments_.exercise, 
+                                 passedDividends, arguments_.exercise,
                                  mesher, calculator,
                                  bsProcess_->riskFreeRate()->referenceDate(),
                                  bsProcess_->riskFreeRate()->dayCounter());

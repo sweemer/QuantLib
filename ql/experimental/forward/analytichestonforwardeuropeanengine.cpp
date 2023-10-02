@@ -2,7 +2,7 @@
 
 /*
  Copyright (C) 2020 Jack Gillett
- 
+
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
 
@@ -18,8 +18,13 @@
 */
 
 #include <ql/experimental/forward/analytichestonforwardeuropeanengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -46,7 +51,7 @@ namespace QuantLib {
             }
         }
 
-        // QL Gaussian Quadrature - map phi from [-1 to 1] to {0, phiRightLimit] 
+        // QL Gaussian Quadrature - map phi from [-1 to 1] to {0, phiRightLimit]
         Real operator()(Real phi) const {
             Real phiDash = (0.5+1e-8+0.5*phi) * phiRightLimit_; // Map phi to full range
             return 0.5*phiRightLimit_*std::real((std::exp(-phiDash*logK_*i_) / (phiDash*i_)) * engine_->chF(phiDash+adj_, tenor_));

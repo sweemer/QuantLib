@@ -21,7 +21,12 @@
 #include <ql/experimental/averageois/makearithmeticaverageois.hpp>
 #include <ql/pricingengines/swap/discountingswapengine.hpp>
 #include <ql/utilities/null_deleter.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -62,7 +67,7 @@ namespace QuantLib {
                 .withFixedLegPaymentFrequency(fixedLegPaymentFrequency_)
                 .withOvernightLegPaymentFrequency(overnightLegPaymentFrequency_)
                 .withArithmeticAverage(mrs_, vol_, byApprox_);
-        
+
         earliestDate_ = swap_->startDate();
         latestDate_ = swap_->maturityDate();
     }

@@ -22,7 +22,12 @@
 
 #include <ql/methods/finitedifferences/utilities/fdmaffinemodeltermstructure.hpp>
 #include <ql/models/model.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

@@ -26,7 +26,12 @@
 #include <ql/quotes/simplequote.hpp>
 #include <ql/termstructures/volatility/swaption/cmsmarket.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using std::vector;
 

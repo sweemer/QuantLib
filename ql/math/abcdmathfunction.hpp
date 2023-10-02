@@ -25,7 +25,12 @@
 
 #include <ql/types.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -48,7 +53,7 @@ namespace QuantLib {
         typedef Real result_type;
 
         AbcdMathFunction(Real a = 0.002,
-                         Real b = 0.001, 
+                         Real b = 0.001,
                          Real c = 0.16,
                          Real d = 0.0005);
         AbcdMathFunction(std::vector<Real> abcd);
@@ -68,11 +73,11 @@ namespace QuantLib {
         /*! first derivative of the function at time t
             \f[ f'(t) = [ (b-c*a) + (-c*b)*t) ] e^{-c*t} \f] */
         Real derivative(Time t) const;
-        
+
         /*! indefinite integral of the function at time t
             \f[ \int f(t)dt = [ (-a/c-b/c^2) + (-b/c)*t ] e^{-c*t} + d*t \f] */
         Real primitive(Time t) const;
-        
+
         /*! definite integral of the function between t1 and t2
             \f[ \int_{t1}^{t2} f(t)dt \f] */
         Real definiteIntegral(Time t1, Time t2) const;

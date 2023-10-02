@@ -25,10 +25,15 @@
 #define quantlib_flatextrapolation2D_hpp
 
 #include <ql/math/interpolations/interpolation2d.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
-    
+
     /*! \ingroup interpolations
         \warning See the Interpolation class for information about the
                  required lifetime of the underlying data.
@@ -74,14 +79,14 @@ namespace QuantLib {
             Real bindX(Real x) const {
                 if(x < xMin())
                     return xMin();
-                if (x > xMax()) 
+                if (x > xMax())
                     return xMax();
                 return x;
             }
             Real bindY(Real y) const {
                 if(y < yMin())
                     return yMin();
-                if (y > yMax()) 
+                if (y > yMax())
                     return yMax();
                 return y;
             }

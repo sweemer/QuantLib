@@ -28,9 +28,14 @@
 #include <ql/math/optimization/differentialevolution.hpp>
 #include <ql/math/optimization/simulatedannealing.hpp>
 #include <ql/tuple.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
 #include <iostream>
 #include <utility>
+#endif
 
 using namespace QuantLib;
 

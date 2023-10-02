@@ -21,7 +21,12 @@
 #include <ql/experimental/exoticoptions/continuousarithmeticasianlevyengine.hpp>
 #include <ql/math/distributions/normaldistribution.hpp>
 #include <ql/pricingengines/blackcalculator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using namespace std;
 
@@ -76,7 +81,7 @@ namespace QuantLib {
             zeroRate(maturity, divdc, Continuous, NoFrequency);
         Real b = riskFreeRate - dividendYield;
 
-        Real Se = (std::fabs(b) > 1000*QL_EPSILON) 
+        Real Se = (std::fabs(b) > 1000*QL_EPSILON)
             ? Real((spot/(T*b))*(exp((b-riskFreeRate)*T2)-exp(-riskFreeRate*T2)))
             : Real(spot*T2/T * std::exp(-riskFreeRate*T2));
 

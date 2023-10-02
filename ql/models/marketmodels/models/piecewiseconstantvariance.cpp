@@ -21,7 +21,12 @@
 
 #include <ql/models/marketmodels/models/piecewiseconstantvariance.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <numeric>
+#endif
 
 namespace QuantLib {
 

@@ -18,8 +18,13 @@
 */
 
 #include <ql/experimental/commodities/unitofmeasure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <ostream>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -57,4 +62,3 @@ namespace QuantLib {
     : name(std::move(name)), code(std::move(code)), unitType(unitType),
       triangulationUnitOfMeasure(std::move(triangulationUnitOfMeasure)), rounding(rounding) {}
 }
-

@@ -28,7 +28,12 @@
 
 #include <ql/math/matrixutilities/sparsematrix.hpp>
 #include <ql/methods/finitedifferences/operators/fdmlinearop.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <numeric>
+#endif
 
 namespace QuantLib {
 
@@ -40,7 +45,7 @@ namespace QuantLib {
         virtual void setTime(Time t1, Time t2) = 0;
 
         virtual Array apply_mixed(const Array& r) const = 0;
-        
+
         virtual Array apply_direction(Size direction, const Array& r) const = 0;
         virtual Array solve_splitting(Size direction, const Array& r, Real s) const = 0;
         virtual Array preconditioner(const Array& r, Real s) const = 0;

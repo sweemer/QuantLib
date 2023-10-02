@@ -27,7 +27,12 @@
 #include <ql/termstructures/volatility/sabrinterpolatedsmilesection.hpp>
 #include <ql/termstructures/volatility/smilesection.hpp>
 #include <ql/termstructures/volatility/smilesectionutils.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -332,7 +337,7 @@ namespace QuantLib {
             if ((modelSettings_.adjustments_ & ModelSettings::KahaleSmile) != 0) {
 
                 i->second.smileSection_ = ext::make_shared<KahaleSmileSection>(
-                    
+
                         i->second.rawSmileSection_, i->second.atm_,
                         (modelSettings_.adjustments_ &
                          ModelSettings::KahaleInterpolation) != 0,

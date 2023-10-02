@@ -30,11 +30,16 @@
 #include <ql/errors.hpp>
 #include <ql/functional.hpp>
 #include <boost/iterator/transform_iterator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iterator>
 #include <algorithm>
 #include <map>
 #include <vector>
 #include <type_traits>
+#endif
 
 namespace QuantLib {
 

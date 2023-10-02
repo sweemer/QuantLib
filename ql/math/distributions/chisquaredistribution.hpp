@@ -26,7 +26,12 @@
 #define quantlib_chi_square_distribution_hpp
 
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <functional>
+#endif
 
 namespace QuantLib {
 

@@ -21,7 +21,12 @@
 #include <ql/experimental/credit/randomdefaultmodel.hpp>
 #include <ql/math/solvers1d/bisection.hpp>
 #include <ql/math/solvers1d/brent.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using namespace std;
 
@@ -93,4 +98,3 @@ namespace QuantLib {
     }
 
 }
-

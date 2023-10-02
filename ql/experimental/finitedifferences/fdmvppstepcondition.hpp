@@ -27,7 +27,12 @@
 #include <ql/methods/finitedifferences/stepcondition.hpp>
 #include <ql/shared_ptr.hpp>
 #include <ql/functional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
     class FdmMesher;

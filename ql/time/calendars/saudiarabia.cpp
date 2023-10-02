@@ -20,7 +20,12 @@
 
 #include <ql/time/calendars/saudiarabia.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
+#endif
 
 namespace QuantLib {
 
@@ -36,17 +41,17 @@ namespace QuantLib {
 
         // In 2015 and 2014, the Eid holidays of the Tadawul Exchange
         // have been from Eid-1 to Eid+4
-        // Sometimes, slightly longer holidays are observed 
+        // Sometimes, slightly longer holidays are observed
         // But conservatively, we take Eid-1 to Eid+4 as the holiday
 
         // Eid Date    Holiday     Offset    Remarks
         // 2015-09-23    22-27     -1,+4     later extended to 22-28 or -1+5
         // 2015-07-17    18-21     -1,+4
-        // 2014-10-05    03-11     -1,+4     because of weekend 03-11 is same as 04-09 
+        // 2014-10-05    03-11     -1,+4     because of weekend 03-11 is same as 04-09
         // 2014-07-28    25-03     -1,+4     because of weekend 25-03 is same as 27-01
-        // 2013-10-15    11-19     -2,+4     because of weekend 11-19 is same as 13-19 
-        // 2013-08-08    06-12     -2,+4 
-        // 2012-10-26    25-03     -1,+5     because of weekend 25-03 is same as 25-31 
+        // 2013-10-15    11-19     -2,+4     because of weekend 11-19 is same as 13-19
+        // 2013-08-08    06-12     -2,+4
+        // 2012-10-26    25-03     -1,+5     because of weekend 25-03 is same as 25-31
         // 2012-08-19    16-24     -1,+4     because of weekend 16-24 is same as 18-23
 
         bool isEidAlAdha(Date d) {
@@ -162,4 +167,3 @@ namespace QuantLib {
     }
 
 }
-

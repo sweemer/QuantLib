@@ -25,7 +25,12 @@
 #define quantlib_simple_local_estimator_hpp
 
 #include <ql/volatilitymodel.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 namespace QuantLib {
 

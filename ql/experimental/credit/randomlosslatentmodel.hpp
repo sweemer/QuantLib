@@ -21,13 +21,18 @@
 
 #include <ql/experimental/credit/basket.hpp>
 #include <ql/experimental/credit/randomdefaultlatentmodel.hpp>
-#include <ql/experimental/credit/spotlosslatentmodel.hpp> 
+#include <ql/experimental/credit/spotlosslatentmodel.hpp>
 #include <ql/experimental/math/gaussiancopulapolicy.hpp>
 #include <ql/experimental/math/latentmodel.hpp>
 #include <ql/experimental/math/tcopulapolicy.hpp>
 #include <ql/math/randomnumbers/mt19937uniformrng.hpp>
 #include <ql/math/solvers1d/brent.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 namespace QuantLib {
 
@@ -35,8 +40,8 @@ namespace QuantLib {
     template<class , class > class RandomLossLM;
     template<class copulaPolicy, class USNG>
         struct simEvent<RandomLossLM<copulaPolicy, USNG> > {
-            simEvent(unsigned int n, unsigned int d, Real r) 
-            : nameIdx(n), dayFromRef(d), 
+            simEvent(unsigned int n, unsigned int d, Real r)
+            : nameIdx(n), dayFromRef(d),
                 // truncates the value:
               compactRR(std::lround(r/rrGranular)) {}
             unsigned int nameIdx : 12; // can index up to 4095 names
@@ -46,10 +51,10 @@ namespace QuantLib {
         public:
             // ..............still one bit left
             bool operator<(const simEvent& evt) const {
-                return dayFromRef < evt.dayFromRef; 
+                return dayFromRef < evt.dayFromRef;
             }
             Real recovery() const {
-                /* we pay the price of this product (plus the division at 
+                /* we pay the price of this product (plus the division at
                 construction) for the memory we save. Precission is lost though,
                 e.g. figures from 0.0 to 0.00390625/2. are stored as 0.0
                 */
@@ -60,7 +65,7 @@ namespace QuantLib {
 
 #ifndef __DOXYGEN__
 
-    template <class C, class G> const Real 
+    template <class C, class G> const Real
         simEvent<RandomLossLM<C, G> >::rrGranular = 1./256.;// 2^8
 
 #endif
@@ -78,13 +83,13 @@ namespace QuantLib {
         Real accuracy_;
     public:
         explicit RandomLossLM(
-            const ext::shared_ptr<SpotRecoveryLatentModel<copulaPolicy> >& 
+            const ext::shared_ptr<SpotRecoveryLatentModel<copulaPolicy> >&
                 copula,
             Size nSims = 0,
-            Real accuracy = 1.e-6, 
+            Real accuracy = 1.e-6,
             BigNatural seed = 2863311530UL)
         : RandomLM< ::QuantLib::RandomLossLM, copulaPolicy, USNG>
-            (copula->numFactors(), copula->size(), copula->copula(), 
+            (copula->numFactors(), copula->size(), copula->copula(),
                 nSims, seed),
           copula_(copula), accuracy_(accuracy)
     {
@@ -94,8 +99,8 @@ namespace QuantLib {
 
         // grant access to static polymorphism:
         /* While this works on g++, VC9 refuses to compile it.
-        Not completely sure whos right; individually making friends of the 
-        calling members or writting explicitly the derived class T parameters 
+        Not completely sure whos right; individually making friends of the
+        calling members or writting explicitly the derived class T parameters
         throws the same errors.
         The access is then open to the member fucntions.
         */
@@ -105,8 +110,8 @@ namespace QuantLib {
 
         // see note on randomdefaultlatentmodel
         void initDates() const {
-            /* Precalculate horizon time default probabilities (used to 
-              determine if the default took place and subsequently compute its 
+            /* Precalculate horizon time default probabilities (used to
+              determine if the default took place and subsequently compute its
               event time)
             */
             Date today = Settings::instance().evaluationDate();
@@ -122,13 +127,13 @@ namespace QuantLib {
             return evt.recovery();
         }
 
-        Real latentVarValue(const std::vector<Real>& factorsSample, 
+        Real latentVarValue(const std::vector<Real>& factorsSample,
             Size iVar) const {
                 return copula_->latentVarValue(factorsSample, iVar);
         }
         Size basketSize() const { return this->basket_->size(); }
         // conditional to default, defined as spot-recovery.
-        Real conditionalRecovery(Real latentVarSample, Size iName, 
+        Real conditionalRecovery(Real latentVarSample, Size iName,
             const Date& d) const;
     private:
       void resetModel() override {
@@ -144,7 +149,7 @@ namespace QuantLib {
           // NOLINTNEXTLINE(bugprone-parent-virtual-call)
           LazyObject::update();
       }
-        // Default probabilities for each name at the time of the maximun 
+        // Default probabilities for each name at the time of the maximun
         //   horizon date. Cached for perf.
         mutable std::vector<Probability> horizonDefaultPs_;
     };
@@ -155,7 +160,7 @@ namespace QuantLib {
 
     template<class C, class URNG>
     void RandomLossLM<C, URNG>::nextSample(
-        const std::vector<Real>& values) const 
+        const std::vector<Real>& values) const
     {
         const ext::shared_ptr<Pool>& pool = this->basket_->pool();
         this->simsBuffer_.push_back(std::vector<defaultSimEvent> ());
@@ -170,56 +175,56 @@ namespace QuantLib {
             is split in two almost disjoint latent models and that theres no
             check on the vector size in the LM base class.
             */
-            Real latentVarSample = 
+            Real latentVarSample =
                 copula_->latentVarValue(values, iName);
-            Probability simDefaultProb = 
+            Probability simDefaultProb =
                 copula_->cumulativeY(latentVarSample, iName);
             // If the default simulated lies before the max date:
             if (horizonDefaultPs_[iName] >= simDefaultProb) {
-                const Handle<DefaultProbabilityTermStructure>& dfts = 
+                const Handle<DefaultProbabilityTermStructure>& dfts =
                     pool->get(pool->names()[iName]).  // use 'live' names
                     defaultProbability(this->basket_->defaultKeys()[iName]);
-                // compute and store default time with respect to the 
+                // compute and store default time with respect to the
                 //  curve ref date:
                 Size dateSTride =
                     static_cast<Size>(Brent().solve(// casted from Real:
                     detail::Root(dfts, simDefaultProb), accuracy_, 0., 1.));
                 /*
-                // value if one approximates to a flat HR; 
+                // value if one approximates to a flat HR;
                 //   faster (>x2) but it introduces an error:..
                 // \todo: see how to include this 'polymorphically'. While
-                //   not the case in pricing in risk metrics/real  
+                //   not the case in pricing in risk metrics/real
                 //   probabilities the curves are often flat
-                static_cast<Size>(ceil(maxHorizon_ * 
+                static_cast<Size>(ceil(maxHorizon_ *
                                     std::log(1.-simDefaultProb)
                 /std::log(1.-data_.horizonDefaultPs_[iName])));
                 */
                 // Determine the realized recovery rate:
-                /* For this; 'conditionalRecovery' needs to compute the pdef on 
+                /* For this; 'conditionalRecovery' needs to compute the pdef on
                 the realized def event date from the simulation. Yet, this might
-                have fallen between todays date and the default TS reference 
+                have fallen between todays date and the default TS reference
                 date(usually a two day gap) To avoid requesting a negative time
-                probability the date is moved to the TS date 
-                Unless the gap is ridiculous this has no practical effect for 
+                probability the date is moved to the TS date
+                Unless the gap is ridiculous this has no practical effect for
                 the RR value*/
                 Date today = Settings::instance().evaluationDate();
-                Date eventDate = today+Period(static_cast<Integer>(dateSTride), 
+                Date eventDate = today+Period(static_cast<Integer>(dateSTride),
                     Days);
-                if(eventDate<dfts->referenceDate()) 
+                if(eventDate<dfts->referenceDate())
                     eventDate = dfts->referenceDate();
-                Real latentRRVarSample = 
+                Real latentRRVarSample =
                     copula_->latentRRVarValue(values, iName);
-                Real recovery = 
+                Real recovery =
                     copula_->conditionalRecovery(latentRRVarSample,
                         iName, eventDate);
                 this->simsBuffer_.back().push_back(
                   defaultSimEvent(iName, dateSTride, recovery));
                 //emplace_back
             }
-        /* Used to remove sims with no events. Uses less memory, faster 
-        post-statistics. But only if all names in the portfolio have low 
-        default probability, otherwise is more expensive and sim access has 
-        to be modified. However low probability is also an indicator that 
+        /* Used to remove sims with no events. Uses less memory, faster
+        post-statistics. But only if all names in the portfolio have low
+        default probability, otherwise is more expensive and sim access has
+        to be modified. However low probability is also an indicator that
         variance reduction is needed. */
         //if(simsBuffer.back().empty()) {
         //    emptySims_++;// Size; intilzd to zero
@@ -231,7 +236,7 @@ namespace QuantLib {
 
     // Common uses: Not valid in multithread version.
     // ---------- Gaussian default generators options ------------------------
-    /* Uses copula direct normal inversion and MT generator 
+    /* Uses copula direct normal inversion and MT generator
     typedef RandomLossLM<GaussianCopulaPolicy,
         RandomSequenceGenerator<MersenneTwisterUniformRng> >
             GaussianRandomLossLM;
@@ -246,11 +251,11 @@ namespace QuantLib {
 
     // ---------- T default generators options ----------------------------
     /*
-    typedef RandomLossLM<TCopulaPolicy, 
+    typedef RandomLossLM<TCopulaPolicy,
       RandomSequenceGenerator<MersenneTwisterUniformRng> > TRandomLossLM;
     */
     /*
-    typedef RandomLossLM<TCopulaPolicy, 
+    typedef RandomLossLM<TCopulaPolicy,
         RandomSequenceGenerator<PolarStudentTRng<MersenneTwisterUniformRng> > >
             TRandomLossLM;
     */

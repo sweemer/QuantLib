@@ -27,9 +27,14 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/models/marketmodels/pathwisemultiproduct.hpp>
 #include <ql/types.hpp>
 #include <ql/utilities/clone.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <memory>
 #include <valarray>
 #include <vector>
+#endif
 
 namespace QuantLib
 {
@@ -65,7 +70,7 @@ namespace QuantLib
         const MarketModelPathwiseMultiProduct& rebate() const;
         void enableCallability();
         void disableCallability();
-              
+
 
     private:
         Clone<MarketModelPathwiseMultiProduct> underlying_;

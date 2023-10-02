@@ -24,8 +24,12 @@
 #include <ql/cashflows/cpicouponpricer.hpp>
 #include <ql/cashflows/inflationcoupon.hpp>
 #include <ql/time/daycounters/thirty360.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -366,15 +370,15 @@ namespace QuantLib {
         Size n = schedule_.size()-1;
         Leg leg;
         leg.reserve(n+1);   // +1 for notional, we always have some sort ...
-        
+
         Date baseDate = baseDate_;
         // BaseDate and baseCPI are not given, use the first date as startDate and the baseFixingg
         // should be at startDate - observationLag
-        
+
         if (n>0) {
             QL_REQUIRE(!fixedRates_.empty() || !spreads_.empty(),
                        "no fixedRates or spreads given");
-            
+
             if (baseDate_ == Null<Date>() && baseCPI_ == Null<Real>()) {
                 baseDate = schedule_.date(0) - observationLag_;
             }
@@ -435,7 +439,7 @@ namespace QuantLib {
         Date paymentDate = paymentCalendar_.adjust(schedule_.date(n), paymentAdjustment_);
         leg.push_back(ext::make_shared<CPICashFlow>
                           (detail::get(notionals_, n, 0.0), index_,
-                           baseDate, baseCPI_, 
+                           baseDate, baseCPI_,
                            schedule_.date(n), observationLag_, observationInterpolation_,
                            paymentDate, subtractInflationNominal_));
 
@@ -446,4 +450,3 @@ namespace QuantLib {
     }
 
 }
-

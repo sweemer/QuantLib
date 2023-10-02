@@ -31,7 +31,12 @@
 #include <ql/pricingengines/barrier/fdhestonbarrierengine.hpp>
 #include <ql/pricingengines/barrier/fdhestonrebateengine.hpp>
 #include <ql/pricingengines/vanilla/fdhestonvanillaengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -198,12 +203,12 @@ namespace QuantLib {
                                        payoff, arguments_.exercise);
             const Size xGridMin = 20;
             const Size vGridMin = 10;
-            const Size rebateDampingSteps 
-                = (dampingSteps_ > 0) ? std::min(Size(1), dampingSteps_/2) : 0; 
+            const Size rebateDampingSteps
+                = (dampingSteps_ > 0) ? std::min(Size(1), dampingSteps_/2) : 0;
             rebateOption.setPricingEngine(
                 ext::make_shared<FdHestonRebateEngine>(*model_, dividendSchedule,
                                                        tGrid_,
-                                                       std::max(xGridMin, xGrid_/4), 
+                                                       std::max(xGridMin, xGrid_/4),
                                                        std::max(vGridMin, vGrid_/4),
                                                        rebateDampingSteps,
                                                        schemeDesc_));

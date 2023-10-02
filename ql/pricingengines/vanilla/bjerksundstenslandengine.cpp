@@ -26,8 +26,13 @@
 #include <ql/math/distributions/normaldistribution.hpp>
 #include <ql/pricingengines/blackcalculator.hpp>
 #include <ql/pricingengines/vanilla/bjerksundstenslandengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
 #include <cmath>
+#endif
 
 namespace QuantLib {
 

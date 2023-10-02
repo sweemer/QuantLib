@@ -22,11 +22,16 @@
 #include <ql/cashflows/subperiodcoupon.hpp>
 #include <ql/indexes/iborindex.hpp>
 #include <ql/instruments/zerocouponswap.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
-    namespace {       
+    namespace {
         ext::shared_ptr<CashFlow>
         compoundedSubPeriodicCoupon(const Date& paymentDate,
                                     const Date& startDate,
@@ -49,12 +54,12 @@ namespace QuantLib {
                                    const Calendar& paymentCalendar,
                                    BusinessDayConvention paymentConvention,
                                    Natural paymentDelay)
-    : Swap(2), type_(type), baseNominal_(baseNominal), iborIndex_(std::move(iborIndex)), 
+    : Swap(2), type_(type), baseNominal_(baseNominal), iborIndex_(std::move(iborIndex)),
       startDate_(startDate), maturityDate_(maturityDate) {
 
         QL_REQUIRE(!(baseNominal < 0.0), "base nominal cannot be negative");
         QL_REQUIRE(startDate < maturityDate,
-                   "start date (" << startDate 
+                   "start date (" << startDate
                    << ") later than or equal to maturity date ("
                    << maturityDate << ")");
 

@@ -27,9 +27,14 @@
 #include <ql/types.hpp>
 #include <ql/math/rounding.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <string>
 #include <map>
 #include <iosfwd>
+#endif
 
 namespace QuantLib {
 

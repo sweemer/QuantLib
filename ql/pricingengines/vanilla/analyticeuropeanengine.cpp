@@ -21,7 +21,12 @@
 #include <ql/exercise.hpp>
 #include <ql/pricingengines/blackcalculator.hpp>
 #include <ql/pricingengines/vanilla/analyticeuropeanengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -43,8 +48,8 @@ namespace QuantLib {
 
         // if the discount curve is not specified, we default to the
         // risk free rate curve embedded within the GBM process
-        ext::shared_ptr<YieldTermStructure> discountPtr = 
-            discountCurve_.empty() ? 
+        ext::shared_ptr<YieldTermStructure> discountPtr =
+            discountCurve_.empty() ?
             process_->riskFreeRate().currentLink() :
             discountCurve_.currentLink();
 
@@ -115,4 +120,3 @@ namespace QuantLib {
     }
 
 }
-

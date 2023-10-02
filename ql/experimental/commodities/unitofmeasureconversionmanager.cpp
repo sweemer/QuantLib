@@ -21,7 +21,12 @@
 #include <ql/experimental/commodities/unitofmeasureconversionmanager.hpp>
 #include <ql/experimental/commodities/petroleumunitsofmeasure.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
+#endif
 
 using namespace std;
 
@@ -206,4 +211,3 @@ namespace QuantLib {
     }
 
 }
-

@@ -28,9 +28,15 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 #endif
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <string>
 #include <locale>
 #include <cctype>
+#endif
+
 #if defined(BOOST_NO_STDC_NAMESPACE)
     namespace std { using ::toupper; }
 #endif

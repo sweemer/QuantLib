@@ -30,7 +30,12 @@
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
 #include <ql/pricingengines/vanilla/fdhestonvanillaengine.hpp>
 #include <ql/processes/batesprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

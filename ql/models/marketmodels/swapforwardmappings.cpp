@@ -25,7 +25,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/models/marketmodels/marketmodel.hpp>
 #include <ql/models/marketmodels/evolutiondescription.hpp>
 #include <ql/models/marketmodels/curvestates/lmmcurvestate.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -63,7 +68,7 @@ namespace QuantLib {
 
         if (forwardIndex >=1)
             part2 *= ratio* annuity(cs, startIndex, forwardIndex, endIndex);
-        else 
+        else
             part2 = 0.0;
 
         return part1-part2;
@@ -195,7 +200,7 @@ namespace QuantLib {
           {
               const Matrix& thisPseudo = volStructure.pseudoRoot(index);
               Real thisVariance =0.0;
-              
+
               for (Size f=0; f < factors; ++f)
               {
                   Real sum=0.0;

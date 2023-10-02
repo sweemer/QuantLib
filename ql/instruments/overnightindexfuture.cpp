@@ -21,7 +21,12 @@
 #include <ql/instruments/overnightindexfuture.hpp>
 #include <ql/indexes/indexmanager.hpp>
 #include <ql/event.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

@@ -25,7 +25,12 @@
 #include <ql/pricingengines/vanilla/analyticeuropeanengine.hpp>
 #include <ql/pricingengines/vanilla/analyticdividendeuropeanengine.hpp>
 #include <ql/pricingengines/vanilla/fdblackscholesvanillaengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <memory>
+#endif
 
 namespace QuantLib {
 
@@ -104,6 +109,5 @@ namespace QuantLib {
             arguments->cashFlow.clear();
         }
     }
-    
-}
 
+}

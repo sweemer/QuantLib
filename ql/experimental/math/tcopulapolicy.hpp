@@ -24,42 +24,47 @@
 #include <ql/experimental/math/convolvedstudentt.hpp>
 #include <ql/functional.hpp>
 #include <boost/math/distributions/students_t.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
     /*! \brief Student-T Latent Model's copula policy.
 
-    Describes the copula of a set of normalized Student-T independent random 
-    factors to be fed into the latent variable model. 
-    The latent model requires the independent variables to be of unit variance 
-    so the policy expects the factors coefficients to be as usual and the T 
-    variables to be normalized, the normalization is performed by the policy. 
-    To normalize the random variables they are divided by the square root of 
+    Describes the copula of a set of normalized Student-T independent random
+    factors to be fed into the latent variable model.
+    The latent model requires the independent variables to be of unit variance
+    so the policy expects the factors coefficients to be as usual and the T
+    variables to be normalized, the normalization is performed by the policy.
+    To normalize the random variables they are divided by the square root of
     the variance of each T (\f$ \frac{\nu}{\nu-2}\f$)
     */
     class TCopulaPolicy {
     public:
-        /*! Stores the parameters defining the factors random variable 
+        /*! Stores the parameters defining the factors random variable
         T-distributions. As it is now the latent models are restricted to
         having the same distribution for all idiosyncratic factors, so only
         one parameter is needed for them.
         */
-        typedef 
-            struct { 
+        typedef
+            struct {
                 std::vector<Integer> tOrders;
             } initTraits;
 
-        /*! Delayed initialization of the distribution parameters and caches. 
+        /*! Delayed initialization of the distribution parameters and caches.
         To be called by the latent model. */
-        /* \todo 
+        /* \todo
         Explore other constructors, with different vector dimensions, defining
         simpler combinations (only one correlation, only one variable) might
         simplify memory.
         */
         explicit TCopulaPolicy(
-            const std::vector<std::vector<Real> >& factorWeights = 
-                std::vector<std::vector<Real> >(), 
+            const std::vector<std::vector<Real> >& factorWeights =
+                std::vector<std::vector<Real> >(),
             const initTraits& vals = initTraits());
 
         //! Number of independent random factors.
@@ -86,58 +91,58 @@ namespace QuantLib {
         */
         Probability cumulativeY(Real val, Size iVariable) const {
     #if defined(QL_EXTRA_SAFETY_CHECKS)
-            QL_REQUIRE(iVariable < latentVarsCumul_.size(), 
+            QL_REQUIRE(iVariable < latentVarsCumul_.size(),
                 "Latent variable index out of bounds.");
     #endif
             return latentVarsCumul_[iVariable](val);
         }
         //! Cumulative probability of the idiosyncratic factors (all the same)
         Probability cumulativeZ(Real z) const {
-            return boost::math::cdf(distributions_.back(), z / 
+            return boost::math::cdf(distributions_.back(), z /
                 varianceFactors_.back());
         }
         /*! Probability density of a given realization of values of the systemic
           factors (remember they are independent).
-          Intended to be used in numerical integration of an arbitrary function 
+          Intended to be used in numerical integration of an arbitrary function
           depending on those values.
         */
         Probability density(const std::vector<Real>& m) const {
     #if defined(QL_EXTRA_SAFETY_CHECKS)
-            QL_REQUIRE(m.size() == distributions_.size()-1, 
+            QL_REQUIRE(m.size() == distributions_.size()-1,
                 "Incompatible sample and latent model sizes");
     #endif
             Real prodDensities = 1.;
-            for(Size i=0; i<m.size(); i++) 
-                prodDensities *= boost::math::pdf(distributions_[i], 
+            for(Size i=0; i<m.size(); i++)
+                prodDensities *= boost::math::pdf(distributions_[i],
                     m[i] /varianceFactors_[i]) /varianceFactors_[i];
                  // accumulate lambda
             return prodDensities;
         }
-        /*! Returns the inverse of the cumulative distribution of the (modelled) 
+        /*! Returns the inverse of the cumulative distribution of the (modelled)
           latent variable (as indexed by iVariable). Involves the convolution
           of the factors' distributions.
         */
         Real inverseCumulativeY(Probability p, Size iVariable) const {
     #if defined(QL_EXTRA_SAFETY_CHECKS)
-            QL_REQUIRE(iVariable < latentVarsCumul_.size(), 
+            QL_REQUIRE(iVariable < latentVarsCumul_.size(),
                 "Latent variable index out of bounds.");
     #endif
             return latentVarsInverters_[iVariable](p);
         }
-        /*! Returns the inverse of the cumulative distribution of the 
-        idiosincratic factor. The LM here is limited to all idiosincratic 
+        /*! Returns the inverse of the cumulative distribution of the
+        idiosincratic factor. The LM here is limited to all idiosincratic
         factors following the same distribution.
         */
         Real inverseCumulativeZ(Probability p) const {
             return boost::math::quantile(distributions_.back(), p)
                 * varianceFactors_.back();
         }
-        /*! Returns the inverse of the cumulative distribution of the 
+        /*! Returns the inverse of the cumulative distribution of the
           systemic factor iFactor.
         */
         Real inverseCumulativeDensity(Probability p, Size iFactor) const {
     #if defined(QL_EXTRA_SAFETY_CHECKS)
-            QL_REQUIRE(iFactor < distributions_.size()-1, 
+            QL_REQUIRE(iFactor < distributions_.size()-1,
                 "Random factor variable index out of bounds.");
     #endif
             return boost::math::quantile(distributions_[iFactor], p)

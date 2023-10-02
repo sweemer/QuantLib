@@ -31,14 +31,19 @@
 #include <ql/processes/blackscholesprocess.hpp>
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/termstructures/yield/flatforward.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
     //! Pricing engine for double barrier options using binomial trees
     /*! \ingroup barrierengines
 
-        \note This engine requires a the discretized option classes. 
+        \note This engine requires a the discretized option classes.
         By default uses a standard binomial implementation, but it can
         also work with DiscretizedDermanKaniDoubleBarrierOption to
         implement a Derman-Kani optimization.
@@ -115,12 +120,12 @@ namespace QuantLib {
 
         ext::shared_ptr<BlackScholesLattice<T> > lattice(
             new BlackScholesLattice<T>(tree, r, maturity, timeSteps_));
-        
+
         D option(arguments_, *process_, grid);
         option.initialize(lattice, maturity);
 
         // Partial derivatives calculated from various points in the
-        // binomial tree 
+        // binomial tree
         // (see J.C.Hull, "Options, Futures and other derivatives", 6th edition, pp 397/398)
 
         // Rollback to third-last step, and get underlying prices (s2) &

@@ -22,7 +22,12 @@
 */
 
 #include <ql/pricingengines/vanilla/mchestonhullwhiteengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -45,4 +50,3 @@ namespace QuantLib {
         return (*payoff_)(states[0])*df;
     }
 }
-

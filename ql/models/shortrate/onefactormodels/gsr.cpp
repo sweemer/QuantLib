@@ -19,7 +19,12 @@
 
 #include <ql/models/shortrate/onefactormodels/gsr.hpp>
 #include <ql/quotes/simplequote.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

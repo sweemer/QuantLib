@@ -21,8 +21,13 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/experimental/variancegamma/fftengine.hpp>
 #include <ql/math/fastfouriertransform.hpp>
 #include <ql/math/interpolations/linearinterpolation.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -50,7 +55,7 @@ namespace QuantLib {
                 return;
             }
         }
-        
+
         // Option not precalculated - do entire FFT for one option.  Not very efficient - call precalculate!
         calculateUncached(payoff, arguments_.exercise);
     }
@@ -135,7 +140,7 @@ namespace QuantLib {
             for (Size i=0; i<n; i++)
             {
                 Real v_j = eta * i;
-                Real sw = eta * (3.0 + ((i % 2) == 0 ? -1.0 : 1.0) - ((i == 0) ? 1.0 : 0.0)) / 3.0; 
+                Real sw = eta * (3.0 + ((i % 2) == 0 ? -1.0 : 1.0) - ((i == 0) ? 1.0 : 0.0)) / 3.0;
 
                 std::complex<Real> psi = df * complexFourierTransform(v_j - (alpha + 1)* i1);
                 psi = psi / (alpha*alpha + alpha - v_j*v_j + i1 * (2 * alpha + 1.0) * v_j);
@@ -178,4 +183,3 @@ namespace QuantLib {
     }
 
 }
-

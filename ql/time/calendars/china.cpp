@@ -20,7 +20,12 @@
 
 #include <ql/time/calendars/china.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <set>
+#endif
 
 namespace QuantLib {
 
@@ -164,7 +169,7 @@ namespace QuantLib {
             || (y == 2022 && d == 12 && m == September)
             || (y == 2023 && d == 29 && m == September)
             // National Day
-            || (y <= 2007 && d >= 1 && d <= 7 && m == October) 
+            || (y <= 2007 && d >= 1 && d <= 7 && m == October)
             || (y == 2008 && ((d >= 29 && m == September) ||
                               (d <= 3 && m == October)))
             || (y == 2009 && d >= 1 && d <= 8 && m == October)
@@ -351,4 +356,3 @@ namespace QuantLib {
     }
 
 }
-

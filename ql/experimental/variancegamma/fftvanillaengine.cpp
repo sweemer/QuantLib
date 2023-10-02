@@ -20,7 +20,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/experimental/variancegamma/fftvanillaengine.hpp>
 #include <ql/exercise.hpp>
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
+#endif
 
 namespace QuantLib {
 
@@ -63,8 +68,8 @@ namespace QuantLib {
 
         Real s = process_->x0();
 
-        std::complex<Real> phi = std::exp(i1 * u * (std::log(s) - (var_ * t_) / 2.0) 
-            - (var_ * u * u * t_) / 2.0); 
+        std::complex<Real> phi = std::exp(i1 * u * (std::log(s) - (var_ * t_) / 2.0)
+            - (var_ * u * u * t_) / 2.0);
         phi = phi * std::pow(dividendDiscount_/ riskFreeDiscount_, i1 * u);
         return phi;
     }

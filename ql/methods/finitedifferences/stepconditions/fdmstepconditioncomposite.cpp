@@ -28,8 +28,13 @@
 #include <ql/methods/finitedifferences/stepconditions/fdmstepconditioncomposite.hpp>
 #include <ql/methods/finitedifferences/utilities/fdmdividendhandler.hpp>
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <set>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -59,8 +64,8 @@ namespace QuantLib {
             condition->applyTo(a, t);
         }
     }
-    
-    ext::shared_ptr<FdmStepConditionComposite> 
+
+    ext::shared_ptr<FdmStepConditionComposite>
     FdmStepConditionComposite::joinConditions(
                 const ext::shared_ptr<FdmSnapshotCondition>& c1,
                 const ext::shared_ptr<FdmStepConditionComposite>& c2) {
@@ -77,7 +82,7 @@ namespace QuantLib {
             stoppingTimes, conditions);
     }
 
-    ext::shared_ptr<FdmStepConditionComposite> 
+    ext::shared_ptr<FdmStepConditionComposite>
     FdmStepConditionComposite::vanillaComposite(
                  const DividendSchedule& cashFlow,
                  const ext::shared_ptr<Exercise>& exercise,
@@ -85,7 +90,7 @@ namespace QuantLib {
                  const ext::shared_ptr<FdmInnerValueCalculator>& calculator,
                  const Date& refDate,
                  const DayCounter& dayCounter) {
-        
+
         std::list<std::vector<Time> > stoppingTimes;
         std::list<ext::shared_ptr<StepCondition<Array> > > stepConditions;
 
@@ -125,7 +130,7 @@ namespace QuantLib {
             stepConditions.push_back(bermudanCondition);
             stoppingTimes.push_back(bermudanCondition->exerciseTimes());
         }
-        
+
         return ext::make_shared<FdmStepConditionComposite>(
             stoppingTimes, stepConditions);
 

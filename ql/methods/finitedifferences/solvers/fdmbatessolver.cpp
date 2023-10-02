@@ -24,8 +24,12 @@
 #include <ql/methods/finitedifferences/solvers/fdm2dimsolver.hpp>
 #include <ql/methods/finitedifferences/solvers/fdmbatessolver.hpp>
 #include <ql/processes/batesprocess.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -44,7 +48,7 @@ namespace QuantLib {
         ext::shared_ptr<FdmLinearOpComposite> op(
             new FdmBatesOp(solverDesc_.mesher, process_.currentLink(),
                            solverDesc_.bcSet, integroIntegrationOrder_,
-                           (!quantoHelper_.empty()) 
+                           (!quantoHelper_.empty())
                                    ? quantoHelper_.currentLink()
                                    : ext::shared_ptr<FdmQuantoHelper>()));
 

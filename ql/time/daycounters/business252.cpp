@@ -19,7 +19,12 @@
 */
 
 #include <ql/time/daycounters/business252.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 namespace QuantLib {
 
@@ -27,7 +32,7 @@ namespace QuantLib {
 
         typedef std::map<Year, std::map<Month, Date::serial_type> > Cache;
         typedef std::map<Year, Date::serial_type> OuterCache;
-        
+
         std::map<std::string, Cache> monthlyFigures_;
         std::map<std::string, OuterCache> yearlyFigures_;
 

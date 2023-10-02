@@ -20,7 +20,12 @@
 #include <ql/exercise.hpp>
 #include <ql/math/distributions/normaldistribution.hpp>
 #include <ql/pricingengines/asian/analytic_discr_geom_av_strike.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -134,4 +139,3 @@ namespace QuantLib {
     }
 
 }
-

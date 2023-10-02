@@ -25,7 +25,12 @@
 #define quantlib_data_formatters_hpp
 
 #include <ql/utilities/null.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <ostream>
+#endif
 
 namespace QuantLib {
 

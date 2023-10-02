@@ -25,7 +25,12 @@
 #include <ql/methods/finitedifferences/operators/fdmlinearoplayout.hpp>
 #include <ql/methods/finitedifferences/operators/secondderivativeop.hpp>
 #include <ql/methods/finitedifferences/operators/secondordermixedderivativeop.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -131,10 +136,10 @@ namespace QuantLib {
                                 *mesher->locations(1))),
       dyMap_(mesher, hestonProcess->riskFreeRate().currentLink(),
               hestonProcess->sigma()*mixingFactor,
-              hestonProcess->kappa(), 
+              hestonProcess->kappa(),
               hestonProcess->theta()),
       dxMap_(mesher,
-             hestonProcess->riskFreeRate().currentLink(), 
+             hestonProcess->riskFreeRate().currentLink(),
              hestonProcess->dividendYield().currentLink(),
              quantoHelper, leverageFct) {
     }

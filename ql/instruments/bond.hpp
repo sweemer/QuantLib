@@ -30,12 +30,15 @@
 #define quantlib_bond_hpp
 
 #include <ql/instrument.hpp>
-
 #include <ql/time/calendar.hpp>
 #include <ql/cashflow.hpp>
 #include <ql/compounding.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

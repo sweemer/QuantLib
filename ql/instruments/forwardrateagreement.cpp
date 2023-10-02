@@ -20,8 +20,13 @@
 #include <ql/event.hpp>
 #include <ql/indexes/iborindex.hpp>
 #include <ql/instruments/forwardrateagreement.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
 #include <iostream>
+#endif
 
 namespace QuantLib {
 

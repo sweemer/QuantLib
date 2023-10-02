@@ -30,8 +30,13 @@
 #include <ql/math/integrals/integral.hpp>
 #include <ql/math/comparison.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <vector>
+#endif
 
 namespace QuantLib {
 

@@ -20,7 +20,12 @@
 */
 
 #include <ql/math/statistics/incrementalstatistics.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
+#endif
 
 namespace QuantLib {
 
@@ -66,7 +71,7 @@ namespace QuantLib {
         Real n = static_cast<Real>(samples());
         Real r1 = n / (n - 2.0);
         Real r2 = (n - 1.0) / (n - 2.0);
-        return std::sqrt(r1 * r2) * 
+        return std::sqrt(r1 * r2) *
                boost::accumulators::extract_result<
                    boost::accumulators::tag::weighted_skewness>(acc_);
     }

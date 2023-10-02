@@ -2,7 +2,7 @@
 
 /*
  Copyright (C) 2010, 2014 Klaus Spanderen
- 
+
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
 
@@ -19,7 +19,12 @@
 
 #include <ql/methods/finitedifferences/operators/fdmlinearoplayout.hpp>
 #include <ql/methods/finitedifferences/stepconditions/fdmsimpleswingcondition.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -48,17 +53,17 @@ namespace QuantLib {
                        "inconsistent array dimensions");
 
             for (const auto& iter : *mesher_->layout()) {
-                
+
                 const std::vector<Size>& coor = iter.coordinates();
-                
+
                 const Size exercisesUsed = coor[swingDirection_];
-                
+
                 if (exercisesUsed < maxExerciseValue) {
                     const Real cashflow = calculator_->innerValue(iter, t);
                     const Real currentValue = a[iter.index()];
                     const Real valuePlusOneExercise
                          = a[mesher_->layout()->neighbourhood(iter, swingDirection_, 1)];
-                    
+
                     if (   currentValue < valuePlusOneExercise + cashflow
                         || exercisesUsed + d <=  minExercises_) {
                         retVal[iter.index()] = valuePlusOneExercise + cashflow;

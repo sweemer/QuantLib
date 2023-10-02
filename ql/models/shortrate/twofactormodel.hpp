@@ -27,7 +27,12 @@
 
 #include <ql/methods/lattices/lattice2d.hpp>
 #include <ql/models/model.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
     class StochasticProcess1D;

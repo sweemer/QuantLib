@@ -21,7 +21,12 @@
 #include <ql/experimental/processes/extouwithjumpsprocess.hpp>
 #include <ql/experimental/processes/klugeextouprocess.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -100,4 +105,3 @@ namespace QuantLib {
     }
 
 }
-

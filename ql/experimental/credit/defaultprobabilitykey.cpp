@@ -23,9 +23,14 @@
 #pragma warning(push)
 #pragma warning(disable:4181)
 #endif
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <set>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -38,9 +43,9 @@ namespace QuantLib {
             }
             const DefaultType& t;
         };
-        
+
     }
-    
+
     bool operator==(const DefaultProbKey& lhs, const DefaultProbKey& rhs) {
         if(lhs.seniority() != rhs.seniority()) return false;
         if(lhs.currency() != rhs.currency()) return false;

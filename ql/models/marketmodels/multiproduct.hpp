@@ -22,8 +22,13 @@
 #define quantlib_market_model_multi_product_hpp
 
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <memory>
+#endif
 
 namespace QuantLib {
 

@@ -26,7 +26,11 @@
 
 #include <ql/methods/montecarlo/sample.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <random>
+#endif
 
 namespace QuantLib {
 
@@ -37,11 +41,11 @@ namespace QuantLib {
         number generator. For more detail see the boost documentation and:
           M.Luescher, A portable high-quality random number generator for
           lattice field theory simulations, Comp. Phys. Comm. 79 (1994) 100
-          
+
         Available luxury levels:
         Ranlux3: Any theoretically possible correlations have very small change
                  of being observed.
-        Ranlux4: highest possible luxury.         
+        Ranlux4: highest possible luxury.
     */
     template <std::size_t P, std::size_t R>
     class Ranlux64UniformRng {

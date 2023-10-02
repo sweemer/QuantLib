@@ -21,7 +21,7 @@
     \brief Parallel evolver for multiple arrays
 
     This class takes the evolver class and creates a new class which evolves
-    each of the evolvers in parallel.  Part of what this does is to take the 
+    each of the evolvers in parallel.  Part of what this does is to take the
     types for each evolver class and then wrapper them so that they create
     new types which are sets of the old types.
 
@@ -35,7 +35,12 @@
 #include <ql/methods/finitedifferences/finitedifferencemodel.hpp>
 #include <ql/methods/finitedifferences/stepcondition.hpp>
 #include <ql/numericalmethod.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

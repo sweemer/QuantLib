@@ -28,8 +28,12 @@
 #include <ql/time/daycounters/thirty360.hpp>
 #include <ql/utilities/dataformatters.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <iomanip>
+#endif
 
 #define LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
@@ -259,4 +263,3 @@ int main(int, char* []) {
     }
 
 }
-

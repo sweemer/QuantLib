@@ -30,7 +30,12 @@
 #include <ql/processes/batesprocess.hpp>
 #include <ql/quotes/simplequote.hpp>
 #include <ql/termstructures/yield/zerospreadedtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -64,9 +69,9 @@ namespace QuantLib {
                     const ext::shared_ptr<LinearInterpolation>& interpl,
                     const FdmBoundaryConditionSet& bcSet,
                     Real x, Real delta, Real nu)
-    : x_(x), delta_(delta), nu_(nu), 
+    : x_(x), delta_(delta), nu_(nu),
       bcSet_(bcSet), interpl_(interpl) { }
-                    
+
     Real FdmBatesOp::IntegroIntegrand::operator()(Real y) const {
         const Real x = x_ + M_SQRT2*delta_*y + nu_;
         Real valueOfDerivative = (*interpl_)(x, true);
@@ -85,33 +90,33 @@ namespace QuantLib {
 
         return std::exp(-y*y)*valueOfDerivative;
     }
-    
+
     Array FdmBatesOp::integro(const Array& r) const {
         QL_REQUIRE(mesher_->layout()->dim().size() == 2, "invalid layout dimension");
 
         Array x(mesher_->layout()->dim()[0]);
         Matrix f(mesher_->layout()->dim()[1], mesher_->layout()->dim()[0]);
-        
+
         for (const auto& iter : *mesher_->layout()) {
             const Size i = iter.coordinates()[0];
             const Size j = iter.coordinates()[1];
-            
+
             x[i]    = mesher_->location(iter, 0);
             f[j][i] = r[iter.index()];
-            
+
         }
         std::vector<ext::shared_ptr<LinearInterpolation> > interpl(f.rows());
         for (Size i=0; i < f.rows(); ++i) {
             interpl[i] = ext::make_shared<LinearInterpolation>(
                 x.begin(), x.end(), f.row_begin(i));
         }
-        
+
         Array integral(r.size());
         for (const auto& iter : *mesher_->layout()) {
             const Size i = iter.coordinates()[0];
             const Size j = iter.coordinates()[1];
 
-            integral[iter.index()] = M_1_SQRTPI* 
+            integral[iter.index()] = M_1_SQRTPI*
                 gaussHermiteIntegration_(
                       IntegroIntegrand(interpl[j], bcSet_, x[i], delta_, nu_));
         }

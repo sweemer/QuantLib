@@ -40,7 +40,12 @@
 #include <ql/termstructures/volatility/swaption/swaptionconstantvol.hpp>
 #include <ql/termstructures/volatility/swaption/swaptionvolstructure.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -303,7 +308,7 @@ namespace QuantLib {
         results_.additionalResults["stdDev"] = stdDev;
         Option::Type w = (arguments_.type==Swap::Payer) ? Option::Call : Option::Put;
         results_.value = Spec().value(w, strike, atmForward, stdDev, annuity, displacement);
-        
+
         Time exerciseTime = vol_->timeFromReference(exerciseDate);
         results_.additionalResults["vega"] = Spec().vega(
             strike, atmForward, stdDev, exerciseTime, annuity, displacement);

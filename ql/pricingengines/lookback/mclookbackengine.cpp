@@ -18,7 +18,12 @@
 */
 
 #include <ql/pricingengines/lookback/mclookbackengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
+#endif
 
 namespace QuantLib {
 

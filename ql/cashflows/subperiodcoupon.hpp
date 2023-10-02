@@ -29,7 +29,12 @@
 #include <ql/cashflows/floatingratecoupon.hpp>
 #include <ql/cashflows/rateaveraging.hpp>
 #include <ql/time/schedule.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

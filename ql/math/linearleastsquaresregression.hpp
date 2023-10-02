@@ -29,7 +29,12 @@
 
 #include <ql/math/generallinearleastsquares.hpp>
 #include <ql/functional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <type_traits>
+#endif
 
 namespace QuantLib {
 
@@ -103,28 +108,28 @@ namespace QuantLib {
     public:
         //! linear regression y_i = a_0 + a_1*x_0 +..+a_n*x_{n-1} + eps
         template <class xContainer, class yContainer>
-        LinearRegression(const xContainer& x, 
+        LinearRegression(const xContainer& x,
                          const yContainer& y, Real intercept = 1.0);
 
         template <class xContainer, class yContainer, class vContainer>
-        LinearRegression(const xContainer& x, 
+        LinearRegression(const xContainer& x,
                          const yContainer& y, const vContainer &v);
     };
 
 
     template <class xContainer, class yContainer> inline
-        LinearRegression::LinearRegression(const xContainer& x, 
-                                           const yContainer& y, Real intercept) 
+        LinearRegression::LinearRegression(const xContainer& x,
+                                           const yContainer& y, Real intercept)
     : GeneralLinearLeastSquares(x, y,
-          details::LinearFcts<xContainer, 
+          details::LinearFcts<xContainer,
               std::is_arithmetic<typename xContainer::value_type>::value>
                                                         (x, intercept).fcts()) {
     }
 
     template <class xContainer, class yContainer, class vContainer> inline
-        LinearRegression::LinearRegression(const xContainer& x, 
-                                           const yContainer& y, 
-                                           const vContainer &v) 
+        LinearRegression::LinearRegression(const xContainer& x,
+                                           const yContainer& y,
+                                           const vContainer &v)
     : GeneralLinearLeastSquares(x, y, v) {
     }
 

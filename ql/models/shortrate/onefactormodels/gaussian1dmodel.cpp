@@ -20,7 +20,12 @@
 #include <ql/models/shortrate/onefactormodels/gaussian1dmodel.hpp>
 #include <ql/math/interpolations/cubicinterpolation.hpp>
 #include <ql/payoff.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 namespace QuantLib {
 

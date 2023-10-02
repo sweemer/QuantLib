@@ -32,7 +32,12 @@
 #include <ql/quote.hpp>
 #include <ql/patterns/lazyobject.hpp>
 #include <ql/time/daycounters/actual365fixed.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

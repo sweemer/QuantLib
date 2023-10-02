@@ -21,8 +21,13 @@
 #include <ql/instruments/asianoption.hpp>
 #include <ql/time/date.hpp>
 #include <ql/settings.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -167,4 +172,3 @@ namespace QuantLib {
     }
 
 }
-

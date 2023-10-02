@@ -26,16 +26,21 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 #include <ql/instruments/vanillaoption.hpp>
 #include <ql/stochasticprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
+#endif
 
 namespace QuantLib {
 
     //! Base class for FFT pricing engines for European vanilla options
     /*! \ingroup vanillaengines
-    
+
         The FFT engine calculates the values of all options with the same expiry at the same time.
         For that reason it is very inefficient to price options individually.  When using this engine
-        you should collect all the options you wish to price in a list and call 
+        you should collect all the options you wish to price in a list and call
         the engine's precalculate method before calling the NPV method of the option.
 
         References:
@@ -74,4 +79,3 @@ namespace QuantLib {
 
 
 #endif
-

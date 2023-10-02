@@ -18,8 +18,13 @@
 */
 
 #include <ql/experimental/math/piecewiseintegral.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

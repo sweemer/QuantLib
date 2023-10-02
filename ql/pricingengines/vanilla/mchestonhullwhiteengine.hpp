@@ -29,7 +29,12 @@
 #include <ql/processes/hestonprocess.hpp>
 #include <ql/processes/hullwhiteprocess.hpp>
 #include <ql/processes/hybridhestonhullwhiteprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -127,14 +132,14 @@ namespace QuantLib {
     template<class RNG,class S>
     inline void MCHestonHullWhiteEngine<RNG,S>::calculate() const {
         MCVanillaEngine<MultiVariate, RNG, S>::calculate();
-        
+
         if (this->controlVariate_) {
             // control variate might lead to small negative
             // option values for deep OTM options
             this->results_.value = std::max(0.0, this->results_.value);
         }
     }
-                  
+
     template <class RNG,class S> inline
     ext::shared_ptr<typename MCHestonHullWhiteEngine<RNG,S>::path_pricer_type>
     MCHestonHullWhiteEngine<RNG,S>::pathPricer() const {

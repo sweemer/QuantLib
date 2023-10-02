@@ -21,7 +21,12 @@
 #define quantlib_alpha_form_concrete_hpp
 
 #include <ql/models/marketmodels/models/alphaform.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

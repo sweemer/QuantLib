@@ -25,7 +25,12 @@
 #include <ql/models/marketmodels/evolutiondescription.hpp>
 #include <ql/models/marketmodels/piecewiseconstantcorrelation.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -91,11 +96,11 @@ namespace QuantLib {
         ext::shared_ptr<PiecewiseConstantCorrelation> corr_;
         std::vector<ext::shared_ptr<PiecewiseConstantVariance> >
                                                 displacedSwapVariances_;
-        
+
         std::vector<Volatility> mktCapletVols_, mdlCapletVols_;
         std::vector<Volatility> mktSwaptionVols_, mdlSwaptionVols_;
         std::vector<std::vector<Volatility> > timeDependentCalibratedSwaptionVols_;
-        
+
         ext::shared_ptr<CurveState> cs_;
         Spread displacement_;
         Size numberOfRates_;

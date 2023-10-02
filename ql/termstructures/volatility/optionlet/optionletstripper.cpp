@@ -21,7 +21,12 @@
 
 #include <ql/indexes/iborindex.hpp>
 #include <ql/termstructures/volatility/optionlet/optionletstripper.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using std::vector;
 
@@ -63,9 +68,9 @@ namespace QuantLib {
             nextCapFloorLength += indexTenor;
         }
         nOptionletTenors_ = optionletTenors_.size();
-        
+
         optionletVolatilities_ =
-            vector<vector<Volatility> >(nOptionletTenors_, 
+            vector<vector<Volatility> >(nOptionletTenors_,
                                         vector<Volatility>(nStrikes_));
         optionletStrikes_ = vector<vector<Rate> >(nOptionletTenors_,
                                                   termVolSurface->strikes());
@@ -83,7 +88,7 @@ namespace QuantLib {
                    ") must be less than optionletStrikes size (" <<
                    optionletStrikes_.size() << ")");
         return optionletStrikes_[i];
-    }   
+    }
 
     const vector<Volatility>&
     OptionletStripper::optionletVolatilities(Size i) const {
@@ -93,7 +98,7 @@ namespace QuantLib {
                    ") must be less than optionletVolatilities size (" <<
                    optionletVolatilities_.size() << ")");
         return optionletVolatilities_[i];
-    }   
+    }
 
     const vector<Period>& OptionletStripper::optionletFixingTenors() const {
         return optionletTenors_;
@@ -103,12 +108,12 @@ namespace QuantLib {
         calculate();
         return optionletDates_;
     }
-      
+
     const vector<Time>& OptionletStripper::optionletFixingTimes() const {
         calculate();
         return optionletTimes_;
     }
-     
+
     Size OptionletStripper::optionletMaturities() const {
         return optionletTenors_.size();
     }
@@ -116,7 +121,7 @@ namespace QuantLib {
     const vector<Date>& OptionletStripper::optionletPaymentDates() const {
         calculate();
         return optionletPaymentDates_;
-    }  
+    }
 
     const vector<Time>& OptionletStripper::optionletAccrualPeriods() const {
         calculate();
@@ -127,7 +132,7 @@ namespace QuantLib {
         calculate();
         return atmOptionletRate_;
     }
-    
+
 
     DayCounter OptionletStripper::dayCounter() const {
         return termVolSurface_->dayCounter();

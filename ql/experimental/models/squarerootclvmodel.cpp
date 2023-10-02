@@ -24,13 +24,15 @@
 #include <ql/processes/blackscholesprocess.hpp>
 #include <ql/processes/squarerootprocess.hpp>
 #include <ql/math/integrals/gaussianquadratures.hpp>
-
 #include <ql/experimental/models/squarerootclvmodel.hpp>
 #include <ql/methods/finitedifferences/utilities/gbsmrndcalculator.hpp>
-
 #include <boost/math/distributions/non_central_chi_squared.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
     SquareRootCLVModel::SquareRootCLVModel(

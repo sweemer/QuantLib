@@ -16,7 +16,12 @@
 */
 
 #include <ql/pricingengines/asian/mc_discr_arith_av_price_heston.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

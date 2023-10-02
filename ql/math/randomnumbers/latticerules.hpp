@@ -25,9 +25,13 @@
 #ifndef quantlib_lattice_rules_hpp
 #define quantlib_lattice_rules_hpp
 
-
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib
 {

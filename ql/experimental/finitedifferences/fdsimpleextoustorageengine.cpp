@@ -39,7 +39,12 @@
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
 #include <ql/pricingengines/vanilla/fdsimplebsswingengine.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

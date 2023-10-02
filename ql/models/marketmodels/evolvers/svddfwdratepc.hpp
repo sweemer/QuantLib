@@ -23,7 +23,12 @@
 #include <ql/models/marketmodels/evolver.hpp>
 #include <ql/models/marketmodels/curvestates/lmmcurvestate.hpp>
 #include <ql/models/marketmodels/driftcomputation/lmmdriftcalculator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <valarray>
+#endif
 
 namespace QuantLib {
 
@@ -35,16 +40,16 @@ namespace QuantLib {
     /*!
    Displaced diffusion LMM with uncorrelated vol process. Called "Shifted BGM" with Heston vol by Brac in "Engineering BGM."
    Vol process is an external input.
-    
+
     */
-    class SVDDFwdRatePc : public MarketModelEvolver 
+    class SVDDFwdRatePc : public MarketModelEvolver
     {
       public:
-    
+
           SVDDFwdRatePc(const ext::shared_ptr<MarketModel>&,
                            const BrownianGeneratorFactory&,
                            const ext::shared_ptr<MarketModelVolProcess>& volProcess,
-                           Size firstVolatilityFactor, 
+                           Size firstVolatilityFactor,
                            Size volatilityFactorStep,
                            const std::vector<Size>& numeraires,
                            Size initialStep = 0);

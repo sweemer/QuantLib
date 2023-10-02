@@ -21,8 +21,13 @@
 
 #include <ql/models/marketmodels/utilities.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <valarray>
+#endif
 
 namespace QuantLib {
 

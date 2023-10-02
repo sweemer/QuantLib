@@ -18,8 +18,13 @@
 */
 
 #include <ql/experimental/commodities/commodity.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -95,4 +100,3 @@ namespace QuantLib {
     }
 
 }
-

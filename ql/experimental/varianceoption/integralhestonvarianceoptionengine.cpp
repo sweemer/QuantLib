@@ -24,9 +24,14 @@
 #include <ql/errors.hpp>
 #include <ql/experimental/varianceoption/integralhestonvarianceoptionengine.hpp>
 #include <ql/functional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
 #include <utility>
 #include <memory>
+#endif
 
 namespace QuantLib {
 
@@ -399,4 +404,3 @@ namespace QuantLib {
     }
 
 }
-

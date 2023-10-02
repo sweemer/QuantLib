@@ -20,7 +20,12 @@
 
 #include <ql/exercise.hpp>
 #include <ql/pricingengines/lookback/analyticcontinuouspartialfixedlookback.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -142,15 +147,14 @@ namespace QuantLib {
 
         Real pow_s = std::pow(s, -x);
         Real carryDiscount = std::exp(-carry * (residualTime() - lookbackPeriodStartTime()));
-        return eta*(underlying() * dividendDiscount() * n1 
+        return eta*(underlying() * dividendDiscount() * n1
                     - strike() * riskFreeDiscount() * n2
-                    + underlying() * riskFreeDiscount() / x 
+                    + underlying() * riskFreeDiscount() / x
                     * (-pow_s * n3 + dividendDiscount() / riskFreeDiscount() * n4)
-                    - underlying() * dividendDiscount() * n5 
-                    - strike() * riskFreeDiscount() * n6 
-                    + carryDiscount * dividendDiscount() 
-                    * (1 - 0.5 * vol * vol / carry) * 
+                    - underlying() * dividendDiscount() * n5
+                    - strike() * riskFreeDiscount() * n6
+                    + carryDiscount * dividendDiscount()
+                    * (1 - 0.5 * vol * vol / carry) *
                     underlying() * n7 * n8);
     }
 }
-

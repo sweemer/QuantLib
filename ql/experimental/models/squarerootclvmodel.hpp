@@ -30,7 +30,12 @@
 #include <ql/math/matrix.hpp>
 #include <ql/experimental/math/gaussiannoncentralchisquaredpolynomial.hpp>
 #include <ql/functional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 namespace QuantLib {
 

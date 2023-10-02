@@ -32,7 +32,12 @@
 #include <ql/processes/blackscholesprocess.hpp>
 #include <ql/termstructures/volatility/equityfx/impliedvoltermstructure.hpp>
 #include <ql/termstructures/yield/impliedtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -155,7 +160,7 @@ namespace QuantLib {
         if (originalResults_->delta != Null<Real>() &&
             originalResults_->strikeSensitivity != Null<Real>()) {
             this->results_.delta = discQ * (originalResults_->delta +
-                  this->arguments_.moneyness * 
+                  this->arguments_.moneyness *
                         originalResults_->strikeSensitivity);
         }
         this->results_.gamma = 0.0;

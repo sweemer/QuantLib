@@ -24,8 +24,12 @@
 #include <ql/models/marketmodels/models/piecewiseconstantabcdvariance.hpp>
 #include <ql/types.hpp>
 #include <ql/shared_ptr.hpp>
-#include <vector>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <vector>
+#endif
 
 namespace QuantLib
 {

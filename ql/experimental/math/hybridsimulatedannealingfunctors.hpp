@@ -28,11 +28,15 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/math/randomnumbers/seedgenerator.hpp>
 #include <ql/math/optimization/problem.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <cmath>
 #include <random>
 #include <utility>
 #include <vector>
+#endif
 
 namespace QuantLib
 {
@@ -77,7 +81,7 @@ namespace QuantLib
         std::mt19937 generator_;
         std::normal_distribution<Real> distribution_;
     };
-    
+
     //! Gaussian Ring Sampler
     /*! Sample from normal distribution, but constrained to lie within
      * .boundaries. If the value ends up beyond the boundary, the value
@@ -103,7 +107,7 @@ namespace QuantLib
 					} else {
 						newPoint[i] = lower_[i] + newPoint[i] - upper_[i];
 					}
-				} 
+				}
             }
         };
     private:
@@ -111,7 +115,7 @@ namespace QuantLib
         std::normal_distribution<Real> distribution_;
         Array lower_, upper_;
     };
-    
+
     //! Gaussian Mirror Sampler
     /*! Sample from normal distribution, but constrained to lie within
      * .boundaries. If the value ends up beyond the boundary, the value

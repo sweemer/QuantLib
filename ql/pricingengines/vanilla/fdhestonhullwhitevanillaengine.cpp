@@ -29,7 +29,12 @@
 #include <ql/pricingengines/vanilla/analytichestonengine.hpp>
 #include <ql/pricingengines/vanilla/fdhestonhullwhitevanillaengine.hpp>
 #include <ql/pricingengines/vanilla/fdhestonvanillaengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -82,7 +87,7 @@ namespace QuantLib {
         QL_DEPRECATED_DISABLE_WARNING
         const DividendSchedule& passedDividends = explicitDividends_ ? dividends_ : arguments_.cashFlow;
         QL_DEPRECATED_ENABLE_WARNING
-  
+
         // 1. cache lookup for precalculated results
         for (auto& cachedArgs2result : cachedArgs2results_) {
             if (cachedArgs2result.first.exercise->type() == arguments_.exercise->type() &&
@@ -122,13 +127,13 @@ namespace QuantLib {
         if (strikes_.empty()) {
             equityMesher = ext::shared_ptr<Fdm1dMesher>(
                 new FdmBlackScholesMesher(
-                    xGrid_, 
+                    xGrid_,
                     FdmBlackScholesMesher::processHelper(
-                      hestonProcess->s0(), hestonProcess->dividendYield(), 
-                      hestonProcess->riskFreeRate(), 
+                      hestonProcess->s0(), hestonProcess->dividendYield(),
+                      hestonProcess->riskFreeRate(),
                       varianceMesher->volaEstimate()),
                       maturity, payoff->strike(),
-                      Null<Real>(), Null<Real>(), 0.0001, 1.5, 
+                      Null<Real>(), Null<Real>(), 0.0001, 1.5,
                       std::pair<Real, Real>(payoff->strike(), 0.1),
                       passedDividends));
         }
@@ -139,19 +144,19 @@ namespace QuantLib {
                 new FdmBlackScholesMultiStrikeMesher(
                     xGrid_,
                     FdmBlackScholesMesher::processHelper(
-                      hestonProcess->s0(), hestonProcess->dividendYield(), 
-                      hestonProcess->riskFreeRate(), 
+                      hestonProcess->s0(), hestonProcess->dividendYield(),
+                      hestonProcess->riskFreeRate(),
                       varianceMesher->volaEstimate()),
                     maturity, strikes_, 0.0001, 1.5,
-                    std::pair<Real, Real>(payoff->strike(), 0.075)));            
+                    std::pair<Real, Real>(payoff->strike(), 0.075)));
         }
-       
-        //2.3 The short rate mesher        
+
+        //2.3 The short rate mesher
         const ext::shared_ptr<OrnsteinUhlenbeckProcess> ouProcess(
             new OrnsteinUhlenbeckProcess(hwProcess_->a(),hwProcess_->sigma()));
         const ext::shared_ptr<Fdm1dMesher> shortRateMesher(
                    new FdmSimpleProcess1dMesher(rGrid_, ouProcess, maturity));
-        
+
         const ext::shared_ptr<FdmMesher> mesher(
             new FdmMesherComposite(equityMesher, varianceMesher,
                                    shortRateMesher));
@@ -161,10 +166,10 @@ namespace QuantLib {
                             new FdmLogInnerValue(arguments_.payoff, mesher, 0));
 
         // 4. Step conditions
-        const ext::shared_ptr<FdmStepConditionComposite> conditions = 
+        const ext::shared_ptr<FdmStepConditionComposite> conditions =
             FdmStepConditionComposite::vanillaComposite(
-                                passedDividends, arguments_.exercise, 
-                                mesher, calculator, 
+                                passedDividends, arguments_.exercise,
+                                mesher, calculator,
                                 hestonProcess->riskFreeRate()->referenceDate(),
                                 hestonProcess->riskFreeRate()->dayCounter());
 
@@ -189,16 +194,16 @@ namespace QuantLib {
         results_.gamma = solver->gammaAt(spot, v0, 0, spot*0.01);
         results_.theta = solver->thetaAt(spot, v0, 0);
 
-        cachedArgs2results_.resize(strikes_.size());        
+        cachedArgs2results_.resize(strikes_.size());
         for (Size i=0; i < strikes_.size(); ++i) {
             cachedArgs2results_[i].first.exercise = arguments_.exercise;
-            cachedArgs2results_[i].first.payoff = 
+            cachedArgs2results_[i].first.payoff =
                 ext::make_shared<PlainVanillaPayoff>(
                     payoff->optionType(), strikes_[i]);
             const Real d = payoff->strike()/strikes_[i];
 
             QL_DEPRECATED_DISABLE_WARNING
-            DividendVanillaOption::results& 
+            DividendVanillaOption::results&
                                 results = cachedArgs2results_[i].second;
             QL_DEPRECATED_ENABLE_WARNING
             results.value = solver->valueAt(spot*d, v0, 0)/d;
@@ -206,41 +211,41 @@ namespace QuantLib {
             results.gamma = solver->gammaAt(spot*d, v0, 0, spot*d*0.01)*d;
             results.theta = solver->thetaAt(spot*d, v0, 0)/d;
         }
-     
+
         if (controlVariate_) {
             ext::shared_ptr<PricingEngine> analyticEngine(
                                        new AnalyticHestonEngine(*model_, 164));
             ext::shared_ptr<Exercise> exercise(
                         new EuropeanExercise(arguments_.exercise->lastDate()));
-            
+
             VanillaOption option(payoff, exercise);
             option.setPricingEngine(analyticEngine);
             Real analyticNPV = option.NPV();
 
             ext::shared_ptr<FdHestonVanillaEngine> fdEngine(
                     new FdHestonVanillaEngine(*model_, tGrid_, xGrid_,
-                                              vGrid_, dampingSteps_, 
+                                              vGrid_, dampingSteps_,
                                               schemeDesc_));
             fdEngine->enableMultipleStrikesCaching(strikes_);
             option.setPricingEngine(fdEngine);
-            
+
             Real fdNPV = option.NPV();
             results_.value += analyticNPV - fdNPV;
             for (Size i=0; i < strikes_.size(); ++i) {
                 VanillaOption controlVariateOption(
                     ext::shared_ptr<StrikedTypePayoff>(
-                        new PlainVanillaPayoff(payoff->optionType(), 
+                        new PlainVanillaPayoff(payoff->optionType(),
                                                strikes_[i])), exercise);
                 controlVariateOption.setPricingEngine(analyticEngine);
                 analyticNPV = controlVariateOption.NPV();
-                
+
                 controlVariateOption.setPricingEngine(fdEngine);
                 fdNPV = controlVariateOption.NPV();
                 cachedArgs2results_[i].second.value += analyticNPV - fdNPV;
             }
         }
     }
-    
+
     void FdHestonHullWhiteVanillaEngine::update() {
         cachedArgs2results_.clear();
         QL_DEPRECATED_DISABLE_WARNING

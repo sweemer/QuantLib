@@ -33,7 +33,12 @@
 #include <ql/pricingengines/barrier/fdblackscholesbarrierengine.hpp>
 #include <ql/pricingengines/barrier/fdblackscholesrebateengine.hpp>
 #include <ql/pricingengines/vanilla/fdblackscholesvanillaengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -110,7 +115,7 @@ namespace QuantLib {
                 xMin, xMax, 0.0001, 1.5,
                 std::make_pair(Null<Real>(), Null<Real>()),
                 dividendSchedule));
-        
+
         const ext::shared_ptr<FdmMesher> mesher (
             ext::make_shared<FdmMesherComposite>(equityMesher));
 
@@ -180,9 +185,9 @@ namespace QuantLib {
                     ext::dynamic_pointer_cast<StrikedTypePayoff>(
                                                             arguments_.payoff);
             // Calculate the vanilla option
-            
+
             VanillaOption vanillaOption(payoff, arguments_.exercise);
-            
+
             vanillaOption.setPricingEngine(
                 ext::make_shared<FdBlackScholesVanillaEngine>(
                         process_, dividendSchedule, tGrid_, xGrid_,
@@ -194,14 +199,14 @@ namespace QuantLib {
                                        arguments_.barrier,
                                        arguments_.rebate,
                                        payoff, arguments_.exercise);
-            
+
             const Size min_grid_size = 50;
-            const Size rebateDampingSteps 
-                = (dampingSteps_ > 0) ? std::min(Size(1), dampingSteps_/2) : 0; 
+            const Size rebateDampingSteps
+                = (dampingSteps_ > 0) ? std::min(Size(1), dampingSteps_/2) : 0;
 
             rebateOption.setPricingEngine(ext::make_shared<FdBlackScholesRebateEngine>(
-                            process_, dividendSchedule, tGrid_, std::max(min_grid_size, xGrid_/5), 
-                            rebateDampingSteps, schemeDesc_, localVol_, 
+                            process_, dividendSchedule, tGrid_, std::max(min_grid_size, xGrid_/5),
+                            rebateDampingSteps, schemeDesc_, localVol_,
                             illegalLocalVolOverwrite_));
 
             results_.value = vanillaOption.NPV()   + rebateOption.NPV()   - results_.value;

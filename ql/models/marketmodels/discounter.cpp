@@ -20,7 +20,12 @@
 #include <ql/models/marketmodels/discounter.hpp>
 #include <ql/models/marketmodels/curvestate.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
+#endif
 
 namespace QuantLib {
 

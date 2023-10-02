@@ -27,7 +27,12 @@
 #define quantlib_optimization_criteria_hpp
 
 #include <ql/utilities/null.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iosfwd>
+#endif
 
 namespace QuantLib {
 
@@ -61,7 +66,7 @@ namespace QuantLib {
         Real functionEpsilon() const;
         Real gradientNormEpsilon() const;
 
-        /*! Test if the number of iterations is not too big 
+        /*! Test if the number of iterations is not too big
             and if a minimum point is not reached */
         bool operator()(Size iteration,
                         Size& statState,
@@ -89,7 +94,7 @@ namespace QuantLib {
                                              bool positiveOptimization,
                                              EndCriteria::Type& ecType) const;
         /*! Test if the gradient norm variation is below gradientNormEpsilon */
-        //bool checkZerGradientNormValue(const Real gNormOld, 
+        //bool checkZerGradientNormValue(const Real gNormOld,
         //                               const Real gNormNew,
         //                               EndCriteria::Type& ecType) const;
         /*! Test if the gradient norm value is below gradientNormEpsilon */

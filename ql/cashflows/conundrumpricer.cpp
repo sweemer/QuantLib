@@ -36,7 +36,12 @@
 #include <ql/termstructures/volatility/smilesection.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/time/schedule.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

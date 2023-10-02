@@ -62,8 +62,13 @@ or guarantee.
 */
 
 #include <ql/math/optimization/lmdif.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <cstdio>
+#endif
 
 namespace QuantLib {
   namespace MINPACK {
@@ -1671,4 +1676,3 @@ if(nprint > 0)
 }
 
 /************************fdjac2.c*************************/
-

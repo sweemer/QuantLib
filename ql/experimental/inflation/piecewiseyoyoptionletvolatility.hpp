@@ -28,7 +28,12 @@
 #include <ql/experimental/inflation/yoyinflationoptionletvolatilitystructure2.hpp>
 #include <ql/patterns/lazyobject.hpp>
 #include <ql/termstructures/iterativebootstrap.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

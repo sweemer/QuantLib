@@ -22,12 +22,17 @@
 
 #include <ql/experimental/credit/constantlosslatentmodel.hpp>
 #include <ql/experimental/credit/defaultlossmodel.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
 #include <algorithm>
+#endif
 
 namespace QuantLib {
 
-    /*! Recursive STCDO default loss model for a heterogeneous pool of names. 
+    /*! Recursive STCDO default loss model for a heterogeneous pool of names.
     The pool names are heterogeneous in their default probabilities, notionals
     and recovery rates. Correlations are given by the latent model.
     The recursive pricing algorithm used here is described in Andersen, Sidenius
@@ -40,10 +45,10 @@ namespace QuantLib {
         portfolio loss weights (notionals and recoveries). As it is now this
         is ok for pricing but not for risk metrics. See the discussion in O'Kane
         18.3.2
-        \todo Intengrands should all use the inverted probabilities for 
+        \todo Intengrands should all use the inverted probabilities for
         performance instead of calling the copula inversion with the same vals.
     */
-    template<class copulaPolicy> 
+    template<class copulaPolicy>
     class RecursiveLossModel : public DefaultLossModel {
     public:
       explicit RecursiveLossModel(
@@ -89,7 +94,7 @@ namespace QuantLib {
             EL(t) = \int\,q(\omega)\,d\omega\,\sum_{l_k}\,l_k\,P(l_k;t|\omega) =
               \int\,q(\omega)\,d\omega\,EL(t|\omega)
             \f]
-            and this is the way it is integrated here. The recursion formula 
+            and this is the way it is integrated here. The recursion formula
             makes it easier this way.
         */
       Real expectedTrancheLoss(const Date& date) const override;
@@ -115,7 +120,7 @@ namespace QuantLib {
         //   taken to be the positive swuare root of this number in the copula.
         ////////in the latent model now: mutable std::vector<Real> oneFactorCorrels_;
         // cached remaining basket magnitudes:
-        mutable Real attachAmount_, 
+        mutable Real attachAmount_,
             detachAmount_,
             notional_;
         mutable Size remainingBsktSize_;
@@ -129,7 +134,7 @@ namespace QuantLib {
 
     template<class CP>
     inline Real RecursiveLossModel<CP>::expectedTrancheLoss(
-        const Date& date) const 
+        const Date& date) const
     {
 /*
         std::map<Real, Probability> dist = lossDistribution(date);
@@ -153,7 +158,7 @@ namespace QuantLib {
 
         // calculate inverted unconditional Ps first so we save the inversion:
         // TO DO : turn to STL algorithm code
-        std::vector<Probability> uncDefProb = 
+        std::vector<Probability> uncDefProb =
             basket_->remainingProbabilities(date);
 
         return copula_->integratedExpectedValue(
@@ -162,7 +167,7 @@ namespace QuantLib {
             });
             */
 
-        std::vector<Probability> uncDefProb = 
+        std::vector<Probability> uncDefProb =
             basket_->remainingProbabilities(date);
         std::vector<Real> invProb;
         for(Size i=0; i<uncDefProb.size(); ++i)
@@ -177,7 +182,7 @@ namespace QuantLib {
     template<class CP>
     inline std::vector<Real> RecursiveLossModel<CP>::lossProbability(const Date& date) const {
 
-        std::vector<Probability> uncDefProb = 
+        std::vector<Probability> uncDefProb =
             basket_->remainingProbabilities(date);
         return copula_->integratedExpectedValueV(
             [&](const std::vector<Real>& v1) {
@@ -213,13 +218,13 @@ namespace QuantLib {
 
     // make it return a distribution object?
     template<class CP>
-    std::map<Real, Probability> RecursiveLossModel<CP>::lossDistribution(const Date& d) const 
+    std::map<Real, Probability> RecursiveLossModel<CP>::lossDistribution(const Date& d) const
     {
         std::map<Real, Probability> distrib;
         std::vector<Real> values  = lossProbability(d);
         Real sum = 0.;
         for(Size i=0; i<values.size(); ++i) {
-            distrib.insert(std::make_pair<Real, Probability>(i * lossUnit_, 
+            distrib.insert(std::make_pair<Real, Probability>(i * lossUnit_,
                 sum + values[i]));
             sum += values[i];
         }
@@ -227,11 +232,11 @@ namespace QuantLib {
     }
 
     // Integrate then search rather than search and then integrate?
-    // Here I am not using a search because the point might be not attainable 
-    //   (loss distrib is not continuous) 
+    // Here I am not using a search because the point might be not attainable
+    //   (loss distrib is not continuous)
     template<class CP>
-    Real RecursiveLossModel<CP>::percentile(const Date& d, 
-        Real percentile) const 
+    Real RecursiveLossModel<CP>::percentile(const Date& d,
+        Real percentile) const
     {
         std::map<Real, Probability> dist = lossDistribution(d);
 
@@ -253,43 +258,43 @@ namespace QuantLib {
         // return xPlus-(xPlus-xMin)*(valPlus-percentile)/(valPlus-valMin);
         Real portfLoss =  xPlus-(xPlus-xMin)*(valPlus-percentile)
             /(valPlus-valMin);
-        return //remainingNotional_ * 
-            std::min(std::max(portfLoss - attachAmount_, 0.), 
+        return //remainingNotional_ *
+            std::min(std::max(portfLoss - attachAmount_, 0.),
                 detachAmount_ - attachAmount_);/////(detach_ - attach_);
     }
 
     template<class CP>
-    Real RecursiveLossModel<CP>::expectedShortfall(const Date& d, 
-        Real perctl) const 
+    Real RecursiveLossModel<CP>::expectedShortfall(const Date& d,
+        Real perctl) const
     {
         if(d == Settings::instance().evaluationDate()) return 0.;
         std::map<Real, Probability> distrib = lossDistribution(d);
 
-        std::map<Real, Probability>::iterator itNxt, itDist = 
+        std::map<Real, Probability>::iterator itNxt, itDist =
             distrib.begin();
         for(; itDist != distrib.end(); ++itDist)
             if(itDist->second >= perctl) break;
         itNxt = itDist;
         --itDist; // what if we are on the first one?!!!
 
-        // One could linearly triangulate the exact point and get extra 
+        // One could linearly triangulate the exact point and get extra
         // precission on the first(broken) period.
-        if(itNxt != distrib.end()) { 
-            Real lossNxt = std::min(std::max(itNxt->first - attachAmount_, 
+        if(itNxt != distrib.end()) {
+            Real lossNxt = std::min(std::max(itNxt->first - attachAmount_,
                 0.), detachAmount_ - attachAmount_);
             Real lossHere = std::min(std::max(itDist->first - attachAmount_,
                 0.), detachAmount_ - attachAmount_);
 
-            Real val =  lossNxt - (itNxt->second - perctl) * 
-                (lossNxt - lossHere) / (itNxt->second - itDist->second); 
+            Real val =  lossNxt - (itNxt->second - perctl) *
+                (lossNxt - lossHere) / (itNxt->second - itDist->second);
             Real suma = (itNxt->second - perctl) * (lossNxt + val) * .5;
             ++itDist; ++itNxt;
             do{
-                lossNxt = std::min(std::max(itNxt->first - attachAmount_, 
+                lossNxt = std::min(std::max(itNxt->first - attachAmount_,
                     0.), detachAmount_ - attachAmount_);
-                lossHere = std::min(std::max(itDist->first - attachAmount_, 
+                lossHere = std::min(std::max(itDist->first - attachAmount_,
                     0.), detachAmount_ - attachAmount_);
-                suma += .5 * (lossHere + lossNxt) * (itNxt->second - 
+                suma += .5 * (lossHere + lossNxt) * (itNxt->second -
                     itDist->second);
                 ++itDist; ++itNxt;
             }while(itNxt != distrib.end());
@@ -300,9 +305,9 @@ namespace QuantLib {
 
     template<class CP>
     std::map<Real, Probability> RecursiveLossModel<CP>::conditionalLossDistrib(
-            const std::vector<Probability>& pDefDate, 
+            const std::vector<Probability>& pDefDate,
             //const Date& date,
-            const std::vector<Real>& mktFactor) const 
+            const std::vector<Real>& mktFactor) const
     {
         //eq. 10 p.68
         //attainable losses distribution, recursive algorithm
@@ -348,9 +353,9 @@ namespace QuantLib {
     // twice?! rewrite one in terms of the other, this is a duplicate!
     template<class CP>
     std::map<Real, Probability> RecursiveLossModel<CP>::conditionalLossDistribInvP(
-            const std::vector<Real>& invpDefDate, 
+            const std::vector<Real>& invpDefDate,
             //const Date& date,
-            const std::vector<Real>& mktFactor) const 
+            const std::vector<Real>& mktFactor) const
     {
         // eq. 10 p.68
         // attainable losses distribution, recursive algorithm
@@ -360,7 +365,7 @@ namespace QuantLib {
         pIndepDistrib.insert(std::make_pair(0., 1.));
         for(Size iName=0; iName<remainingBsktSize_; ++iName) {
             Probability pDef =
-                copula_->conditionalDefaultProbabilityInvP(invpDefDate[iName], 
+                copula_->conditionalDefaultProbabilityInvP(invpDefDate[iName],
                     iName, mktFactor);
 
             // iterate on all possible losses in the distribution:
@@ -396,17 +401,17 @@ namespace QuantLib {
 
 
     /*
-    Bugs here???. The max min on the tranche looks 
-    wrong. It is better to have a tranche function since that way we can avoid 
-    adding up losses over all the posible losses rather than just over the 
+    Bugs here???. The max min on the tranche looks
+    wrong. It is better to have a tranche function since that way we can avoid
+    adding up losses over all the posible losses rather than just over the
     tranche limits.
     */
     //! Portfolio loss conditional to the market factor value
     template<class CP>
     Real RecursiveLossModel<CP>::expectedConditionalLoss(
-        const std::vector<Probability>& pDefDate, 
+        const std::vector<Probability>& pDefDate,
         //const Date& date,
-        const std::vector<Real>& mktFactor) const 
+        const std::vector<Real>& mktFactor) const
     {
         std::map<Real, Probability> pIndepDistrib =
             conditionalLossDistrib(pDefDate, mktFactor);
@@ -424,7 +429,7 @@ namespace QuantLib {
         while(distIt != pIndepDistrib.end()) {
             Real loss = distIt->first * lossUnit_;
      //       loss = std::max(std::min(loss, detachAmount_)-attachAmount_, 0.);
-            loss = std::min(std::max(loss - attachAmount_, 0.), 
+            loss = std::min(std::max(loss - attachAmount_, 0.),
                 detachAmount_ - attachAmount_);
             // MIN MAX BUGS ....??
             expLoss += loss * distIt->second;
@@ -436,9 +441,9 @@ namespace QuantLib {
     template<class CP>
     // again, I am duplicating code.
     Real RecursiveLossModel<CP>::expectedConditionalLossInvP(
-                                 const std::vector<Real>& invPDefDate, 
+                                 const std::vector<Real>& invPDefDate,
                                  //const Date& date,
-                                 const std::vector<Real>& mktFactor) const 
+                                 const std::vector<Real>& mktFactor) const
     {
         std::map<Real, Probability> pIndepDistrib =
             conditionalLossDistribInvP(invPDefDate, mktFactor);
@@ -456,7 +461,7 @@ namespace QuantLib {
         while(distIt != pIndepDistrib.end()) {
             Real loss = distIt->first * lossUnit_;
    //         loss = std::max(std::min(loss, detachAmount_)-attachAmount_, 0.);
-            loss = std::min(std::max(loss - attachAmount_, 0.), 
+            loss = std::min(std::max(loss - attachAmount_, 0.),
                 detachAmount_ - attachAmount_);
             // MIN MAX BUGS ....???
             expLoss += loss * distIt->second;
@@ -467,9 +472,9 @@ namespace QuantLib {
 
     template<class CP>
     std::vector<Real> RecursiveLossModel<CP>::conditionalLossProb(
-        const std::vector<Probability>& pDefDate, 
+        const std::vector<Probability>& pDefDate,
         //const Date& date,
-        const std::vector<Real>& mktFactor) const 
+        const std::vector<Real>& mktFactor) const
     {
         std::map<Real, Probability> pIndepDistrib =
             conditionalLossDistrib(pDefDate, mktFactor);

@@ -26,7 +26,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 #include <ql/experimental/variancegamma/fftengine.hpp>
 #include <ql/experimental/variancegamma/variancegammaprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
+#endif
 
 namespace QuantLib {
 
@@ -61,4 +66,3 @@ namespace QuantLib {
 
 
 #endif
-

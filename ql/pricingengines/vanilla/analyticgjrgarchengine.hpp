@@ -28,14 +28,19 @@
 #include <ql/models/equity/gjrgarchmodel.hpp>
 #include <ql/instruments/vanillaoption.hpp>
 #include <ql/math/integrals/gaussianquadratures.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
+#endif
 
 namespace QuantLib {
 
     //! GJR-GARCH(1,1) engine
     /*! References:
 
-    Jin-Chuan Duan, Genevieve Gauthier, Jean-Guy Simonato, 
+    Jin-Chuan Duan, Genevieve Gauthier, Jean-Guy Simonato,
     Caroline Sasseville, 2006. Approximating the GJR-GARCH
     and EGARCH option pricing models analytically
     Journal of Computational Finance, Volume 9, Number 3,

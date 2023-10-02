@@ -25,7 +25,12 @@
 #include <ql/methods/finitedifferences/operators/secondderivativeop.hpp>
 #include <ql/methods/finitedifferences/operators/secondordermixedderivativeop.hpp>
 #include <ql/models/shortrate/onefactormodels/hullwhite.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -135,8 +140,8 @@ namespace QuantLib {
         else
             QL_FAIL("direction too large");
     }
-    
-    Array FdmHestonHullWhiteOp::preconditioner(const Array& r, 
+
+    Array FdmHestonHullWhiteOp::preconditioner(const Array& r,
                                                Real dt) const {
         return solve_splitting(0, r, dt);
     }

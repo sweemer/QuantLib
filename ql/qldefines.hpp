@@ -128,7 +128,11 @@
 
 // import global functions into std namespace
 #if defined(BOOST_NO_STDC_NAMESPACE)
+    #ifdef QL_USE_STD_MODULES
+    import std;
+    #else
     #include <cmath>
+    #endif
     namespace std {
         using ::sqrt; using ::abs; using ::fabs;
         using ::exp; using ::log; using ::pow;
@@ -168,7 +172,11 @@
 /*! \def QL_EPSILON
     Defines the machine precision for operations over doubles
 */
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <limits>
+#endif
 // limits used as such
 #define QL_MIN_INTEGER         ((std::numeric_limits<QL_INTEGER>::min)())
 #define QL_MAX_INTEGER         ((std::numeric_limits<QL_INTEGER>::max)())

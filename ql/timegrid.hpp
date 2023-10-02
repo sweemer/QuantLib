@@ -27,11 +27,16 @@
 
 #include <ql/errors.hpp>
 #include <ql/math/comparison.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <algorithm>
 #include <iterator>
 #include <numeric>
 #include <cmath>
+#endif
 
 namespace QuantLib {
 

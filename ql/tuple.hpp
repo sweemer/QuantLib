@@ -27,7 +27,11 @@
 #include <ql/qldefines.hpp>
 
 #if defined(QL_USE_STD_TUPLE)
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <tuple>
+#endif
 #else
 #include <boost/tuple/tuple.hpp>
 #endif
@@ -52,4 +56,3 @@ namespace QuantLib {
 
 
 #endif
-

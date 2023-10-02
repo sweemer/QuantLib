@@ -22,7 +22,13 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
 #include <ql/math/randomnumbers/latticersg.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
+
 namespace QuantLib {
 
     LatticeRsg::LatticeRsg(Size dimensionality, std::vector<Real> z, Size N)
@@ -44,7 +50,7 @@ namespace QuantLib {
         ++i_;
 
         return sequence_;
-    
+
     }
 
 }

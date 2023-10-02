@@ -19,7 +19,12 @@
 
 #include <ql/models/marketmodels/products/multistep/cashrebate.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -45,28 +50,28 @@ namespace QuantLib {
 
 
     std::vector<Time>
-    MarketModelCashRebate::possibleCashFlowTimes() const 
+    MarketModelCashRebate::possibleCashFlowTimes() const
     {
         return paymentTimes_;
     }
 
-    Size MarketModelCashRebate::numberOfProducts() const 
+    Size MarketModelCashRebate::numberOfProducts() const
     {
         return numberOfProducts_;
     }
 
-    Size MarketModelCashRebate::maxNumberOfCashFlowsPerProductPerStep() const 
+    Size MarketModelCashRebate::maxNumberOfCashFlowsPerProductPerStep() const
     {
         return 1;
     }
 
-    void MarketModelCashRebate::reset() 
+    void MarketModelCashRebate::reset()
     {
        currentIndex_=0;
     }
 
     std::vector<Size>
-    MarketModelCashRebate::suggestedNumeraires() const 
+    MarketModelCashRebate::suggestedNumeraires() const
     {
         QL_FAIL("not implemented (yet?)");
     }
@@ -83,7 +88,7 @@ namespace QuantLib {
             std::vector<std::vector<MarketModelMultiProduct::CashFlow> >&
                                                                genCashFlows)
     {
-        for (Size i=0; i<numberOfProducts_; ++i) 
+        for (Size i=0; i<numberOfProducts_; ++i)
         {
             numberCashFlowsThisStep[i] = 1;
             genCashFlows[i][0].timeIndex = currentIndex_;
@@ -94,10 +99,9 @@ namespace QuantLib {
     }
 
     std::unique_ptr<MarketModelMultiProduct>
-    MarketModelCashRebate::clone() const 
+    MarketModelCashRebate::clone() const
     {
         return std::unique_ptr<MarketModelMultiProduct>(new MarketModelCashRebate(*this));
     }
 
 }
-

@@ -27,13 +27,18 @@
 #include <ql/math/array.hpp>
 #include <ql/math/randomnumbers/mt19937uniformrng.hpp>
 #include <ql/mathconstants.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
     //! Isotropic random walk
-    /*! A variate is used to draw from a random element of a 
-        probability distribution. The draw corresponds to the 
+    /*! A variate is used to draw from a random element of a
+        probability distribution. The draw corresponds to the
         radius of a d-dimensional sphere. The position on the
         surface of the d-dimensional sphere is randomly chosen
         with all points on the surface having the same probability,
@@ -76,7 +81,7 @@ namespace QuantLib {
                     *first = radius*(*weight);
             }
         }
-        inline void setDimension(Size dim) { 
+        inline void setDimension(Size dim) {
             dim_ = dim;
             weights_ = Array(dim, 1.0);
         }

@@ -40,8 +40,13 @@
 #include <ql/methods/finitedifferences/solvers/fdmsolverdesc.hpp>
 #include <ql/methods/finitedifferences/stepconditions/fdmstepconditioncomposite.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <list>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -181,7 +186,7 @@ namespace QuantLib {
         x[0] = process_->initialValues()[0];
         x[1] = process_->initialValues()[1];
         x[2] = process_->initialValues()[2];
-        
+
         const Real tol = 1e-8;
         const Real maxExerciseValue = exerciseMesher->locations().back();
         const Real minExerciseValue = exerciseMesher->locations().front();

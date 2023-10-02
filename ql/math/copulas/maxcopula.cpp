@@ -19,11 +19,16 @@
 
 #include <ql/math/copulas/maxcopula.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
+#endif
 
 namespace QuantLib {
 
-    Real MaxCopula::operator()(Real x, Real y) const 
+    Real MaxCopula::operator()(Real x, Real y) const
     {
         QL_REQUIRE(x >= 0.0 && x <=1.0 ,
                    "1st argument (" << x << ") must be in [0,1]");

@@ -21,7 +21,12 @@
 #include "ql/time/daycounters/yearfractiontodate.hpp"
 
 #include <boost/numeric/conversion/cast.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 namespace QuantLib {
 
@@ -61,4 +66,3 @@ namespace QuantLib {
             return guessDate + Period(searchDirection, Days);
     }
 }
-

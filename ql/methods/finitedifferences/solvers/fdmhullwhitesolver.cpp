@@ -25,7 +25,12 @@
 #include <ql/methods/finitedifferences/solvers/fdmhullwhitesolver.hpp>
 #include <ql/methods/finitedifferences/stepconditions/fdmsnapshotcondition.hpp>
 #include <ql/models/shortrate/onefactormodels/hullwhite.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

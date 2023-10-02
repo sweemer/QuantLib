@@ -31,8 +31,13 @@
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
 #include <ql/models/shortrate/onefactormodels/hullwhite.hpp>
 #include <ql/pricingengines/swap/discountingswapengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

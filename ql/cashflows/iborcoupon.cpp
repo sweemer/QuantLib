@@ -28,7 +28,12 @@
 #include <ql/indexes/interestrateindex.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/optional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -271,7 +276,7 @@ namespace QuantLib {
         Leg leg = FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
                          schedule_, notionals_, index_, paymentDayCounter_,
                          paymentAdjustment_, fixingDays_, gearings_, spreads_,
-                         caps_, floors_, inArrears_, zeroPayments_, paymentLag_, paymentCalendar_, 
+                         caps_, floors_, inArrears_, zeroPayments_, paymentLag_, paymentCalendar_,
 			             exCouponPeriod_, exCouponCalendar_, exCouponAdjustment_, exCouponEndOfMonth_);
 
         if (caps_.empty() && floors_.empty() && !inArrears_) {

@@ -26,13 +26,15 @@ synthetic rates which are interleaved
 #ifndef volatility_interpolation_specifier_hpp
 #define  volatility_interpolation_specifier_hpp
 
-
-
 #include <ql/models/marketmodels/models/piecewiseconstantvariance.hpp>
 #include <ql/types.hpp>
 #include <ql/shared_ptr.hpp>
-#include <vector>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <vector>
+#endif
 
 namespace QuantLib
 {

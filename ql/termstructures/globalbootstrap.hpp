@@ -31,7 +31,12 @@
 #include <ql/termstructures/bootstraperror.hpp>
 #include <ql/termstructures/bootstraphelper.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

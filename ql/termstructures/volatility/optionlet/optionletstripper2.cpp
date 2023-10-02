@@ -28,8 +28,12 @@
 #include <ql/termstructures/volatility/optionlet/optionletstripper2.hpp>
 #include <ql/termstructures/volatility/optionlet/spreadedoptionletvol.hpp>
 #include <ql/termstructures/volatility/optionlet/strippedoptionletadapter.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
 

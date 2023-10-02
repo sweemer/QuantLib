@@ -19,7 +19,12 @@
 
 #include <ql/experimental/commodities/commoditycashflow.hpp>
 #include <ql/patterns/visitor.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
+#endif
 
 namespace QuantLib {
 
@@ -60,4 +65,3 @@ namespace QuantLib {
     }
 
 }
-

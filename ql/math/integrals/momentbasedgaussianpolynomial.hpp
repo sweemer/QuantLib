@@ -27,8 +27,13 @@
 #include <ql/math/comparison.hpp>
 #include <ql/math/integrals/gaussianorthogonalpolynomial.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <vector>
+#endif
 
 namespace QuantLib {
     /*! References:

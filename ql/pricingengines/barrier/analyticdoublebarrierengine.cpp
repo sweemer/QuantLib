@@ -20,7 +20,12 @@
 #include <ql/exercise.hpp>
 #include <ql/pricingengines/barrier/analyticdoublebarrierengine.hpp>
 #include <ql/pricingengines/blackcalculator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -181,14 +186,14 @@ namespace QuantLib {
           Real d3 = std::log( std::pow(barrierLo(), 2 * n + 2) / (strike() * underlying() * U2n) ) / stdDeviation() + bsigma;
           Real d4 = std::log( std::pow(barrierLo(), 2 * n + 2) / (barrierHi() * underlying() * U2n) ) / stdDeviation() + bsigma;
 
-          acc1 += std::pow( std::pow(barrierHi(), n) / std::pow(barrierLo(), n), mu1 ) * 
+          acc1 += std::pow( std::pow(barrierHi(), n) / std::pow(barrierLo(), n), mu1 ) *
                   (f_(d1) - f_(d2)) -
-                  std::pow( std::pow(barrierLo(), n+1) / (std::pow(barrierHi(), n) * underlying()), mu1 ) * 
+                  std::pow( std::pow(barrierLo(), n+1) / (std::pow(barrierHi(), n) * underlying()), mu1 ) *
                   (f_(d3) - f_(d4));
 
-          acc2 += std::pow( std::pow(barrierHi(), n) / std::pow(barrierLo(), n), mu1-2) * 
+          acc2 += std::pow( std::pow(barrierHi(), n) / std::pow(barrierLo(), n), mu1-2) *
                   (f_(d1 - stdDeviation()) - f_(d2 - stdDeviation())) -
-                  std::pow( std::pow(barrierLo(), n+1) / (std::pow(barrierHi(), n) * underlying()), mu1-2 ) * 
+                  std::pow( std::pow(barrierLo(), n+1) / (std::pow(barrierHi(), n) * underlying()), mu1-2 ) *
                   (f_(d3-stdDeviation()) - f_(d4-stdDeviation()));
        }
 
@@ -196,7 +201,7 @@ namespace QuantLib {
        Real kov = underlying() * rend * acc1 - strike() * riskFreeDiscount() * acc2;
        return std::max(0.0, kov);
     }
-    
+
     Real AnalyticDoubleBarrierEngine::callKI() const {
         // Call KI equates to vanilla - callKO
         return std::max(0.0, vanillaEquivalent() - callKO());
@@ -216,14 +221,14 @@ namespace QuantLib {
           Real y3 = std::log( std::pow(barrierLo(), 2 * n + 2) / (barrierLo() * underlying() * U2n) ) / stdDeviation() + bsigma;
           Real y4 = std::log( std::pow(barrierLo(), 2 * n + 2) / (strike() * underlying() * U2n) ) / stdDeviation() + bsigma;
 
-          acc1 += std::pow( std::pow(barrierHi(), n) / std::pow(barrierLo(), n), mu1-2) * 
+          acc1 += std::pow( std::pow(barrierHi(), n) / std::pow(barrierLo(), n), mu1-2) *
                   (f_(y1 - stdDeviation()) - f_(y2 - stdDeviation())) -
-                  std::pow( std::pow(barrierLo(), n+1) / (std::pow(barrierHi(), n) * underlying()), mu1-2 ) * 
+                  std::pow( std::pow(barrierLo(), n+1) / (std::pow(barrierHi(), n) * underlying()), mu1-2 ) *
                   (f_(y3-stdDeviation()) - f_(y4-stdDeviation()));
 
-          acc2 += std::pow( std::pow(barrierHi(), n) / std::pow(barrierLo(), n), mu1 ) * 
+          acc2 += std::pow( std::pow(barrierHi(), n) / std::pow(barrierLo(), n), mu1 ) *
                   (f_(y1) - f_(y2)) -
-                  std::pow( std::pow(barrierLo(), n+1) / (std::pow(barrierHi(), n) * underlying()), mu1 ) * 
+                  std::pow( std::pow(barrierLo(), n+1) / (std::pow(barrierHi(), n) * underlying()), mu1 ) *
                   (f_(y3) - f_(y4));
 
        }
@@ -232,12 +237,11 @@ namespace QuantLib {
        Real kov = strike() * riskFreeDiscount() * acc1 - underlying() * rend  * acc2;
        return std::max(0.0, kov);
     }
-    
+
     Real AnalyticDoubleBarrierEngine::putKI() const {
         // Put KI equates to vanilla - putKO
         return std::max(0.0, vanillaEquivalent() - putKO());
     }
 
-    
-}
 
+}

@@ -27,7 +27,12 @@
 #include <ql/instruments/capfloor.hpp>
 #include <ql/models/shortrate/onefactormodels/gaussian1dmodel.hpp>
 #include <ql/pricingengines/genericmodelengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -61,4 +66,3 @@ namespace QuantLib {
 }
 
 #endif
-

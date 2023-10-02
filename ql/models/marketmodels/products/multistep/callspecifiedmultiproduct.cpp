@@ -20,7 +20,12 @@
 #include <ql/models/marketmodels/products/multistep/callspecifiedmultiproduct.hpp>
 #include <ql/models/marketmodels/products/multistep/cashrebate.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -35,7 +40,7 @@ namespace QuantLib {
         const std::vector<Time>& evolutionTimes1 = d1.evolutionTimes();
         const std::vector<Time>& exerciseTimes = strategy->exerciseTimes();
 
-        if (!rebate_.empty()) 
+        if (!rebate_.empty())
         {
             EvolutionDescription d2 = rebate_->evolution();
             const std::vector<Time>& rateTimes2 = d2.rateTimes();
@@ -43,7 +48,7 @@ namespace QuantLib {
                        std::equal(rateTimes1.begin(), rateTimes1.end(),
                                   rateTimes2.begin()),
                        "incompatible rate times");
-        } 
+        }
         else
         {
             EvolutionDescription description(rateTimes1, exerciseTimes);
@@ -81,35 +86,35 @@ namespace QuantLib {
     }
 
     std::vector<Size>
-    CallSpecifiedMultiProduct::suggestedNumeraires() const 
+    CallSpecifiedMultiProduct::suggestedNumeraires() const
     {
         return underlying_->suggestedNumeraires();
     }
 
-    const EvolutionDescription& CallSpecifiedMultiProduct::evolution() const 
+    const EvolutionDescription& CallSpecifiedMultiProduct::evolution() const
     {
         return evolution_;
     }
 
     std::vector<Time>
-    CallSpecifiedMultiProduct::possibleCashFlowTimes() const 
+    CallSpecifiedMultiProduct::possibleCashFlowTimes() const
     {
         return cashFlowTimes_;
     }
 
-    Size CallSpecifiedMultiProduct::numberOfProducts() const 
+    Size CallSpecifiedMultiProduct::numberOfProducts() const
     {
         return underlying_->numberOfProducts();
     }
 
     Size
-    CallSpecifiedMultiProduct::maxNumberOfCashFlowsPerProductPerStep() const 
+    CallSpecifiedMultiProduct::maxNumberOfCashFlowsPerProductPerStep() const
     {
         return std::max(underlying_->maxNumberOfCashFlowsPerProductPerStep(),
                         rebate_->maxNumberOfCashFlowsPerProductPerStep());
     }
 
-    void CallSpecifiedMultiProduct::reset() 
+    void CallSpecifiedMultiProduct::reset()
     {
         underlying_->reset();
         rebate_->reset();
@@ -122,7 +127,7 @@ namespace QuantLib {
     bool CallSpecifiedMultiProduct::nextTimeStep(
             const CurveState& currentState,
             std::vector<Size>& numberCashFlowsThisStep,
-            std::vector<std::vector<CashFlow> >& cashFlowsGenerated) 
+            std::vector<std::vector<CashFlow> >& cashFlowsGenerated)
     {
 
         bool isUnderlyingTime = isPresent_[0][currentIndex_];
@@ -139,9 +144,9 @@ namespace QuantLib {
         if (!wasCalled_ && isExerciseTime && callable_)
             wasCalled_ = strategy_->exercise(currentState);
 
-        if (wasCalled_) 
+        if (wasCalled_)
         {
-            if (isRebateTime) 
+            if (isRebateTime)
             {
                 done = rebate_->nextTimeStep(currentState,
                                              numberCashFlowsThisStep,
@@ -150,8 +155,8 @@ namespace QuantLib {
                     for (Size j=0; j<numberCashFlowsThisStep[i]; ++j)
                         cashFlowsGenerated[i][j].timeIndex += rebateOffset_;
             }
-        } 
-        else 
+        }
+        else
         {
             if (isRebateTime)
                 rebate_->nextTimeStep(currentState,
@@ -168,38 +173,37 @@ namespace QuantLib {
     }
 
     std::unique_ptr<MarketModelMultiProduct>
-    CallSpecifiedMultiProduct::clone() const 
+    CallSpecifiedMultiProduct::clone() const
     {
         return std::unique_ptr<MarketModelMultiProduct>(new CallSpecifiedMultiProduct(*this));
     }
 
     const MarketModelMultiProduct&
-    CallSpecifiedMultiProduct::underlying() const 
+    CallSpecifiedMultiProduct::underlying() const
     {
         return *underlying_;
     }
 
     const ExerciseStrategy<CurveState>&
-    CallSpecifiedMultiProduct::strategy() const 
+    CallSpecifiedMultiProduct::strategy() const
     {
         return *strategy_;
     }
 
     const MarketModelMultiProduct&
-    CallSpecifiedMultiProduct::rebate() const 
+    CallSpecifiedMultiProduct::rebate() const
     {
         return *rebate_;
     }
 
-    void CallSpecifiedMultiProduct::enableCallability() 
+    void CallSpecifiedMultiProduct::enableCallability()
     {
         callable_ = true;
     }
 
-    void CallSpecifiedMultiProduct::disableCallability() 
+    void CallSpecifiedMultiProduct::disableCallability()
     {
         callable_ = false;
     }
 
 }
-

@@ -20,7 +20,12 @@
 #include <ql/exercise.hpp>
 #include <ql/experimental/exoticoptions/analytictwoassetcorrelationengine.hpp>
 #include <ql/math/distributions/bivariatenormaldistribution.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using std::log;
 

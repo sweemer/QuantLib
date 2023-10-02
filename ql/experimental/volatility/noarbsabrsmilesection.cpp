@@ -20,8 +20,12 @@
 #include <ql/experimental/volatility/noarbsabrsmilesection.hpp>
 #include <ql/pricingengines/blackformula.hpp>
 #include <ql/termstructures/volatility/sabr.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -90,7 +94,7 @@ Real NoArbSabrSmileSection::volatilityImpl(Rate strike) const {
     }
     if (impliedVol == 0.0)
         // fall back on Hagan 2002 expansion
-        impliedVol = 
+        impliedVol =
             unsafeSabrVolatility(strike, forward_, exerciseTime(), params_[0],
                                  params_[1], params_[2], params_[3], volatilityType());
 

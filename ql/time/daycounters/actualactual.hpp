@@ -26,7 +26,12 @@
 
 #include <ql/time/daycounter.hpp>
 #include <ql/time/schedule.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -87,7 +92,7 @@ namespace QuantLib {
             Time
             yearFraction(const Date& d1, const Date& d2, const Date&, const Date&) const override;
         };
-        static ext::shared_ptr<DayCounter::Impl> implementation(Convention c, 
+        static ext::shared_ptr<DayCounter::Impl> implementation(Convention c,
                                                                 const Schedule& schedule);
       public:
         explicit ActualActual(Convention c,

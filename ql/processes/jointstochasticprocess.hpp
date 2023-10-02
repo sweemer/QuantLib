@@ -26,8 +26,13 @@
 
 #include <ql/utilities/null.hpp>
 #include <ql/stochasticprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <map>
+#endif
 
 namespace QuantLib {
 
@@ -86,8 +91,8 @@ namespace QuantLib {
                 : t0_(t0), dt_(dt) {}
 
             bool operator<(const CachingKey& key) const {
-                return   t0_ < key.t0_ 
-                    || ( t0_ == key.t0_ && dt_ < key.dt_); 
+                return   t0_ < key.t0_
+                    || ( t0_ == key.t0_ && dt_ < key.dt_);
             }
             Time t0_;
             Time dt_;

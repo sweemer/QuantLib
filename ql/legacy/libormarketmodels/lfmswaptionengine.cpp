@@ -20,7 +20,12 @@
 #include <ql/legacy/libormarketmodels/lfmswaptionengine.hpp>
 #include <ql/pricingengines/blackformula.hpp>
 #include <ql/pricingengines/swap/discountingswapengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -70,4 +75,3 @@ namespace QuantLib {
     }
 
 }
-

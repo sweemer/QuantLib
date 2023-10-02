@@ -29,8 +29,13 @@
 #include <ql/math/interpolations/linearinterpolation.hpp>
 #include <ql/quote.hpp>
 #include <ql/termstructures/yield/zeroyieldstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -193,4 +198,3 @@ namespace QuantLib {
 
 
 #endif
-

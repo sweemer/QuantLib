@@ -20,7 +20,12 @@
 
 #include <ql/pricingengines/swaption/discretizedswaption.hpp>
 #include <ql/pricingengines/swaption/treeswaptionengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

@@ -39,8 +39,12 @@
 #include <ql/time/calendars/target.hpp>
 #include <ql/time/daycounters/simpledaycounter.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <iomanip>
+#endif
 
 #define LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
@@ -263,11 +267,11 @@ int main(int, char* []) {
         ExponentialSplinesFitting exponentialSplinesFixed(constrainAtZero,7,0.02);
 
         auto ts7 = ext::make_shared<FittedBondDiscountCurve>(curveSettlementDays,
-                                                    calendar, 
-                                                    instrumentsA, 
-                                                    dc, 
-                                                    exponentialSplinesFixed, 
-                                                    tolerance, 
+                                                    calendar,
+                                                    instrumentsA,
+                                                    dc,
+                                                    exponentialSplinesFixed,
+                                                    tolerance,
                                                     max);
 
         printOutput("(g) exponential splines, fixed kappa", ts7);
@@ -332,7 +336,7 @@ int main(int, char* []) {
                  << setw(6) << fixed << setprecision(3)
                  << 100.*parRate(*ts6,keyDates,dc) << " | "
                  // Exponential, fixed kappa
-                 << setw(6) << fixed << setprecision(3) 
+                 << setw(6) << fixed << setprecision(3)
                  << 100. *parRate(*ts7, keyDates, dc) << endl;
         }
 
@@ -422,7 +426,7 @@ int main(int, char* []) {
                  << setw(6) << fixed << setprecision(3)
                  << 100.*parRate(*ts6,keyDates,dc) << " | "
                  // exponential, fixed kappa
-                 << setw(6) << fixed << setprecision(3) 
+                 << setw(6) << fixed << setprecision(3)
                  << 100. * parRate(*ts7, keyDates, dc) << endl;
         }
 
@@ -511,12 +515,12 @@ int main(int, char* []) {
 
         printOutput("(f) Nelson-Siegel spread", ts66);
 
-        auto ts77 = ext::make_shared<FittedBondDiscountCurve>(curveSettlementDays, 
-                                                    calendar, 
-                                                    instrumentsA, 
-                                                    dc, 
-                                                    exponentialSplinesFixed, 
-                                                    tolerance, 
+        auto ts77 = ext::make_shared<FittedBondDiscountCurve>(curveSettlementDays,
+                                                    calendar,
+                                                    instrumentsA,
+                                                    dc,
+                                                    exponentialSplinesFixed,
+                                                    tolerance,
                                                     max);
 
         printOutput("(g) exponential, fixed kappa", ts77);
@@ -575,7 +579,7 @@ int main(int, char* []) {
                  << setw(6) << fixed << setprecision(3)
                  << 100.*parRate(*ts66,keyDates,dc) << " | "
                  // exponential, fixed kappa
-                 << setw(6) << fixed << setprecision(3) 
+                 << setw(6) << fixed << setprecision(3)
                  << 100. *parRate(*ts77, keyDates, dc) << endl;
         }
 
@@ -661,7 +665,7 @@ int main(int, char* []) {
                  << setw(6) << fixed << setprecision(3)
                  << 100.*parRate(*ts66,keyDates,dc) << " | "
                  // exponential spline, fixed kappa
-                 << setw(6) << fixed << setprecision(3) 
+                 << setw(6) << fixed << setprecision(3)
                  << 100. *parRate(*ts77, keyDates, dc) << endl;
         }
 
@@ -676,4 +680,3 @@ int main(int, char* []) {
     }
 
 }
-

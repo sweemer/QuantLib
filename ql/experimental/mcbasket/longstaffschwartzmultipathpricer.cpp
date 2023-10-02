@@ -20,7 +20,12 @@
 #include <ql/experimental/mcbasket/longstaffschwartzmultipathpricer.hpp>
 #include <ql/math/generallinearleastsquares.hpp>
 #include <ql/utilities/tracing.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -58,7 +63,7 @@ namespace QuantLib {
     /*
       Extract the relevant information from the whole path
      */
-    LongstaffSchwartzMultiPathPricer::PathInfo 
+    LongstaffSchwartzMultiPathPricer::PathInfo
     LongstaffSchwartzMultiPathPricer::transformPath(const MultiPath& multiPath)
     const {
         const Size numberOfAssets = multiPath.assetNumber();
@@ -71,7 +76,7 @@ namespace QuantLib {
             for (Size j = 0; j < numberOfAssets; ++j)
                 path[j][i] = multiPath[j][pos];
         }
-        
+
         PathInfo info(numberOfTimes);
 
         payoff_->value(path, forwardTermStructures_, info.payments, info.exercises, info.states);
@@ -117,7 +122,7 @@ namespace QuantLib {
             /*
               coeff_[i].size()
               - 0 => never exercise
-              - v_.size() => use estimated continuation value 
+              - v_.size() => use estimated continuation value
                 (if > lowerBounds_[i])
               - v_.size() + 1 => always exercise
 
@@ -127,18 +132,18 @@ namespace QuantLib {
             const bool canExercise = !states.empty();
 
             if (canExercise) {
-                if (coeff_[i].size() == v_.size() + 1) {   
+                if (coeff_[i].size() == v_.size() + 1) {
                     // special value always exercise
                     price = exercise;
                 }
                 else {
                     if (!coeff_[i].empty() && exercise > lowerBounds_[i]) {
-                        
+
                         Real continuationValue = 0.0;
                         for (Size l = 0; l < v_.size(); ++l) {
                             continuationValue += coeff_[i][l] * v_[l](states);
                         }
-                        
+
                         if (continuationValue < exercise) {
                             price = exercise;
                         }
@@ -198,7 +203,7 @@ namespace QuantLib {
                 // and the path will not partecipate to the Lesat Square regression
 
                 const Array & states = paths_[j].states[i];
-                QL_REQUIRE(states.empty() || states.size() == basisDimension, 
+                QL_REQUIRE(states.empty() || states.size() == basisDimension,
                            "Invalid size of basis system");
 
                 // only paths that could potentially create exercise opportunities
@@ -242,7 +247,7 @@ namespace QuantLib {
                         for (Size l = 0; l < v_.size(); ++l) {
                             continuationValue += coeff_[i][l] * v_[l](x[k]);
                         }
-                        
+
                         if (continuationValue < exercise[j]) {
                             lsExercise[j] = true;
                         }
@@ -260,15 +265,15 @@ namespace QuantLib {
             sumNoExercise /= n;
             sumAlwaysExercise /= n;
 
-            QL_TRACE(   "Time index: " << i 
-                     << ", LowerBound: " << lowerBounds_[i + 1] 
-                     << ", Optimum: " << sumOptimized 
-                     << ", Continuation: " << sumNoExercise 
+            QL_TRACE(   "Time index: " << i
+                     << ", LowerBound: " << lowerBounds_[i + 1]
+                     << ", Optimum: " << sumOptimized
+                     << ", Continuation: " << sumNoExercise
                      << ", Termination: " << sumAlwaysExercise);
 
-            if (  sumOptimized >= sumNoExercise 
+            if (  sumOptimized >= sumNoExercise
                 && sumOptimized >= sumAlwaysExercise) {
-                
+
                 QL_TRACE("Accepted LS decision");
                 for (Size j = 0; j < n; ++j) {
                     // lsExercise already contains "canExercise"
@@ -282,13 +287,13 @@ namespace QuantLib {
                     prices[j] = canExercise ? exercise[j] : prices[j];
                 }
                 // special value to indicate always exercise
-                coeff_[i] = Array(v_.size() + 1); 
+                coeff_[i] = Array(v_.size() + 1);
             }
             else {
                 QL_TRACE("Overridden bad LS decision: NEVER");
                 // prices already contain the continuation value
                 // special value to indicate never exercise
-                coeff_[i] = Array(0); 
+                coeff_[i] = Array(0);
             }
 
             // then we add in any case the payment at time t

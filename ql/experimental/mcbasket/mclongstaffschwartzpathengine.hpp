@@ -22,7 +22,12 @@
 
 #include <ql/experimental/mcbasket/longstaffschwartzmultipathpricer.hpp>
 #include <ql/pricingengines/mcsimulation.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -64,7 +69,7 @@ namespace QuantLib {
         void calculate() const;
 
       protected:
-        virtual ext::shared_ptr<LongstaffSchwartzMultiPathPricer> 
+        virtual ext::shared_ptr<LongstaffSchwartzMultiPathPricer>
                                                     lsmPathPricer() const = 0;
 
         TimeGrid timeGrid() const;
@@ -112,7 +117,7 @@ namespace QuantLib {
                    "timeSteps must be positive, " << timeSteps <<
                    " not allowed");
         QL_REQUIRE(timeStepsPerYear != 0,
-                   "timeStepsPerYear must be positive, " 
+                   "timeStepsPerYear must be positive, "
                     << timeStepsPerYear << " not allowed");
         this->registerWith(process_);
     }
@@ -122,7 +127,7 @@ namespace QuantLib {
     inline
     ext::shared_ptr<typename
         MCLongstaffSchwartzPathEngine<GenericEngine,MC,RNG,S>::path_pricer_type>
-        MCLongstaffSchwartzPathEngine<GenericEngine,MC,RNG,S>::pathPricer() 
+        MCLongstaffSchwartzPathEngine<GenericEngine,MC,RNG,S>::pathPricer()
         const {
 
         QL_REQUIRE(pathPricer_, "path pricer unknown");
@@ -132,7 +137,7 @@ namespace QuantLib {
     template <class GenericEngine, template <class> class MC,
               class RNG, class S>
     inline
-    void MCLongstaffSchwartzPathEngine<GenericEngine,MC,RNG,S>::calculate() 
+    void MCLongstaffSchwartzPathEngine<GenericEngine,MC,RNG,S>::calculate()
     const {
         pathPricer_ = this->lsmPathPricer();
         this->mcModel_ = ext::shared_ptr<MonteCarloModel<MC,RNG,S> >(
@@ -177,7 +182,7 @@ namespace QuantLib {
     inline
     ext::shared_ptr<typename
     MCLongstaffSchwartzPathEngine<GenericEngine,MC,RNG,S>::path_generator_type>
-    MCLongstaffSchwartzPathEngine<GenericEngine,MC,RNG,S>::pathGenerator() 
+    MCLongstaffSchwartzPathEngine<GenericEngine,MC,RNG,S>::pathGenerator()
     const {
 
         Size dimensions = process_->factors();

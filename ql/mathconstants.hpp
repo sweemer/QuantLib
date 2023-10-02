@@ -20,7 +20,11 @@
 #ifndef quantlib_math_constants_hpp
 #define quantlib_math_constants_hpp
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 #ifndef M_E
     #define M_E         2.71828182845904523536
@@ -127,4 +131,3 @@
 #endif
 
 #endif
-

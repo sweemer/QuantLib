@@ -24,7 +24,12 @@
 #include <ql/pricingengines/forward/mcforwardvanillaengine.hpp>
 #include <ql/pricingengines/vanilla/analytichestonengine.hpp>
 #include <ql/processes/hestonprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

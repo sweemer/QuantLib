@@ -29,8 +29,13 @@
 #include <ql/methods/finitedifferences/operators/fdmlinearoplayout.hpp>
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
 #include <ql/payoff.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <deque>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -124,11 +129,11 @@ namespace QuantLib {
         for (Size i=0; i < x.size(); ++i) {
             x[i] = std::exp(mesher_->location(iter, i));
         }
-        
+
         return (*payoff_)(x);
     }
-    
-    Real 
+
+    Real
     FdmLogBasketInnerValue::avgInnerValue(
                                     const FdmLinearOpIterator& iter, Time t) {
         return innerValue(iter, t);

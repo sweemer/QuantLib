@@ -21,7 +21,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/models/marketmodels/products/multistep/multistepforwards.hpp>
 #include <ql/models/marketmodels/products/pathwise/pathwiseproductcaplet.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -35,9 +40,9 @@ namespace QuantLib {
         const std::vector<Real>& accruals,
         const std::vector<Time>& paymentTimes,
         const std::vector<Rate>& strikes)
-        : rateTimes_(rateTimes), 
+        : rateTimes_(rateTimes),
         accruals_(accruals),
-        paymentTimes_(paymentTimes), 
+        paymentTimes_(paymentTimes),
         strikes_(strikes) ,
         numberRates_(accruals_.size())
     {
@@ -63,13 +68,13 @@ namespace QuantLib {
 
     }
 
-   
+
 
 
     bool MarketModelPathwiseMultiCaplet::nextTimeStep(
         const CurveState& currentState,
         std::vector<Size>& numberCashFlowsThisStep,
-        std::vector<std::vector<MarketModelPathwiseMultiProduct::CashFlow> >& cashFlowsGenerated) 
+        std::vector<std::vector<MarketModelPathwiseMultiProduct::CashFlow> >& cashFlowsGenerated)
     {
         Rate liborRate = currentState.forwardRate(currentIndex_);
         cashFlowsGenerated[currentIndex_][0].timeIndex = currentIndex_;
@@ -92,7 +97,7 @@ namespace QuantLib {
     }
 
     std::unique_ptr<MarketModelPathwiseMultiProduct>
-    MarketModelPathwiseMultiCaplet::clone() const 
+    MarketModelPathwiseMultiCaplet::clone() const
     {
         return std::unique_ptr<MarketModelPathwiseMultiProduct>(new MarketModelPathwiseMultiCaplet(*this));
     }
@@ -145,9 +150,9 @@ namespace QuantLib {
         const std::vector<Real>& accruals,
         const std::vector<Time>& paymentTimes,
         const std::vector<Rate>& strikes)
-        : rateTimes_(rateTimes), 
+        : rateTimes_(rateTimes),
         accruals_(accruals),
-        paymentTimes_(paymentTimes), 
+        paymentTimes_(paymentTimes),
         strikes_(strikes) ,
         numberRates_(accruals_.size())
     {
@@ -177,9 +182,9 @@ namespace QuantLib {
         const std::vector<Real>& accruals,
         const std::vector<Time>& paymentTimes,
         Rate strike)
-        : rateTimes_(rateTimes), 
+        : rateTimes_(rateTimes),
         accruals_(accruals),
-        paymentTimes_(paymentTimes), 
+        paymentTimes_(paymentTimes),
         strikes_(accruals.size()) ,
         numberRates_(accruals_.size())
     {
@@ -197,7 +202,7 @@ namespace QuantLib {
         QL_REQUIRE(accruals.size()==numberRates_,
             "accruals.size()<> numberOfRates");
 
-        
+
         std::fill(strikes_.begin(), strikes_.end(),strike);
 
 
@@ -209,7 +214,7 @@ namespace QuantLib {
     bool MarketModelPathwiseMultiDeflatedCaplet::nextTimeStep(
         const CurveState& currentState,
         std::vector<Size>& numberCashFlowsThisStep,
-        std::vector<std::vector<MarketModelPathwiseMultiProduct::CashFlow> >& cashFlowsGenerated) 
+        std::vector<std::vector<MarketModelPathwiseMultiProduct::CashFlow> >& cashFlowsGenerated)
     {
         Rate liborRate = currentState.forwardRate(currentIndex_);
         cashFlowsGenerated[currentIndex_][0].timeIndex = currentIndex_;
@@ -239,7 +244,7 @@ namespace QuantLib {
     }
 
     std::unique_ptr<MarketModelPathwiseMultiProduct>
-    MarketModelPathwiseMultiDeflatedCaplet::clone() const 
+    MarketModelPathwiseMultiDeflatedCaplet::clone() const
     {
         return std::unique_ptr<MarketModelPathwiseMultiProduct>(new MarketModelPathwiseMultiDeflatedCaplet(*this));
     }
@@ -291,7 +296,7 @@ namespace QuantLib {
         {
             QL_REQUIRE(startsAndEnds_[j].first < startsAndEnds_[j].second,"a cap must start before it ends: " << j << startsAndEnds_[j].first << startsAndEnds_[j].second );
             QL_REQUIRE(startsAndEnds_[j].second <= accruals.size() ,"a cap must end when the underlying caplets: " << j << startsAndEnds_[j].first << startsAndEnds_[j].second );
-           
+
         }
 
         innerCashFlowSizes_.resize(accruals.size());
@@ -350,7 +355,7 @@ namespace QuantLib {
     {
 
         bool done = underlyingCaplets_.nextTimeStep(currentState, innerCashFlowSizes_, innerCashFlowsGenerated_);
-        
+
         for (Size k=0; k < startsAndEnds_.size(); ++k)
             numberCashFlowsThisStep[k]=0;
 
@@ -379,4 +384,3 @@ namespace QuantLib {
     }
 
 }
-

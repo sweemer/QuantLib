@@ -23,8 +23,13 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/models/marketmodels/evolvers/lognormalfwdrateeuler.hpp>
 #include <ql/models/marketmodels/marketmodel.hpp>
 #include <ql/models/marketmodels/pathwiseaccountingengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -321,7 +326,7 @@ namespace QuantLib {
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     PathwiseVegasAccountingEngine::PathwiseVegasAccountingEngine(
@@ -832,22 +837,22 @@ namespace QuantLib {
 
         partials_ = Matrix(pseudoRootStructure_->numberOfFactors(),numberRates_);
 
-//      set up this container object        
+//      set up this container object
 //        std::vector<std::vector<std::vector<Matrix> >  > elementary_vegas_ThisPath_;  // dimensions are product, step, rate, rate and factor
 
-        { // force destruction of modelVegaMatrix as soon as no longer needed 
+        { // force destruction of modelVegaMatrix as soon as no longer needed
             Matrix modelVegaMatrix(numberRates_, factors_,0.0);
 
             for (Size i=0; i < numberProducts_; ++i)
-            {  
+            {
                 elementary_vegas_ThisPath_[i].resize(numberSteps_);
                 for (Size j=0; j < numberSteps_; ++j)
                 {
-                   
+
                         elementary_vegas_ThisPath_[i][j]= modelVegaMatrix;
                 }
             }
-        } // modelVegaMatrix destroyed here 
+        } // modelVegaMatrix destroyed here
 
         numberElementaryVegas_ = numberSteps_*numberRates_*factors_;
 /*
@@ -890,7 +895,7 @@ namespace QuantLib {
         Size thisStep;
 
         bool done = false;
-        do 
+        do
         {
             thisStep = evolver_->currentStep();
             Size storeStep = thisStep+1;
@@ -1054,7 +1059,7 @@ namespace QuantLib {
         } // end of  for (Integer currentStep =  numberSteps_-1; currentStep >=0 ; --currentStep)
 
 
-        // all V matrices computed we now compute the elementary vegas for this path 
+        // all V matrices computed we now compute the elementary vegas for this path
 
         for (Size i=0; i < numberProducts_; ++i)
         {
@@ -1078,7 +1083,7 @@ namespace QuantLib {
 /*
                                   if (j ==distinguishedStep_ && k ==distinguishedRate_ &&f== distinguishedFactor_)
                                       std::cout << sensitivity << "," <<  jacobiansThisPaths_[j][j][k][f] << "," << gaussians_[j][f] << "," << V_[i][nextIndex][j] << "," << LIBORRates_[nextIndex][j] << "\n";
-  */                
+  */
 
 
                                 elementary_vegas_ThisPath_[i][j][k][f] = sensitivity;
@@ -1105,7 +1110,7 @@ namespace QuantLib {
         }
 
         return 1.0; // we have put the weight in already, this results in lower variance since weight changes along the path
-    
+
 }
 
     void PathwiseVegasOuterAccountingEngine::multiplePathValuesElementary(std::vector<Real>& means, std::vector<Real>& errors,
@@ -1124,7 +1129,7 @@ namespace QuantLib {
         for (Size i=0; i<numberOfPaths; ++i)
         {
           singlePathValues(values);
-          
+
           for (Size j=0; j < values.size(); ++j)
             {
                 sums[j] += values[j];
@@ -1177,18 +1182,9 @@ namespace QuantLib {
 
                     means[p*outDataPerProduct+1+numberRates_+bump] = thisVega;
                }
-                    
+
             }
 
         } // end of method
 
 } // end of namespace
-
-
-
-
-
-
-
-
-

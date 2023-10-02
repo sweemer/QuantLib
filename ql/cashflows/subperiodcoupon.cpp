@@ -23,7 +23,12 @@
 #include <ql/time/schedule.hpp>
 #include <ql/indexes/iborindex.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 namespace QuantLib {
 
@@ -42,7 +47,7 @@ namespace QuantLib {
                                        const Date& exCouponDate)
     : FloatingRateCoupon(paymentDate, nominal, startDate, endDate,
                          fixingDays, index, gearing, couponSpread,
-                         refPeriodStart, refPeriodEnd, dayCounter, 
+                         refPeriodStart, refPeriodEnd, dayCounter,
                          false, exCouponDate),
       rateSpread_(rateSpread) {
         Schedule sch = MakeSchedule()
@@ -107,7 +112,7 @@ namespace QuantLib {
         }
     }
 
-    Real SubPeriodsPricer::swapletPrice() const { 
+    Real SubPeriodsPricer::swapletPrice() const {
         QL_FAIL("SubPeriodsPricer::swapletPrice not implemented");
     }
 
@@ -306,4 +311,3 @@ namespace QuantLib {
         return cashflows;
     }
 }
-

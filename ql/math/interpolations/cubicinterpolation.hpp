@@ -32,7 +32,12 @@
 #include <ql/math/matrix.hpp>
 #include <ql/math/interpolation.hpp>
 #include <ql/methods/finitedifferences/tridiagonaloperator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -130,7 +135,7 @@ namespace QuantLib {
             Akima,
 
             //! Kruger approximation (local, monotonic, non-linear)
-            Kruger, 
+            Kruger,
 
             //! Weighted harmonic mean approximation (local, monotonic, non-linear)
             Harmonic,
@@ -385,7 +390,7 @@ namespace QuantLib {
                     || rightType_ == CubicInterpolation::Lagrange) {
                     QL_REQUIRE((xEnd-xBegin) >= 4,
                                "Lagrange boundary condition requires at least "
-                               "4 points (" << (xEnd-xBegin) << " are given)"); 
+                               "4 points (" << (xEnd-xBegin) << " are given)");
                 }
             }
 

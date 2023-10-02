@@ -18,7 +18,12 @@
 */
 
 #include <ql/experimental/averageois/averageoiscouponpricer.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 using std::vector;
 using std::exp;
@@ -92,7 +97,7 @@ namespace QuantLib {
             DiscountFactor startDiscount = curve->discount(dates[i]);
             DiscountFactor endDiscount = curve->discount(dates[n]);
 
-            accumulatedRate += log(startDiscount / endDiscount) - 
+            accumulatedRate += log(startDiscount / endDiscount) -
                 convAdj1(curve->timeFromReference(dates[i]),
                          curve->timeFromReference(dates[n])) -
                 convAdj2(curve->timeFromReference(dates[i]),
@@ -143,4 +148,3 @@ namespace QuantLib {
     }
 
 }
-

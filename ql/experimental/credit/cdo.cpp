@@ -19,7 +19,12 @@
 
 #include <ql/event.hpp>
 #include <ql/experimental/credit/cdo.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using namespace std;
 

@@ -19,7 +19,12 @@
 
 #include <ql/models/marketmodels/callability/swapratetrigger.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

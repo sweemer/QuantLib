@@ -38,7 +38,12 @@ See <http://creativecommons.org/publicdomain/zero/1.0/>. */
 
 #include <ql/methods/montecarlo/sample.hpp>
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cstdint>
+#endif
 
 namespace QuantLib {
 

@@ -21,7 +21,12 @@
 #include <ql/cashflows/averagebmacoupon.hpp>
 #include <ql/cashflows/couponpricer.hpp>
 #include <ql/utilities/vectors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -251,4 +256,3 @@ namespace QuantLib {
     }
 
 }
-

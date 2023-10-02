@@ -27,8 +27,13 @@
 #define quantlib_sobol_ld_rsg_hpp
 
 #include <ql/methods/montecarlo/sample.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cstdint>
 #include <vector>
+#endif
 
 namespace QuantLib {
 

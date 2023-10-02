@@ -22,7 +22,7 @@
 
 /*! \file concentrating1dmesher.cpp
     \brief One-dimensional grid mesher concentrating around critical points
-*/ 
+*/
 
 #include <ql/errors.hpp>
 #include <ql/timegrid.hpp>
@@ -34,7 +34,12 @@
 #include <ql/math/interpolations/linearinterpolation.hpp>
 #include <ql/math/ode/adaptiverungekutta.hpp>
 #include <ql/methods/finitedifferences/meshers/concentrating1dmesher.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 namespace QuantLib {
 

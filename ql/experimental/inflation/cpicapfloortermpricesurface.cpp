@@ -17,10 +17,13 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-
 #include <ql/experimental/inflation/cpicapfloortermpricesurface.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -47,7 +50,7 @@ namespace QuantLib {
         // does the index have a TS?
         QL_REQUIRE(!zii_->zeroInflationTermStructure().empty(), "ZITS missing from index");
         QL_REQUIRE(!nominalTS_.empty(), "nominal TS missing");
-              
+
         // data consistency checking, enough data?
         QL_REQUIRE(fStrikes_.size() > 1, "not enough floor strikes");
         QL_REQUIRE(cStrikes_.size() > 1, "not enough cap strikes");
@@ -81,7 +84,7 @@ namespace QuantLib {
                             "non-positive cap price: " << cPrice_[i][j] );
                 if(i>0) {
                     QL_REQUIRE( cPrice_[i][j] <= cPrice_[i-1][j],
-                                "non-decreasing cap prices: " 
+                                "non-decreasing cap prices: "
                                << cPrice_[i][j] << " then " << cPrice_[i-1][j]);
                 }
             }
@@ -125,20 +128,19 @@ namespace QuantLib {
         return calendar().adjust(referenceDate() + p, businessDayConvention());
     }
 
-    
+
     Real CPICapFloorTermPriceSurface::price(const Period &d, Rate k) const {
         return this->price(cpiOptionDateFromTenor(d), k);
     }
-    
+
 
     Real CPICapFloorTermPriceSurface::capPrice(const Period &d, Rate k) const {
         return this->capPrice(cpiOptionDateFromTenor(d), k);
     }
-    
+
 
     Real CPICapFloorTermPriceSurface::floorPrice(const Period &d, Rate k) const {
         return this->floorPrice(cpiOptionDateFromTenor(d), k);
     }
 
 }
-

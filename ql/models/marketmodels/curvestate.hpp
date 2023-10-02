@@ -23,8 +23,13 @@
 #define quantlib_curve_state_hpp
 
 #include <ql/math/array.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <memory>
+#endif
 
 namespace QuantLib {
 

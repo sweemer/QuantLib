@@ -24,7 +24,12 @@
 #include <ql/settings.hpp>
 #include <ql/utilities/dataparsers.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <string>
+#endif
 
 using boost::algorithm::to_upper_copy;
 using std::string;

@@ -39,8 +39,13 @@
 #include <ql/math/solvers1d/brent.hpp>
 #include <ql/termstructures/volatility/smilesectionutils.hpp>
 #include <boost/math/distributions/normal.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <utility>
+#endif
 
 // numerical constants, still experimental
 #define QL_KAHALE_FMAX QL_MAX_REAL

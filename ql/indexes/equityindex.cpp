@@ -19,7 +19,12 @@
 
 #include <ql/indexes/equityindex.hpp>
 #include <ql/settings.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -60,12 +65,12 @@ namespace QuantLib {
         if (result != Null<Real>())
             // if historical fixing is present use it
             return result;
-        
+
         if (fixingDate == today && !spot_.empty())
             // Today's fixing is missing, but spot is
             // provided, so use it as proxy
             return spot_->value();
-        
+
         QL_FAIL("Missing " << name() << " fixing for " << fixingDate);
     }
 

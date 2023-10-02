@@ -25,7 +25,12 @@
 #define quantlib_math_gaussian_copula_h
 
 #include <ql/math/distributions/bivariatenormaldistribution.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <functional>
+#endif
 
 namespace QuantLib {
 
@@ -54,10 +59,10 @@ namespace QuantLib {
         Real operator()(Real x, Real y) const;
       private:
         Real rho_;
-        BivariateCumulativeNormalDistributionWe04DP bivariate_normal_cdf_;     
+        BivariateCumulativeNormalDistributionWe04DP bivariate_normal_cdf_;
         InverseCumulativeNormal invCumNormal_;
     };
-    
+
 }
 
 #endif

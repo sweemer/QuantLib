@@ -21,7 +21,12 @@
 #include <ql/pricingengines/exotic/analyticeuropeanmargrabeengine.hpp>
 #include <ql/instruments/payoffs.hpp>
 #include <ql/math/distributions/normaldistribution.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

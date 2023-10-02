@@ -26,7 +26,12 @@
 #define quantlib_mixed_scheme_hpp
 
 #include <ql/methods/finitedifferences/finitedifferencemodel.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

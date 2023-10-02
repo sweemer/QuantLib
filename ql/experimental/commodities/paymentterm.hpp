@@ -25,8 +25,13 @@
 #define quantlib_payment_term_hpp
 
 #include <ql/time/calendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -97,7 +102,7 @@ namespace QuantLib {
     inline Integer PaymentTerm::offsetDays() const {
         return data_->offsetDays;
     }
- 
+
     inline const Calendar& PaymentTerm::calendar() const {
         return data_->calendar;
     }

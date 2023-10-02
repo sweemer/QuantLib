@@ -22,7 +22,12 @@
 #define quantlib_fra_time_dep_corr_struct_hpp
 
 #include <ql/models/marketmodels/piecewiseconstantcorrelation.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

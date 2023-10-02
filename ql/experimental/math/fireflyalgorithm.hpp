@@ -34,14 +34,18 @@ http://arxiv.org/pdf/1003.1464.pdf
 #include <ql/math/randomnumbers/mt19937uniformrng.hpp>
 #include <ql/math/randomnumbers/seedgenerator.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <random>
+#endif
 
 namespace QuantLib {
 
     /*! The main process is as follows:
     M individuals are used to explore the N-dimensional parameter space:
-    \f$ X_{i}^k = (X_{i, 1}^k, X_{i, 2}^k, \ldots, X_{i, N}^k) \f$ is the kth-iteration 
+    \f$ X_{i}^k = (X_{i, 1}^k, X_{i, 2}^k, \ldots, X_{i, N}^k) \f$ is the kth-iteration
     for the ith-individual. X is updated via the rule
     \f[
     X_{i, j}^{k+1} = X_{i, j}^k + I(X^k)_{i,j} + RandomWalk_{i,j}^k
@@ -51,23 +55,23 @@ namespace QuantLib {
     The optimization stops either because the number of iterations has been reached
     or because the stationary function value limit has been reached.
 
-    The current implementation extends the normal Firefly Algorithm with a 
+    The current implementation extends the normal Firefly Algorithm with a
     differential evolution (DE) optimizer according to:
-    Afnizanfaizal Abdullah, et al. "A New Hybrid Firefly Algorithm for Complex and 
-    Nonlinear Problem". Volume 151 of the series Advances in Intelligent and Soft 
+    Afnizanfaizal Abdullah, et al. "A New Hybrid Firefly Algorithm for Complex and
+    Nonlinear Problem". Volume 151 of the series Advances in Intelligent and Soft
     Computing pp 673-680, 2012.
     http://link.springer.com/chapter/10.1007%2F978-3-642-28765-7_81
-    
-    In effect this implementation provides a fully fledged DE global optimizer 
-    as well. The Firefly Algorithm was easy to combine with DE because it already 
-    contained a step where the current solutions are sorted. The population is 
-    then divided into two subpopulations based on their order. The subpopulation 
-    with the best results are updated via the firefly algorithm. The worse 
+
+    In effect this implementation provides a fully fledged DE global optimizer
+    as well. The Firefly Algorithm was easy to combine with DE because it already
+    contained a step where the current solutions are sorted. The population is
+    then divided into two subpopulations based on their order. The subpopulation
+    with the best results are updated via the firefly algorithm. The worse
     subpopulation is updated via the DE operator:
     \f[
     Y^{k+1} = X_{best}^k + F(X_{r1}^k - X_{r2}^k)
     \f]
-    and 
+    and
     \f[
     X_{i,j}^{k+1} = Y_{i,j}^{k+1}\ \text{if} R_{i,j} <= C
     \f]
@@ -92,7 +96,7 @@ namespace QuantLib {
         EndCriteria::Type minimize(Problem& P, const EndCriteria& endCriteria) override;
 
       protected:
-        std::vector<Array> x_, xI_, xRW_; 
+        std::vector<Array> x_, xI_, xRW_;
         std::vector<std::pair<Real, Size> > values_;
         Array lX_, uX_;
         Real mutation_, crossover_;
@@ -206,8 +210,8 @@ namespace QuantLib {
     template <class Distribution>
     class DistributionRandomWalk : public FireflyAlgorithm::RandomWalk {
       public:
-        explicit DistributionRandomWalk(Distribution dist, 
-                                        Real delta = 0.9, 
+        explicit DistributionRandomWalk(Distribution dist,
+                                        Real delta = 0.9,
                                         unsigned long seed = SeedGenerator::instance().get())
         : walkRandom_(std::mt19937(seed), std::move(dist), 1, Array(1, 1.0), seed),
           delta_(delta) {}
@@ -223,14 +227,14 @@ namespace QuantLib {
         IsotropicRandomWalk<Distribution, std::mt19937> walkRandom_;
         Real delta_;
     };
-    
+
     //! Gaussian Walk
     /*  Gaussian random walk
     */
     class GaussianWalk : public DistributionRandomWalk<std::normal_distribution<QuantLib::Real>> {
       public:
-        explicit GaussianWalk(Real sigma, 
-                              Real delta = 0.9, 
+        explicit GaussianWalk(Real sigma,
+                              Real delta = 0.9,
                               unsigned long seed = SeedGenerator::instance().get())
         : DistributionRandomWalk<std::normal_distribution<QuantLib::Real>>(
                            std::normal_distribution<QuantLib::Real>(0.0, sigma), delta, seed){}
@@ -241,8 +245,8 @@ namespace QuantLib {
     */
     class LevyFlightWalk : public DistributionRandomWalk<LevyFlightDistribution> {
       public:
-        explicit LevyFlightWalk(Real alpha, 
-                                Real xm = 0.5, 
+        explicit LevyFlightWalk(Real alpha,
+                                Real xm = 0.5,
                                 Real delta = 0.9,
                                 unsigned long seed = SeedGenerator::instance().get())
         : DistributionRandomWalk<LevyFlightDistribution>(

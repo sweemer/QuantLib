@@ -31,7 +31,12 @@
 #define QL_BOOST_HAS_TANH_SINH
 
 #include <boost/math/quadrature/tanh_sinh.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <limits>
+#endif
 
 namespace QuantLib {
     using tanh_sinh = boost::math::quadrature::tanh_sinh<Real>;

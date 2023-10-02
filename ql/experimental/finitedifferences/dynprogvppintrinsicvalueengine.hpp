@@ -26,7 +26,12 @@
 
 #include <ql/pricingengine.hpp>
 #include <ql/experimental/finitedifferences/vanillavppoption.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -52,4 +57,3 @@ namespace QuantLib {
 }
 
 #endif
-

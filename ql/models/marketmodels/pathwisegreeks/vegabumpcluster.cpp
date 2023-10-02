@@ -20,8 +20,13 @@
 #include <ql/errors.hpp>
 #include <ql/models/marketmodels/evolutiondescription.hpp>
 #include <ql/models/marketmodels/pathwisegreeks/vegabumpcluster.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
 #include <valarray>
+#endif
 
 namespace QuantLib {
 

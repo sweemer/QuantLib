@@ -27,7 +27,12 @@
 
 #include <ql/currency.hpp>
 #include <ql/patterns/singleton.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

@@ -26,7 +26,12 @@
 #include <ql/quotes/simplequote.hpp>
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using std::pow;
 using std::log;
@@ -103,11 +108,11 @@ namespace QuantLib {
         Real call25Vol = vol25Call_->value();
         Real put25Vol = vol25Put_->value();
 
-        BlackDeltaCalculator blackDeltaCalculatorPut25(Option::Put, vol25Put_->deltaType(), x0Quote->value(), 
+        BlackDeltaCalculator blackDeltaCalculatorPut25(Option::Put, vol25Put_->deltaType(), x0Quote->value(),
                                                       domesticTS_->discount(T_), foreignTS_->discount(T_),
                                                       put25Vol * sqrt(T_));
         Real put25Strike = blackDeltaCalculatorPut25.strikeFromDelta(-0.25);
-        BlackDeltaCalculator blackDeltaCalculatorCall25(Option::Call, vol25Call_->deltaType(), x0Quote->value(), 
+        BlackDeltaCalculator blackDeltaCalculatorCall25(Option::Call, vol25Call_->deltaType(), x0Quote->value(),
                                                       domesticTS_->discount(T_), foreignTS_->discount(T_),
                                                       call25Vol * sqrt(T_));
         Real call25Strike = blackDeltaCalculatorCall25.strikeFromDelta(0.25);
@@ -131,8 +136,8 @@ namespace QuantLib {
 
         //vanilla option price
         Real forward = x0Quote->value() * foreignTS_->discount(T_) / domesticTS_->discount(T_);
-        Real vanillaOption = blackFormula(payoff->optionType(), payoff->strike(), 
-                                      forward, 
+        Real vanillaOption = blackFormula(payoff->optionType(), payoff->strike(),
+                                      forward,
                                       strikeVol * sqrt(T_),
                                       domesticTS_->discount(T_));
         results_.additionalResults["Forward"] = forward;
@@ -193,11 +198,11 @@ namespace QuantLib {
             Real priceBS = barrierOption.NPV();
 
             Real priceAtmCallBS = blackFormula(Option::Call,atmStrike,
-                                              forward, 
+                                              forward,
                                               atmVol_->value() * sqrt(T_),
                                               domesticTS_->discount(T_));
             Real price25CallBS = blackFormula(Option::Call,call25Strike,
-                                              forward, 
+                                              forward,
                                               atmVol_->value() * sqrt(T_),
                                               domesticTS_->discount(T_));
             Real price25PutBS = blackFormula(Option::Put,put25Strike,
@@ -207,12 +212,12 @@ namespace QuantLib {
 
             //market price
             Real priceAtmCallMkt = blackFormula(Option::Call,atmStrike,
-                                              forward, 
+                                              forward,
                                               atmVol_->value() * sqrt(T_),
                                               domesticTS_->discount(T_));
 
             Real price25CallMkt = blackFormula(Option::Call,call25Strike,
-                                              forward, 
+                                              forward,
                                               call25Vol * sqrt(T_),
                                               domesticTS_->discount(T_));
             Real price25PutMkt = blackFormula(Option::Put,put25Strike,
@@ -223,19 +228,19 @@ namespace QuantLib {
 
             //Analytical Black Scholes formula for vanilla option
             NormalDistribution norm;
-            Real d1atm = (std::log(forward/atmStrike) 
+            Real d1atm = (std::log(forward/atmStrike)
                            + 0.5*std::pow(atmVolQuote->value(),2.0) * T_)/(atmVolQuote->value() * sqrt(T_));
             Real vegaAtm_Analytical = x0Quote->value() * norm(d1atm) * sqrt(T_) * foreignTS_->discount(T_);
             Real vannaAtm_Analytical = vegaAtm_Analytical/x0Quote->value() *(1.0 - d1atm/(atmVolQuote->value()*sqrt(T_)));
             Real volgaAtm_Analytical = vegaAtm_Analytical * d1atm * (d1atm - atmVolQuote->value() * sqrt(T_))/atmVolQuote->value();
 
-            Real d125call = (std::log(forward/call25Strike) 
+            Real d125call = (std::log(forward/call25Strike)
                            + 0.5*std::pow(atmVolQuote->value(),2.0) * T_)/(atmVolQuote->value() * sqrt(T_));
             Real vega25Call_Analytical = x0Quote->value() * norm(d125call) * sqrt(T_) * foreignTS_->discount(T_);
             Real vanna25Call_Analytical = vega25Call_Analytical/x0Quote->value() *(1.0 - d125call/(atmVolQuote->value()*sqrt(T_)));
             Real volga25Call_Analytical = vega25Call_Analytical * d125call * (d125call - atmVolQuote->value() * sqrt(T_))/atmVolQuote->value();
 
-            Real d125Put = (std::log(forward/put25Strike) 
+            Real d125Put = (std::log(forward/put25Strike)
                            + 0.5*std::pow(atmVolQuote->value(),2.0) * T_)/(atmVolQuote->value() * sqrt(T_));
             Real vega25Put_Analytical = x0Quote->value() * norm(d125Put) * sqrt(T_) * foreignTS_->discount(T_);
             Real vanna25Put_Analytical = vega25Put_Analytical/x0Quote->value() *(1.0 - d125Put/(atmVolQuote->value()*sqrt(T_)));
@@ -263,8 +268,8 @@ namespace QuantLib {
             Real vegaBarBS2 = (barrierOption.NPV() - priceBS2)/sigmaShift_vega;
             Real volgaBarBS = (vegaBarBS2 - vegaBarBS)/sigmaShift_volga;
 
-            ext::static_pointer_cast<SimpleQuote> (atmVolQuote.currentLink())->setValue(atmVolQuote->value() 
-                                                                                               - sigmaShift_volga 
+            ext::static_pointer_cast<SimpleQuote> (atmVolQuote.currentLink())->setValue(atmVolQuote->value()
+                                                                                               - sigmaShift_volga
                                                                                                - sigmaShift_vega);//setback
 
             //BS Delta
@@ -331,7 +336,7 @@ namespace QuantLib {
             Real p_survival = 1.0 - probTouch;
 
             Real lambda = p_survival ;
-            Real adjust = q[0]*(priceAtmCallMkt - priceAtmCallBS) 
+            Real adjust = q[0]*(priceAtmCallMkt - priceAtmCallBS)
                         + q[1]*(price25CallMkt - price25CallBS)
                         + q[2]*(price25PutMkt - price25PutBS);
             Real outPrice = priceBS + lambda*adjust;//

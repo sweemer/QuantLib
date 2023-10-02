@@ -41,8 +41,12 @@
 #include <ql/time/daycounters/actual360.hpp>
 #include <ql/time/daycounters/thirty360.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <iomanip>
+#endif
 
 using namespace std;
 using namespace QuantLib;
@@ -212,4 +216,3 @@ int main(int, char* []) {
         return 1;
     }
 }
-

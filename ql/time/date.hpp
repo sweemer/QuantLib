@@ -40,11 +40,14 @@
 #include <boost/date_time/posix_time/posix_time_duration.hpp>
 #endif
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cstdint>
 #include <utility>
 #include <functional>
 #include <string>
-
+#endif
 
 namespace QuantLib {
 
@@ -291,7 +294,7 @@ namespace QuantLib {
       #include <unordered_set>
 
       std::unordered_set<Date> set;
-      Date d = Date(1, Jan, 2020); 
+      Date d = Date(1, Jan, 2020);
 
       set.insert(d);
       assert(set.count(d)); // 'd' was added to 'set'

@@ -26,7 +26,12 @@
 #define quantlib_extended_cox_ingersoll_ross_hpp
 
 #include <ql/models/shortrate/onefactormodels/coxingersollross.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

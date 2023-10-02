@@ -29,13 +29,17 @@
 #include <ql/indexes/ibor/euribor.hpp>
 #include <ql/instruments/vanillaswap.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <numeric>
+#endif
 
 namespace QuantLib {
 
     /*! Italian CCTEU (Certificato di credito del tesoro)
         Euribor6M indexed floating rate bond
-    
+
         \ingroup instruments
 
     */

@@ -26,8 +26,13 @@
 #include <ql/math/distributions/normaldistribution.hpp>
 #include <ql/methods/finitedifferences/utilities/bsmrndcalculator.hpp>
 #include <ql/processes/blackscholesprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

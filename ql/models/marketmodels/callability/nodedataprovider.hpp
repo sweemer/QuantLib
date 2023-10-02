@@ -22,8 +22,13 @@
 #define quantlib_market_model_node_data_provider_hpp
 
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <valarray>
+#endif
 
 namespace QuantLib {
 

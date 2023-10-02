@@ -21,7 +21,12 @@
 #include <ql/math/optimization/conjugategradient.hpp>
 #include <ql/math/optimization/leastsquare.hpp>
 #include <ql/math/optimization/problem.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

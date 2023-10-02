@@ -25,7 +25,12 @@
 #define quantlib_convex_monotone_interpolation_hpp
 
 #include <ql/math/interpolation.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 namespace QuantLib {
 

@@ -34,7 +34,12 @@
 #include <ql/math/statistics/histogram.hpp>
 #include <ql/math/statistics/riskstatistics.hpp>
 #include <ql/tuple.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 /* Intended to replace
     ql\experimental\credit\randomdefaultmodel.Xpp
@@ -489,7 +494,7 @@ namespace QuantLib {
                 losses.end())) / static_cast<Real>(nSims_);
 
         return ( perctlInf * (1.-percent-probOverQ) +//<-correction term
-            std::accumulate(losses.begin() + position, losses.end(), 
+            std::accumulate(losses.begin() + position, losses.end(),
 			    Real(0.))/nSims_
                 )/(1.-percent);
 

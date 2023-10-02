@@ -26,7 +26,12 @@
 #define quantlib_pascal_triangle_hpp
 
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

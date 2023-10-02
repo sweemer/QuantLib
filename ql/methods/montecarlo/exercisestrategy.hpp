@@ -22,8 +22,13 @@
 #define quantlib_exercise_strategy_hpp
 
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <memory>
+#endif
 
 namespace QuantLib {
 

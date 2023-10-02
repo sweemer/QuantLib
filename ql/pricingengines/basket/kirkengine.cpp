@@ -2,7 +2,7 @@
 
 /*
  Copyright (C) 2010 Klaus Spanderen
- 
+
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
 
@@ -22,7 +22,12 @@
 #include <ql/pricingengines/basket/kirkengine.hpp>
 #include <ql/pricingengines/blackcalculator.hpp>
 #include <ql/pricingengines/blackformula.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -52,7 +57,7 @@ namespace QuantLib {
                                                    spreadPayoff->basePayoff());
         QL_REQUIRE(payoff, "non-plain payoff given");
         const Real strike = payoff->strike();
-        
+
         const Real f1 = process1_->stateVariable()->value();
         const Real f2 = process2_->stateVariable()->value();
 
@@ -66,18 +71,17 @@ namespace QuantLib {
             process1_->riskFreeRate()->discount(exercise->lastDate());
 
         const Real f = f1/(f2 + strike);
-        const Real v 
-            = std::sqrt(variance1 
+        const Real v
+            = std::sqrt(variance1
                         + variance2*squared(f2/(f2+strike))
                         - 2*rho_*std::sqrt(variance1*variance2)
                             *(f2/(f2+strike)));
-        
+
         BlackCalculator black(
              ext::make_shared<PlainVanillaPayoff>(
                  payoff->optionType(),1.0),
              f, v, riskFreeDiscount);
-        
+
         results_.value = (f2 + strike)*black.value();
     }
 }
-

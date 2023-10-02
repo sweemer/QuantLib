@@ -27,9 +27,14 @@
 #include <ql/math/interpolations/chebyshevinterpolation.hpp>
 #include <ql/pricingengines/blackcalculator.hpp>
 #include <ql/pricingengines/vanilla/qdfpamericanengine.hpp>
-#include <utility>
 #ifndef QL_BOOST_HAS_TANH_SINH
 #    include <ql/math/integrals/gausslobattointegral.hpp>
+#endif
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
 #endif
 
 namespace QuantLib {
@@ -516,7 +521,3 @@ namespace QuantLib {
     }
 
 }
-
-
-
-

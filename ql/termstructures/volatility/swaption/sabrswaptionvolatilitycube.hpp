@@ -38,8 +38,12 @@
 #include <ql/quote.hpp>
 #include <ql/termstructures/volatility/sabrsmilesection.hpp>
 #include <ql/termstructures/volatility/swaption/swaptionvolcube.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 #ifndef SWAPTIONVOLCUBE_VEGAWEIGHTED_TOL
     #define SWAPTIONVOLCUBE_VEGAWEIGHTED_TOL 15.0e-4
@@ -48,7 +52,7 @@
     #define SWAPTIONVOLCUBE_TOL 100.0e-4
 #endif
 
-namespace QuantLib {    
+namespace QuantLib {
 
     class Interpolation2D;
     class EndCriteria;
@@ -56,7 +60,7 @@ namespace QuantLib {
 
     //! XABR Swaption Volatility Cube
     /*! This class implements the XABR Swaption Volatility Cube
-        which is a generic for different SABR, ZABR and 
+        which is a generic for different SABR, ZABR and
         different smile models that can be used to instantiate concrete cubes.
     */
     template<class Model>
@@ -1159,7 +1163,7 @@ namespace QuantLib {
 
     /*! \deprecated Renamed to XabrSwaptionVolatilityCube.
                     Deprecated in version 1.30.
-    */    
+    */
     template <class Model>
     using SwaptionVolCube1x [[deprecated("renamed to XabrSwaptionVolatilityCube")]] = XabrSwaptionVolatilityCube<Model>;
 
@@ -1167,7 +1171,7 @@ namespace QuantLib {
     //                      SabrSwaptionVolatilityCube                      //
     //======================================================================//
 
-    //! Swaption Volatility Cube SABR 
+    //! Swaption Volatility Cube SABR
     /*! This struct defines the types used by SABR Volatility cubes
         for interpolation (SABRInterpolation) and for modeling the
         smile (SabrSmileSection).

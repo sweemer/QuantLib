@@ -49,7 +49,11 @@
 #include <boost/container_hash/hash.hpp>
 #endif
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <unordered_map>
+#endif
 
 namespace QuantLib {
 

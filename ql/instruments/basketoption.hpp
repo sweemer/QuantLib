@@ -29,7 +29,12 @@
 #include <ql/instruments/multiassetoption.hpp>
 #include <ql/instruments/payoffs.hpp>
 #include <ql/math/array.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -90,12 +95,12 @@ namespace QuantLib {
         explicit SpreadBasketPayoff(const ext::shared_ptr<Payoff> &p)
         : BasketPayoff(p) {}
         Real accumulate(const Array& a) const override {
-            QL_REQUIRE(a.size() == 2, 
+            QL_REQUIRE(a.size() == 2,
                     "payoff is only defined for two underlyings");
             return a[0]-a[1];
         }
     };
-    
+
     //! Basket option on a number of assets
     /*! \ingroup instruments */
     class BasketOption : public MultiAssetOption {
@@ -114,4 +119,3 @@ namespace QuantLib {
 
 
 #endif
-

@@ -19,8 +19,13 @@
 
 #include <ql/experimental/catbonds/catrisk.hpp>
 #include <ql/time/daycounters/actualactual.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <random>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -34,8 +39,8 @@ namespace QuantLib {
     : CatSimulation(start, end), events_(std::move(events)), eventsStart_(eventsStart),
       eventsEnd_(eventsEnd) {
         years_ = end_.year()-start_.year();
-        if(eventsStart_.month()<start_.month() 
-                            || (eventsStart_.month()==start_.month() 
+        if(eventsStart_.month()<start_.month()
+                            || (eventsStart_.month()==start_.month()
                                 && eventsStart_.dayOfMonth()<=start_.dayOfMonth())) {
             periodStart_ = Date(start_.dayOfMonth(), start_.month(), eventsStart_.year());
         } else {
@@ -47,7 +52,7 @@ namespace QuantLib {
 
     bool EventSetSimulation::nextPath(std::vector< std::pair< Date, Real > >& path) {
         path.resize(0);
-        if(periodEnd_>eventsEnd_) //Ran out of event data 
+        if(periodEnd_>eventsEnd_) //Ran out of event data
             return false;
 
         while(i_<events_->size() && (*events_)[i_].first<periodStart_) {
@@ -77,9 +82,9 @@ namespace QuantLib {
         return ext::make_shared<EventSetSimulation>(events_, eventsStart_, eventsEnd_, start, end);
     }
 
-    BetaRiskSimulation::BetaRiskSimulation(Date start, Date end, Real maxLoss, Real lambda, Real alpha, Real beta) 
-              : CatSimulation(start, end), 
-                maxLoss_(maxLoss), 
+    BetaRiskSimulation::BetaRiskSimulation(Date start, Date end, Real maxLoss, Real lambda, Real alpha, Real beta)
+              : CatSimulation(start, end),
+                maxLoss_(maxLoss),
                 exponential_(lambda),
                 gammaAlpha_(alpha),
                 gammaBeta_(beta)
@@ -97,7 +102,7 @@ namespace QuantLib {
     }
 
     bool BetaRiskSimulation::nextPath(std::vector<std::pair<Date, Real> > &path)
-    {        
+    {
         path.resize(0);
         Real eventFraction = exponential_(rng_);
         while(eventFraction<=yearFraction_)
@@ -115,10 +120,10 @@ namespace QuantLib {
         return true;
     }
 
-    BetaRisk::BetaRisk(Real maxLoss, 
-                 Real years, 
-                 Real mean, 
-                 Real stdDev) 
+    BetaRisk::BetaRisk(Real maxLoss,
+                 Real years,
+                 Real mean,
+                 Real stdDev)
     : maxLoss_(maxLoss), lambda_(1.0/years) {
         QL_REQUIRE(mean<maxLoss, "Mean "<<mean<<"of the loss distribution must be less than the maximum loss "<<maxLoss);
         Real normalizedMean = mean/maxLoss;

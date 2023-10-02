@@ -28,7 +28,12 @@
 
 #include <ql/methods/finitedifferences/meshers/fdmmesher.hpp>
 #include <ql/methods/finitedifferences/operators/fdmlinearopiterator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <memory>
+#endif
 
 namespace QuantLib {
 

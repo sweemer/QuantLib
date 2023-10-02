@@ -28,7 +28,11 @@
 #include <ql/models/equity/hestonmodel.hpp>
 #include <ql/instruments/vanillaoption.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
     class AnalyticHestonEngine;

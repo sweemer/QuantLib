@@ -25,7 +25,12 @@
 #define quantlib_modified_bessel_hpp
 
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
+#endif
 
 namespace QuantLib {
 

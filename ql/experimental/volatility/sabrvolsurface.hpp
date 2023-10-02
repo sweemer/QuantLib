@@ -28,7 +28,12 @@
 #include <ql/experimental/volatility/blackatmvolcurve.hpp>
 #include <ql/quote.hpp>
 #include <ql/termstructures/volatility/sabrinterpolatedsmilesection.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <array>
+#endif
 
 namespace QuantLib {
 

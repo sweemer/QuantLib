@@ -30,7 +30,12 @@
 #include <ql/quote.hpp>
 #include <ql/patterns/lazyobject.hpp>
 #include <ql/time/daycounters/actual365fixed.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -39,7 +44,7 @@ namespace QuantLib {
         a volatility surface whose elements are the market term volatilities
         of a set of caps/floors with given length and given strike.
     */
-    class CapFloorTermVolSurface : public LazyObject, 
+    class CapFloorTermVolSurface : public LazyObject,
                                    public CapFloorTermVolatilityStructure {
       public:
         //! floating reference date, floating market data
@@ -103,7 +108,7 @@ namespace QuantLib {
         void initializeOptionDatesAndTimes() const;
         void registerWithMarketData();
         void interpolate();
-        
+
         Size nOptionTenors_;
         std::vector<Period> optionTenors_;
         mutable std::vector<Date> optionDates_;

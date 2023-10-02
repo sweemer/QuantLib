@@ -25,7 +25,12 @@
 #define quantlib_piecewise_function_hpp
 
 #include <ql/qldefines.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
+#endif
 
 /*! This defines a piecewise constant function which is RCLL and takes
     the values Y[0], Y[1], ... Y[n] on the intervals

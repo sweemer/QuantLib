@@ -30,8 +30,12 @@
 #include <ql/experimental/inflation/yoyoptionletstripper.hpp>
 #include <ql/instruments/makeyoyinflationcapfloor.hpp>
 #include <ql/math/solvers1d/brent.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -300,4 +304,3 @@ namespace QuantLib {
 }
 
 #endif
-

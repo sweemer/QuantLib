@@ -32,7 +32,12 @@
 #include <ql/models/equity/hestonmodel.hpp>
 #include <ql/instruments/vanillaoption.hpp>
 #include <ql/functional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
+#endif
 
 namespace QuantLib {
 
@@ -246,7 +251,7 @@ namespace QuantLib {
 
     // inline
 
-    inline 
+    inline
     std::complex<Real> AnalyticHestonEngine::addOnTerm(Real,
                                                        Time,
                                                        Size) const {

@@ -28,7 +28,12 @@
 #include <ql/math/statistics/statistics.hpp>
 #include <ql/methods/montecarlo/mctraits.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

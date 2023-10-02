@@ -43,9 +43,14 @@
 #include <ql/termstructures/volatility/equityfx/fixedlocalvolsurface.hpp>
 #include <ql/termstructures/volatility/equityfx/localvoltermstructure.hpp>
 #include <ql/timegrid.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <functional>
 #include <memory>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -537,4 +542,3 @@ namespace QuantLib {
         return logEntries_;
     }
 }
-

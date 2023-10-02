@@ -32,7 +32,12 @@
 #include <ql/interestrate.hpp>
 #include <ql/math/comparison.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -248,7 +253,7 @@ namespace QuantLib {
     #endif
 
     template <class T>
-    void InterpolatedZeroCurve<T>::initialize(const Compounding& compounding, 
+    void InterpolatedZeroCurve<T>::initialize(const Compounding& compounding,
                                               const Frequency& frequency)
     {
         QL_REQUIRE(dates_.size() >= T::requiredPoints,

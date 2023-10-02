@@ -21,7 +21,12 @@
 
 #include <ql/math/bernsteinpolynomial.hpp>
 #include <ql/termstructures/yield/nonlinearfittingmethods.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -36,7 +41,7 @@ namespace QuantLib {
         const Real fixedKappa)
     : FittedBondDiscountCurve::FittingMethod(
           constrainAtZero, weights, optimizationMethod, l2, minCutoffTime, maxCutoffTime),
-          numCoeffs_(numCoeffs), fixedKappa_(fixedKappa) 
+          numCoeffs_(numCoeffs), fixedKappa_(fixedKappa)
     {
         QL_REQUIRE(ExponentialSplinesFitting::size() > 0, "At least 1 unconstrained coefficient required");
     }
@@ -47,7 +52,7 @@ namespace QuantLib {
         const Size numCoeffs, const Real fixedKappa)
         : FittedBondDiscountCurve::FittingMethod(constrainAtZero, weights, ext::shared_ptr<OptimizationMethod>(), l2,
                                                  minCutoffTime, maxCutoffTime),
-          numCoeffs_(numCoeffs),fixedKappa_(fixedKappa) 
+          numCoeffs_(numCoeffs),fixedKappa_(fixedKappa)
     {
         QL_REQUIRE(ExponentialSplinesFitting::size() > 0, "At least 1 unconstrained coefficient required");
     }
@@ -65,12 +70,12 @@ namespace QuantLib {
     std::unique_ptr<FittedBondDiscountCurve::FittingMethod>
     ExponentialSplinesFitting::clone() const {
         return std::unique_ptr<FittedBondDiscountCurve::FittingMethod>(
-                                        new ExponentialSplinesFitting(*this)); 
+                                        new ExponentialSplinesFitting(*this));
     }
 
     Size ExponentialSplinesFitting::size() const {
         Size N = constrainAtZero_ ? numCoeffs_ : numCoeffs_ + 1;
-        
+
         return (fixedKappa_ != Null<Real>()) ? N-1 : N; //One fewer optimization parameters if kappa is fixed
     }
 
@@ -295,7 +300,7 @@ namespace QuantLib {
     SimplePolynomialFitting::SimplePolynomialFitting(Natural degree, bool constrainAtZero,
                                                      const Array& weights, const Array& l2,
                                                      const Real minCutoffTime, const Real maxCutoffTime)
-        : FittedBondDiscountCurve::FittingMethod(constrainAtZero, weights, 
+        : FittedBondDiscountCurve::FittingMethod(constrainAtZero, weights,
                                                  ext::shared_ptr<OptimizationMethod>(), l2, minCutoffTime, maxCutoffTime),
         size_(constrainAtZero ? degree : degree + 1) {}
 
@@ -367,4 +372,3 @@ namespace QuantLib {
         FittedBondDiscountCurve::FittingMethod::init();
     }
 }
-

@@ -21,7 +21,12 @@
 #include <ql/methods/finitedifferences/solvers/fdm2dblackscholessolver.hpp>
 #include <ql/methods/finitedifferences/solvers/fdm2dimsolver.hpp>
 #include <ql/processes/blackscholesprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -42,11 +47,11 @@ namespace QuantLib {
 
 
     void Fdm2dBlackScholesSolver::performCalculations() const {
-        
+
         ext::shared_ptr<Fdm2dBlackScholesOp> op(
 			ext::make_shared<Fdm2dBlackScholesOp>(solverDesc_.mesher,
-                                        p1_.currentLink(), 
-                                        p2_.currentLink(), 
+                                        p1_.currentLink(),
+                                        p2_.currentLink(),
                                         correlation_,
                                         solverDesc_.maturity,
                                         localVol_,
@@ -62,7 +67,7 @@ namespace QuantLib {
 
         return solver_->interpolateAt(x, y);
     }
-    
+
     Real Fdm2dBlackScholesSolver::thetaAt(Real u, Real v) const {
         calculate();
         const Real x = std::log(u);
@@ -91,20 +96,20 @@ namespace QuantLib {
 
     Real Fdm2dBlackScholesSolver::gammaXat(Real u, Real v) const {
         calculate();
-        
+
         const Real x = std::log(u);
         const Real y = std::log(v);
-        
+
         return (solver_->derivativeXX(x, y)
                 -solver_->derivativeX(x, y))/(u*u);
     }
 
     Real Fdm2dBlackScholesSolver::gammaYat(Real u, Real v) const {
         calculate();
-        
+
         const Real x = std::log(u);
         const Real y = std::log(v);
-        
+
         return (solver_->derivativeYY(x, y)
                 -solver_->derivativeY(x, y))/(v*v);
     }

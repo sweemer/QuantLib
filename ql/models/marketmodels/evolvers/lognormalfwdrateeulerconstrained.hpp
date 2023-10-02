@@ -25,7 +25,12 @@
 #include <ql/models/marketmodels/constrainedevolver.hpp>
 #include <ql/models/marketmodels/curvestates/lmmcurvestate.hpp>
 #include <ql/models/marketmodels/driftcomputation/lmmdriftcalculator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <valarray>
+#endif
 
 namespace QuantLib {
 

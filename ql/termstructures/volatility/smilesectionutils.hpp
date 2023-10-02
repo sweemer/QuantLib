@@ -25,7 +25,12 @@
 #define quantlib_smile_section_utils_hpp
 
 #include <ql/termstructures/volatility/smilesection.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

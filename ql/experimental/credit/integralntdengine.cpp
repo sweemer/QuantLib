@@ -21,7 +21,12 @@
 #include <ql/cashflows/fixedratecoupon.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/experimental/credit/basket.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <numeric>
+#endif
 
 namespace QuantLib {
 
@@ -35,7 +40,7 @@ namespace QuantLib {
         Real accrualValue = 0.0;
         Real claimValue = 0.0;
         Date d0;
-        /* Given the expense of probsBeingNthEvent both in integrable and 
+        /* Given the expense of probsBeingNthEvent both in integrable and
         monte carlo algorithms this engine tests who to call.
         Warning: This is not entirely a basket property but of the model too.
         The basket has to have all notionals equal but it is the model which
@@ -51,16 +56,16 @@ namespace QuantLib {
             if (d > discountCurve_->referenceDate()) {
                 /*
                 std::vector<Probability> probsTriggering =
-                    arguments_.basket->probsBeingNthEvent(arguments_.ntdOrder, 
+                    arguments_.basket->probsBeingNthEvent(arguments_.ntdOrder,
                         d);
-                Probability defaultProb = 
-                    std::accumulate(probsTriggering.begin(), 
+                Probability defaultProb =
+                    std::accumulate(probsTriggering.begin(),
                     probsTriggering.end(), Real(0.));
                 // OVERKILL???? 1-probAtLeastNEvents is enough
 
 */
                 // prob of contract not having been triggered by date of payment
-                Probability probNonTriggered = 
+                Probability probNonTriggered =
                     1. - arguments_.basket->probAtLeastNEvents(
                         arguments_.ntdOrder, d);
 
@@ -68,7 +73,7 @@ namespace QuantLib {
                     i->amount() * discountCurve_->discount(d) * probNonTriggered;
                 ////   * (1.0 - defaultProb);
 
-                if (coupon->accrualStartDate() >= 
+                if (coupon->accrualStartDate() >=
                     discountCurve_->referenceDate())
                     d = coupon->accrualStartDate();
                 else
@@ -79,10 +84,10 @@ namespace QuantLib {
                 Period stepSize = integrationStepSize_;
 /*
                 probsTriggering =
-                    arguments_.basket->probsBeingNthEvent(arguments_.ntdOrder, 
+                    arguments_.basket->probsBeingNthEvent(arguments_.ntdOrder,
                     ///////REDUNDANT?
                         d0);
-                Probability defProb0 = std::accumulate(probsTriggering.begin(), 
+                Probability defProb0 = std::accumulate(probsTriggering.begin(),
                 ///OVERKILL????
                     probsTriggering.end(), Real(0.));
 */
@@ -97,8 +102,8 @@ namespace QuantLib {
                         defProb1 = arguments_.basket->probAtLeastNEvents(
                             arguments_.ntdOrder, d);
                         claimValue -= (defProb1-defProb0)
-                            * arguments_.basket->claim()->amount(d, 
-                                arguments_.notional, 
+                            * arguments_.basket->claim()->amount(d,
+                                arguments_.notional,
                                 arguments_.basket->recoveryRate(d, 0))
                             * disc;
 
@@ -106,29 +111,29 @@ namespace QuantLib {
                         probsTriggering1 =
                             arguments_.basket->probsBeingNthEvent(
                                 arguments_.ntdOrder, d);
-                        defProb1 = std::accumulate(probsTriggering1.begin(), 
+                        defProb1 = std::accumulate(probsTriggering1.begin(),
                             probsTriggering1.end(), Real(0.));
-                        /*Recoveries might differ along names, depending on 
-                        which name is triggering the contract the loss will be 
-                        different  
-                        There is an issue here; MC engines can still be used 
-                        since the prob of triggering the contract can be 
-                        extracted from the simulation from the 
-                        probsBeingNthEvent statistic. Yet, when the RR is 
-                        stochastic the realized value of the RR is the expected 
+                        /*Recoveries might differ along names, depending on
+                        which name is triggering the contract the loss will be
+                        different
+                        There is an issue here; MC engines can still be used
+                        since the prob of triggering the contract can be
+                        extracted from the simulation from the
+                        probsBeingNthEvent statistic. Yet, when the RR is
+                        stochastic the realized value of the RR is the expected
                         one subject/conditional to the contract being triggered;
-                        not simply the expected value. For this reason the MC 
+                        not simply the expected value. For this reason the MC
                         can not be used through the statistic but has to consume
                         the simulations directly.
                         */
-                        for(Size iName=0; 
-                            iName<arguments_.basket->remainingSize(); 
-                            iName++) 
+                        for(Size iName=0;
+                            iName<arguments_.basket->remainingSize();
+                            iName++)
                         {
                             claimValue -= (probsTriggering1[iName]-
                                 probsTriggering[iName])
-                                * arguments_.basket->claim()->amount(d, 
-                                    arguments_.notional,// [iName]! 
+                                * arguments_.basket->claim()->amount(d,
+                                    arguments_.notional,// [iName]!
                                     arguments_.basket->recoveryRate(d, iName))
                                 * disc;
                         }
@@ -156,7 +161,7 @@ namespace QuantLib {
         // The upfront might be due before the curve ref date...
         if (!arguments_.premiumLeg[0]->hasOccurred(today))
             results_.upfrontPremiumValue =
-                arguments_.basket->remainingNotional() 
+                arguments_.basket->remainingNotional()
                     * arguments_.upfrontRate
                     * discountCurve_->discount(
                         ext::dynamic_pointer_cast<FixedRateCoupon>(
@@ -168,18 +173,18 @@ namespace QuantLib {
             results_.upfrontPremiumValue *= -1;
         }
 
-        results_.value = results_.premiumValue + accrualValue + claimValue + 
+        results_.value = results_.premiumValue + accrualValue + claimValue +
             results_.upfrontPremiumValue;
 
-        results_.fairPremium = -arguments_.premiumRate * claimValue 
+        results_.fairPremium = -arguments_.premiumRate * claimValue
             / (results_.premiumValue + accrualValue);
         // alternatively use results buffers and omit locals.
         results_.protectionValue = claimValue;
 
         results_.additionalResults["fairPremium"] = results_.fairPremium;
-        results_.additionalResults["premiumLegNPV"] = 
+        results_.additionalResults["premiumLegNPV"] =
             Real(results_.premiumValue + results_.upfrontPremiumValue);
-        results_.additionalResults["protectionLegNPV"] = 
+        results_.additionalResults["protectionLegNPV"] =
             results_.protectionValue;
     }
 

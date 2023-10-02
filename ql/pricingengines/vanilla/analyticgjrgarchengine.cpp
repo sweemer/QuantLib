@@ -25,7 +25,12 @@
 #include <ql/pricingengines/vanilla/analyticgjrgarchengine.hpp>
 #include <ql/math/distributions/normaldistribution.hpp>
 #include <ql/instruments/payoffs.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 using std::exp;
 using std::pow;
@@ -85,7 +90,7 @@ namespace QuantLib {
         Real stdev, sigma, k3, k4;
         Real d, del, d_, C, A3, A4, Capp;
         bool constants_match = false;
-        
+
         if (!init_ || b1 != b1_ || b2 != b2_ || b3 != b3_ || la != la_) {
             // compute the useful coefficients
             m1 = b1 + (b2+b3*N)*(1+la*la) + b3*la*n; // ok
@@ -120,7 +125,7 @@ namespace QuantLib {
                 + 2*b1*b2*(3+la*la) + 2*b3*b1*(la*n+3*N+la*la*N); // ok
             x1 = -6*b2*la - 2*b3*(4*n+3*la*N); // ok
             b1_ = b1; b2_ = b2; b3_ = b3; la_ = la;
-            m1_ = m1; m2_ = m2; m3_ = m3; 
+            m1_ = m1; m2_ = m2; m3_ = m3;
             v1_ = v1; v2_ = v2; v3_ = v3; z1_ = z1; z2_ = z2; x1_ = x1;
         } else {
             // these assignments are never used ?
@@ -129,12 +134,12 @@ namespace QuantLib {
             // v1 = v1_; v2 = v2_; v3 = v3_; z1 = z1_; z2 = z2_; x1 = x1_;
             constants_match = true;
         }
-        
+
         // compute the first four moments
         if (!init_ || !constants_match || b0 != b0_ || h1 != h1_ || T != T_) {
             // these assignments are never used ?
             //b1 = b1_; b2 = b2_; b3 = b3_; la = la_;
-            m1 = m1_; m2 = m2_; m3 = m3_; 
+            m1 = m1_; m2 = m2_; m3 = m3_;
             v1 = v1_; v2 = v2_; /*v3 = v3_;*/ z1 = z1_; /*z2 = z2_;*/ x1 = x1_;
 
             std::unique_ptr<Real[]> m1ai(new Real[T]);
@@ -160,15 +165,15 @@ namespace QuantLib {
                     + m2i*h1*h1; // ko
                 Real Eh3 = pow(b0,3)*(
                     (1-m3i)/(1-m3)
-                    + 3*m2*((1-m3i)/(1-m3)-m2im3i/(m2-m3))/(1-m2) 
-                    + 3*m1*((1-m3i)/(1-m3)-m1im3i/(m1-m3))/(1-m1) 
+                    + 3*m2*((1-m3i)/(1-m3)-m2im3i/(m2-m3))/(1-m2)
+                    + 3*m1*((1-m3i)/(1-m3)-m1im3i/(m1-m3))/(1-m1)
                     + 6*m1*m2*(
                                ((1-m3i)/(1-m3)-m2im3i/(m2-m3))/(1-m2)
                                + (m2im3i/(m2-m3)-m1im3i/(m1-m3))/(m1-m2)
                                )/(1-m1))
                     + 3*b0*b0*m1*h1*(m1im3i/(m1-m3)
                                 +2*m2*(m1im3i/(m1-m3)-m2im3i/(m2-m3))/(m1-m2))
-                    + 3*b0*m2*h1*h1*m2im3i/(m2-m3) 
+                    + 3*b0*m2*h1*h1*m2im3i/(m2-m3)
                     + m3i*h1*h1*h1; // ko
                 Real Eh3_2 = .375*std::pow(Eh,-0.5)*Eh2+.625*std::pow(Eh,1.5);
                 Real Eh5_2 = 1.875*std::pow(Eh,0.5)*Eh2-.875*std::pow(Eh,2.5);
@@ -177,39 +182,39 @@ namespace QuantLib {
                 sEh3 += Eh3;
                 for (j = 0; j < T-i-1; ++j) {
                     Real Ehh = b0*Eh*(1-m1ai[j+1])/(1-m1)+ Eh2*m1ai[j+1]; // ko
-                    Real Ehh2 = b0*b0*Eh*((1+m1)*(1-m2ai[j+1])/(1-m2) 
+                    Real Ehh2 = b0*b0*Eh*((1+m1)*(1-m2ai[j+1])/(1-m2)
                                   - 2*m1*(m1ai[j+1]
                                           -m2ai[j+1])/(m1-m2))/(1-m1)
                         + 2*b0*m1*Eh2*(m1ai[j+1]-m2ai[j+1])/(m1-m2)
                         + m2ai[j+1]*Eh3; // ko
-                    Real Eh2h = b0*Eh2*(1-m1ai[j+1])/(1-m1) 
+                    Real Eh2h = b0*Eh2*(1-m1ai[j+1])/(1-m1)
                         + m1ai[j+1]*Eh3; // ok
                     Real Eh1_2eh = v1*m1ai[j]*Eh3_2; // ko
                     Real Eh1_2eh2 = 2*b0*v1*(m1ai[j+1]
-                                             -m2ai[j+1])*Eh3_2/(m1-m2) 
+                                             -m2ai[j+1])*Eh3_2/(m1-m2)
                         + v2*m2ai[j]*Eh5_2; // ko
-                    Real Ehij = b0*(1-m1ai[i+j+1])/(1-m1) 
+                    Real Ehij = b0*(1-m1ai[i+j+1])/(1-m1)
                         + m1ai[i+j+1]*h1; // ko
-                    Real Ehh3_2 = 0.375*Ehh2/std::sqrt(Ehij) 
-                        + 0.75*std::sqrt(Ehij)*Ehh 
+                    Real Ehh3_2 = 0.375*Ehh2/std::sqrt(Ehij)
+                        + 0.75*std::sqrt(Ehij)*Ehh
                         - 0.125*std::pow(Ehij,1.5)*Eh; // ko
                     Real Eh3_2eh = v1*m1ai[j]*Eh5_2; // ko
                     Real Eh3_2e3h = x1*m1ai[j]*Eh5_2; // ok
-                    Real Eh1_2eh3_2 = 0.375*Eh1_2eh2/std::sqrt(Ehij) 
+                    Real Eh1_2eh3_2 = 0.375*Eh1_2eh2/std::sqrt(Ehij)
                         + 0.75*std::sqrt(Ehij)*Eh1_2eh; // ko
                     sEhh += Ehh;
                     sEh1_2eh += Eh1_2eh;
-                    sEhh2 += Ehh2; 
+                    sEhh2 += Ehh2;
                     sEh2h += Eh2h;
                     sEh1_2eh2 += Eh1_2eh2;
                     sEh3_2eh += Eh3_2eh;
-                    sEhe2h += b0*Eh*(1-m1ai[j+1])/(1-m1) 
+                    sEhe2h += b0*Eh*(1-m1ai[j+1])/(1-m1)
                         + z1*m1ai[j]*Eh2; // ko
                     sEh3_2e3h += Eh3_2e3h; // ok
                     for (k = 0; k < T-i-j-2; ++k) {
-                        Real Ehhh = b0*Ehh*(1-m1ai[k+1])/(1-m1) 
+                        Real Ehhh = b0*Ehh*(1-m1ai[k+1])/(1-m1)
                             + m1ai[k+1]*Ehh2; //ko
-                        Real Eh1_2ehh = b0*Eh1_2eh*(1-m1ai[k+1])/(1-m1) 
+                        Real Eh1_2ehh = b0*Eh1_2eh*(1-m1ai[k+1])/(1-m1)
                             + m1ai[k+1]*Eh1_2eh2; // ko
                         sEhhh += Ehhh;
                         sEh1_2ehh += Eh1_2ehh;
@@ -218,8 +223,8 @@ namespace QuantLib {
                     }
                 }
             }
-            
-            ex = T*r - 0.5*sEh; 
+
+            ex = T*r - 0.5*sEh;
             SD1 = 2*sEhh + sEh2;
             SD2 = sEh;
             SD3 = sEh1_2eh;
@@ -227,38 +232,38 @@ namespace QuantLib {
             ST1 = 6*sEhhh + (3*sEhh2 + (3*sEh2h + sEh3));
             ST2 = 3*sEh1_2eh;
             ST3 = 2*sEhh1_2eh + (2*sEh1_2ehh + (2*sEh3_2eh + sEh1_2eh2));
-            ST4 = sEhe2h + (sEhh + (sEh2 + 2*sEh1_2eh1_2eh)); 
-            ex3 = pow(T*r,3) - 1.5*T*T*r*r*sEh 
+            ST4 = sEhe2h + (sEhh + (sEh2 + 2*sEh1_2eh1_2eh));
+            ex3 = pow(T*r,3) - 1.5*T*T*r*r*sEh
                 + 3*T*r*(SD1/4+SD2-SD3) + (ST2-ST1/8+3*ST3/4-3*ST4/2);
-            SQ2 = 6*sEhe2h + (12*sEh1_2eh1_2eh + 3*sEh2);     
+            SQ2 = 6*sEhe2h + (12*sEh1_2eh1_2eh + 3*sEh2);
             SQ4 = 2*sEhhh + 2*sEhh2;
-            SQ5 = 3*sEhh1_2eh + 3*sEh1_2ehh + 3*sEh3_2eh 
+            SQ5 = 3*sEhh1_2eh + 3*sEh1_2ehh + 3*sEh3_2eh
                 + 3*sEh1_2eh2 + sEh3_2e3h;
-            ex4 = pow(T*r,4) - 2*pow(T*r,3)*sEh 
-                + 6*T*T*r*r*(SD1/4+SD2-SD3) + T*r*(4*ST2-ST1/2+3*ST3-6*ST4) 
+            ex4 = pow(T*r,4) - 2*pow(T*r,3)*sEh
+                + 6*T*T*r*r*(SD1/4+SD2-SD3) + T*r*(4*ST2-ST1/2+3*ST3-6*ST4)
                 + (SQ2+3*SQ4/2-2*SQ5);
-            
+
             // compute variance, skewness, kurtosis
             sigma = ex2 - ex*ex;
             // 3rd central moment mu3
             k3 = ex3 - 3*sigma*ex - ex*ex*ex;
             // 4th central moment mu4
             k4 = ex4 + 6*ex*ex*ex2 - 3*ex*ex*ex*ex - 4*ex*ex3;
-            k3 /= std::pow(sigma,1.5); // 3rd standardized moment, ie skewness 
+            k3 /= std::pow(sigma,1.5); // 3rd standardized moment, ie skewness
             k4 /= pow(sigma,2); // 4th standardized moment, ie kurtosis
-            ex_ = ex; sigma_ = sigma; 
+            ex_ = ex; sigma_ = sigma;
             k3_ = k3; k4_ = k4; r_ = r; T_ = T; b0_ = b0; h1_ = h1;
         } else {
-            ex = ex_; sigma = sigma_; 
+            ex = ex_; sigma = sigma_;
             k3 = k3_; k4 = k4_; r = r_; T = T_; /*b0 = b0_; h1 = h1_;*/ // never used ?
         }
-        
+
         // compute call option price
         stdev = std::sqrt(sigma);
         del = (ex - r*T + sigma/2)/stdev;
         d = (std::log(s/x) + (r*T+sigma/2))/stdev;
         d_ = d+del;
-        C = s*std::exp(del*stdev)*CumulativeNormalDistribution()(d_) 
+        C = s*std::exp(del*stdev)*CumulativeNormalDistribution()(d_)
             - x*std::exp(-r*T)*CumulativeNormalDistribution()(d_-stdev);
         A3 = s*std::exp(del*stdev)*stdev*((2*stdev-d_)
                    *std::exp(-d_*d_/2)/std::sqrt(2*M_PI)
@@ -280,5 +285,5 @@ namespace QuantLib {
           default:
             QL_FAIL("unknown option type");
         }
-    }   
+    }
 }

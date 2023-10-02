@@ -21,7 +21,12 @@
 #include <ql/experimental/barrieroption/suowangdoublebarrierengine.hpp>
 #include <ql/instruments/europeanoption.hpp>
 #include <ql/pricingengines/vanilla/analyticeuropeanengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -45,7 +50,7 @@ namespace QuantLib {
         QL_REQUIRE(!triggered(S), "barrier touched");
 
         DoubleBarrier::Type barrierType = arguments_.barrierType;
-        QL_REQUIRE(barrierType == DoubleBarrier::KnockOut || 
+        QL_REQUIRE(barrierType == DoubleBarrier::KnockOut ||
                    barrierType == DoubleBarrier::KnockIn,
                    "only KnockIn and KnockOut options supported");
 
@@ -168,4 +173,3 @@ namespace QuantLib {
     }
 
 }
-

@@ -31,7 +31,12 @@
 #include <ql/math/interpolations/linearinterpolation.hpp>
 #include <ql/math/interpolations/cubicinterpolation.hpp>
 #include <ql/math/interpolations/bicubicsplineinterpolation.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

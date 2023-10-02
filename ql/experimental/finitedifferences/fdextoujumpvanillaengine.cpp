@@ -18,7 +18,7 @@
 */
 
 /*! \file fdoujumpvanillaengine.cpp
-    \brief Finite Differences Ornstein Uhlenbeck plus exponential jumps engine 
+    \brief Finite Differences Ornstein Uhlenbeck plus exponential jumps engine
            for simple swing options
 */
 
@@ -36,7 +36,12 @@
 #include <ql/methods/finitedifferences/stepconditions/fdmbermudanstepcondition.hpp>
 #include <ql/methods/finitedifferences/stepconditions/fdmstepconditioncomposite.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -53,7 +58,7 @@ namespace QuantLib {
 
     void FdExtOUJumpVanillaEngine::calculate() const {
         // 1. Mesher
-        const Time maturity 
+        const Time maturity
             = rTS_->dayCounter().yearFraction(rTS_->referenceDate(),
                                               arguments_.exercise->lastDate());
         const ext::shared_ptr<StochasticProcess1D> ouProcess(
@@ -62,8 +67,8 @@ namespace QuantLib {
             new FdmSimpleProcess1dMesher(xGrid_, ouProcess,maturity));
 
         const ext::shared_ptr<Fdm1dMesher> yMesher(
-            new ExponentialJump1dMesher(yGrid_, 
-                                        process_->beta(), 
+            new ExponentialJump1dMesher(yGrid_,
+                                        process_->beta(),
                                         process_->jumpIntensity(),
                                         process_->eta()));
 
@@ -77,23 +82,23 @@ namespace QuantLib {
         // 3. Step conditions
         const ext::shared_ptr<FdmStepConditionComposite> conditions =
             FdmStepConditionComposite::vanillaComposite(
-                                DividendSchedule(), arguments_.exercise, 
-                                mesher, calculator, 
+                                DividendSchedule(), arguments_.exercise,
+                                mesher, calculator,
                                 rTS_->referenceDate(), rTS_->dayCounter());
 
         // 4. Boundary conditions
         const FdmBoundaryConditionSet boundaries;
-        
+
         // 5. set-up solver
         FdmSolverDesc solverDesc = { mesher, boundaries, conditions,
                                     calculator, maturity, tGrid_, 0 };
 
         const ext::shared_ptr<FdmExtOUJumpSolver> solver(
-            new FdmExtOUJumpSolver(Handle<ExtOUWithJumpsProcess>(process_), 
+            new FdmExtOUJumpSolver(Handle<ExtOUWithJumpsProcess>(process_),
                                    rTS_, solverDesc, schemeDesc_));
-      
+
         const Real x = process_->initialValues()[0];
         const Real y = process_->initialValues()[1];
-        results_.value = solver->valueAt(x, y);      
+        results_.value = solver->valueAt(x, y);
     }
 }

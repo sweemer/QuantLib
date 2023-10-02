@@ -31,7 +31,12 @@
 #include <ql/termstructures/interpolatedcurve.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -126,7 +131,7 @@ template <class T> DiscountFactor InterpolatedSimpleZeroCurve<T>::discountImpl(T
         R = (zMax * tMax + instFwdMax * (t - tMax)) / t;
     }
 
-	return DiscountFactor(1.0 / (1.0 + R * t));    
+	return DiscountFactor(1.0 / (1.0 + R * t));
 }
 
 template <class T>

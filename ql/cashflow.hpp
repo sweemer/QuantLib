@@ -29,7 +29,12 @@
 #include <ql/math/comparison.hpp>
 #include <ql/optional.hpp>
 #include <ql/patterns/lazyobject.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

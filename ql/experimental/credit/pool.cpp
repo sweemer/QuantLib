@@ -19,7 +19,12 @@
 
 #include <ql/experimental/credit/pool.hpp>
 #include <ql/functional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iterator>
+#endif
 
 namespace QuantLib {
 
@@ -41,7 +46,7 @@ namespace QuantLib {
         return data_.find(name) != data_.end();
     }
 
-    void Pool::add (const std::string& name, const Issuer& issuer, 
+    void Pool::add (const std::string& name, const Issuer& issuer,
         const DefaultProbKey& contractTrigger) {
         if (!has(name)) {
             data_[name] = issuer;
@@ -83,5 +88,3 @@ namespace QuantLib {
     }
 
 }
-
-

@@ -22,7 +22,12 @@
 #include <ql/processes/eulerdiscretization.hpp>
 #include <ql/processes/gjrgarchprocess.hpp>
 #include <ql/quotes/simplequote.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -67,7 +72,7 @@ namespace QuantLib {
             riskFreeRate_->forwardRate(t, t, Continuous).rate()
                - dividendYield_->forwardRate(t, t, Continuous).rate()
                - 0.5 * vol * vol,
-            daysPerYear_*daysPerYear_*omega_ + daysPerYear_*(beta_ 
+            daysPerYear_*daysPerYear_*omega_ + daysPerYear_*(beta_
                                              + alpha_*q2 + gamma_*q3 - 1.0) *
                ((discretization_==PartialTruncation) ? x[1] : vol*vol)
         };
@@ -86,8 +91,8 @@ namespace QuantLib {
         const Real n = std::exp(-lambda_*lambda_/2.0)/std::sqrt(2*M_PI);
         const Real sigma2 = 2.0 + 4.0*lambda_*lambda_;
         const Real q3 = lambda_*n + N + lambda_*lambda_*N;
-        const Real Eml_e4 = lambda_*lambda_*lambda_*n + 5.0*lambda_*n 
-            + 3.0*N + lambda_*lambda_*lambda_*lambda_*N 
+        const Real Eml_e4 = lambda_*lambda_*lambda_*n + 5.0*lambda_*n
+            + 3.0*N + lambda_*lambda_*lambda_*lambda_*N
             + 6.0*lambda_*lambda_*N;
         const Real sigma3 = Eml_e4 - q3*q3;
         const Real sigma12 = -2.0*lambda_;
@@ -97,14 +102,14 @@ namespace QuantLib {
                          : (discretization_ == Reflection) ? Real(- std::sqrt(-x[1]))
                          : 1e-8; // set vol to (almost) zero but still
                                  // expose some correlation information
-        const Real rho1 = std::sqrt(daysPerYear_)*(alpha_*sigma12 
+        const Real rho1 = std::sqrt(daysPerYear_)*(alpha_*sigma12
                                             + gamma_*sigma13) * vol * vol;
         const Real rho2 = vol*vol*std::sqrt(daysPerYear_)
-            *std::sqrt(alpha_*alpha_*(sigma2 - sigma12*sigma12) 
-                       + gamma_*gamma_*(sigma3 - sigma13*sigma13) 
-                       + 2.0*alpha_*gamma_*(sigma23 - sigma12*sigma13)); 
+            *std::sqrt(alpha_*alpha_*(sigma2 - sigma12*sigma12)
+                       + gamma_*gamma_*(sigma3 - sigma13*sigma13)
+                       + 2.0*alpha_*gamma_*(sigma23 - sigma12*sigma13));
 
-            // tmp[0][0], tmp[0][1] are the coefficients of dW_1 and dW_2 
+            // tmp[0][0], tmp[0][1] are the coefficients of dW_1 and dW_2
             // in asset return stochastic process
         tmp[0][0] = vol;  tmp[0][1] = 0.0;
         tmp[1][0] = rho1; tmp[1][1] = rho2;
@@ -127,8 +132,8 @@ namespace QuantLib {
         const Real sigma2 = 2.0 + 4.0*lambda_*lambda_;
         const Real q2 = 1.0 + lambda_*lambda_;
         const Real q3 = lambda_*n + N + lambda_*lambda_*N;
-        const Real Eml_e4 = lambda_*lambda_*lambda_*n + 5.0*lambda_*n 
-            + 3.0*N + lambda_*lambda_*lambda_*lambda_*N 
+        const Real Eml_e4 = lambda_*lambda_*lambda_*n + 5.0*lambda_*n
+            + 3.0*N + lambda_*lambda_*lambda_*lambda_*N
             + 6.0*lambda_*lambda_*N;
         const Real sigma3 = Eml_e4 - q3*q3;
         const Real sigma12 = -2.0*lambda_;
@@ -136,8 +141,8 @@ namespace QuantLib {
         const Real sigma23 = 2.0*N + sigma12*sigma13;
         const Real rho1 = std::sqrt(daysPerYear_)*(alpha_*sigma12 + gamma_*sigma13);
         const Real rho2 = std::sqrt(daysPerYear_)
-            *std::sqrt(alpha_*alpha_*(sigma2 - sigma12*sigma12) 
-                       + gamma_*gamma_*(sigma3 - sigma13*sigma13) 
+            *std::sqrt(alpha_*alpha_*(sigma2 - sigma12*sigma12)
+                       + gamma_*gamma_*(sigma3 - sigma13*sigma13)
                        + 2.0*alpha_*gamma_*(sigma23 - sigma12*sigma13));
 
         switch (discretization_) {
@@ -151,7 +156,7 @@ namespace QuantLib {
             mu =    riskFreeRate_->forwardRate(t0, t0+dt, Continuous).rate()
                   - dividendYield_->forwardRate(t0, t0+dt, Continuous).rate()
                     - 0.5 * vol * vol;
-            nu = daysPerYear_*daysPerYear_*omega_ 
+            nu = daysPerYear_*daysPerYear_*omega_
                 + daysPerYear_*(beta_ + alpha_*q2 + gamma_*q3 - 1.0) * x0[1];
 
             retVal[0] = x0[0] * std::exp(mu*dt+vol*dw[0]*sdt);
@@ -162,7 +167,7 @@ namespace QuantLib {
             mu =    riskFreeRate_->forwardRate(t0, t0+dt, Continuous).rate()
                   - dividendYield_->forwardRate(t0, t0+dt, Continuous).rate()
                     - 0.5 * vol * vol;
-            nu = daysPerYear_*daysPerYear_*omega_ 
+            nu = daysPerYear_*daysPerYear_*omega_
                 + daysPerYear_*(beta_ + alpha_*q2 + gamma_*q3 - 1.0) * vol *vol;
 
             retVal[0] = x0[0] * std::exp(mu*dt+vol*dw[0]*sdt);
@@ -173,7 +178,7 @@ namespace QuantLib {
             mu =    riskFreeRate_->forwardRate(t0, t0+dt, Continuous).rate()
                   - dividendYield_->forwardRate(t0, t0+dt, Continuous).rate()
                     - 0.5 * vol*vol;
-            nu = daysPerYear_*daysPerYear_*omega_ 
+            nu = daysPerYear_*daysPerYear_*omega_
                 + daysPerYear_*(beta_ + alpha_*q2 + gamma_*q3 - 1.0) * vol * vol;
 
             retVal[0] = x0[0]*std::exp(mu*dt+vol*dw[0]*sdt);

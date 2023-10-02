@@ -19,7 +19,12 @@
 */
 
 #include <ql/time/daycounters/actual365fixed.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 namespace QuantLib {
 
@@ -95,4 +100,3 @@ namespace QuantLib {
     }
 
 }
-

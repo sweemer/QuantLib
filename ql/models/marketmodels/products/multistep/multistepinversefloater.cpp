@@ -20,7 +20,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/models/marketmodels/curvestate.hpp>
 #include <ql/models/marketmodels/products/multistep/multistepinversefloater.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -66,10 +71,9 @@ namespace QuantLib {
     }
 
     std::unique_ptr<MarketModelMultiProduct>
-    MultiStepInverseFloater::clone() const 
+    MultiStepInverseFloater::clone() const
     {
         return std::unique_ptr<MarketModelMultiProduct>(new MultiStepInverseFloater(*this));
     }
 
 }
-

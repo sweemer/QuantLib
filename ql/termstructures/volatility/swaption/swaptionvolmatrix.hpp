@@ -30,7 +30,12 @@
 #include <ql/termstructures/volatility/swaption/swaptionvoldiscrete.hpp>
 #include <ql/math/interpolations/interpolation2d.hpp>
 #include <ql/math/matrix.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

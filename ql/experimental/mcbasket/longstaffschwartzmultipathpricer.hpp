@@ -26,7 +26,12 @@
 #include <ql/methods/montecarlo/lsmbasissystem.hpp>
 #include <ql/experimental/mcbasket/pathpayoff.hpp>
 #include <ql/functional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <memory>
+#endif
 
 namespace QuantLib {
 

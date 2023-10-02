@@ -28,8 +28,13 @@
 #include <ql/utilities/null.hpp>
 #include <ql/patterns/curiouslyrecurring.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <iomanip>
+#endif
 
 namespace QuantLib {
 

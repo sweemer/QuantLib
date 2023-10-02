@@ -43,7 +43,12 @@
 #include <ql/termstructures/volatility/volatilitytype.hpp>
 #include <ql/utilities/dataformatters.hpp>
 #include <ql/utilities/null.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

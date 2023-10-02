@@ -28,7 +28,12 @@
 #include <ql/time/calendar.hpp>
 #include <ql/time/calendars/brazil.hpp>
 #include <ql/time/daycounter.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

@@ -24,8 +24,13 @@
 #include <ql/models/marketmodels/forwardforwardmappings.hpp>
 #include <ql/models/marketmodels/models/fwdperiodadapter.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <set>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -121,5 +126,3 @@ namespace QuantLib {
         }
     }
 }
-
-

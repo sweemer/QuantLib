@@ -21,7 +21,12 @@
 #include <ql/experimental/exoticoptions/analytictwoassetbarrierengine.hpp>
 #include <ql/math/distributions/bivariatenormaldistribution.hpp>
 #include <ql/math/distributions/normaldistribution.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -241,4 +246,3 @@ namespace QuantLib {
     }
 
 }
-

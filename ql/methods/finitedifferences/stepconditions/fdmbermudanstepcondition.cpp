@@ -20,7 +20,12 @@
 #include <ql/methods/finitedifferences/operators/fdmlinearoplayout.hpp>
 #include <ql/methods/finitedifferences/stepconditions/fdmbermudanstepcondition.hpp>
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -41,11 +46,11 @@ namespace QuantLib {
     const std::vector<Time>& FdmBermudanStepCondition::exerciseTimes() const {
         return exerciseTimes_;
     }
-    
+
     void FdmBermudanStepCondition::applyTo(Array& a, Time t) const {
-        if (std::find(exerciseTimes_.begin(), exerciseTimes_.end(), t) 
+        if (std::find(exerciseTimes_.begin(), exerciseTimes_.end(), t)
               != exerciseTimes_.end()) {
-            
+
             QL_REQUIRE(mesher_->layout()->size() == a.size(),
                        "inconsistent array dimensions");
 
@@ -60,7 +65,7 @@ namespace QuantLib {
                 if (innerValue > a[iter.index()]) {
                     a[iter.index()] = innerValue;
                 }
-            }            
+            }
         }
     }
 }

@@ -25,8 +25,13 @@
 #define quantlib_exchange_contract_hpp
 
 #include <ql/time/date.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

@@ -26,8 +26,12 @@
 #include <ql/pricingengines/swaption/discretizedswaption.hpp>
 #include <ql/quotes/simplequote.hpp>
 #include <ql/time/schedule.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
 

@@ -20,7 +20,12 @@
 #include <ql/models/shortrate/onefactormodel.hpp>
 #include <ql/pricingengines/capfloor/discretizedcapfloor.hpp>
 #include <ql/pricingengines/capfloor/treecapfloorengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -79,5 +84,3 @@ namespace QuantLib {
     }
 
 }
-
-

@@ -43,8 +43,12 @@
 #include <ql/time/daycounters/actual360.hpp>
 #include <ql/time/daycounters/thirty360.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <iomanip>
+#endif
 
 using namespace QuantLib;
 
@@ -236,12 +240,12 @@ int main(int argc, char *argv[]) {
         auto swapBase =
             ext::make_shared<EuriborSwapIsdaFixA>(10 * Years, yts6m, ytsOis);
 
-        
+
         std::vector<ext::shared_ptr<BlackCalibrationHelper>> basket =
             swaption->calibrationBasket(swapBase, *swaptionVol,
                                         BasketGeneratingEngine::Naive);
         printBasket(basket);
-        
+
 
         std::cout
             << "\nLet's calibrate our model to this basket. We use a "
@@ -258,23 +262,23 @@ int main(int argc, char *argv[]) {
         EndCriteria ec(1000, 10, 1E-8, 1E-8,
                        1E-8); // only max iterations use actually used by LM
 
-        
+
         gsr->calibrateVolatilitiesIterative(basket, method, ec);
-        
+
 
         printModelCalibration(basket, gsr->volatility());
-        
+
 
         std::cout << "\nFinally we price our bermudan swaption in the "
                      "calibrated model:" << std::endl;
 
-        
+
         Real npv = swaption->NPV();
-        
+
 
         std::cout << "\nBermudan swaption NPV (ATM calibrated GSR) = "
                   << std::fixed << std::setprecision(6) << npv << std::endl;
-        
+
 
         std::cout << "\nThere is another mode to generate a calibration basket called"
                      "\nMaturityStrikeByDeltaGamma. This means that the maturity,"
@@ -285,14 +289,14 @@ int main(int argc, char *argv[]) {
                      "\nLet's try this in our case."
                   << std::endl;
 
-        
+
         basket = swaption->calibrationBasket(
             swapBase, *swaptionVol,
             BasketGeneratingEngine::MaturityStrikeByDeltaGamma);
-        
+
 
         printBasket(basket);
-        
+
 
         std::cout
             << "\nThe calibrated nominal is close to the exotics nominal."
@@ -308,21 +312,21 @@ int main(int argc, char *argv[]) {
 
 
         gsr->calibrateVolatilitiesIterative(basket, method, ec);
-        
+
 
         printModelCalibration(basket, gsr->volatility());
-        
+
 
         std::cout << "\nAnd the bermudan's price becomes:" << std::endl;
 
-        
+
         npv = swaption->NPV();
-        
+
 
         std::cout << "\nBermudan swaption NPV (deal strike calibrated GSR) = "
                   << std::setprecision(6) << npv << std::endl;
 
-        
+
 
         std::cout
             << "\nWe can do more complicated things, let's e.g. modify the"
@@ -348,14 +352,14 @@ int main(int argc, char *argv[]) {
 
         swaption2->setPricingEngine(nonstandardSwaptionEngine);
 
-        
+
         basket = swaption2->calibrationBasket(
             swapBase, *swaptionVol,
             BasketGeneratingEngine::MaturityStrikeByDeltaGamma);
-        
+
 
         printBasket(basket);
-        
+
 
         std::cout << "\nThe notional is weighted over the underlying exercised "
                      "\ninto and the maturity is adjusted downwards. The rate"
@@ -395,15 +399,15 @@ int main(int argc, char *argv[]) {
 
         swaption3->setPricingEngine(nonstandardSwaptionEngine2);
 
-        
+
 
         basket = swaption3->calibrationBasket(
             swapBase, *swaptionVol,
             BasketGeneratingEngine::MaturityStrikeByDeltaGamma);
-        
+
 
         printBasket(basket);
-        
+
 
         std::cout
             << "\nNote that nominals are not exactly 1.0 here. This is"
@@ -420,11 +424,11 @@ int main(int argc, char *argv[]) {
 
         gsr->calibrateVolatilitiesIterative(basket, method, ec);
         Real npv3 = swaption3->NPV();
-        
+
 
         std::cout << "\nBond's bermudan call right npv = "
                   << std::setprecision(6) << npv3 << std::endl;
-        
+
 
         std::cout
             << "\nUp to now, no credit spread is included in the pricing."
@@ -434,13 +438,13 @@ int main(int argc, char *argv[]) {
 
         oas.linkTo(oas100);
 
-        
+
         basket = swaption3->calibrationBasket(
             swapBase, *swaptionVol,
             BasketGeneratingEngine::MaturityStrikeByDeltaGamma);
-        
+
         printBasket(basket);
-        
+
 
         std::cout
             << "\nThe adjusted basket takes the credit spread into account."
@@ -455,11 +459,11 @@ int main(int argc, char *argv[]) {
 
         gsr->calibrateVolatilitiesIterative(basket, method, ec);
         Real npv4 = swaption3->NPV();
-        
+
 
         std::cout << "\nBond's bermudan call right npv (oas = 100bp) = "
                   << std::setprecision(6) << npv4 << std::endl;
-        
+
 
         std::cout
             << "\nThe next instrument we look at is a CMS 10Y vs Euribor "
@@ -498,9 +502,9 @@ int main(int argc, char *argv[]) {
 
         underlying4->setPricingEngine(swapPricer);
 
-        
+
         Real npv5 = underlying4->NPV();
-        
+
 
         std::cout << "Underlying CMS Swap NPV = " << std::setprecision(6)
                   << npv5 << std::endl;
@@ -509,32 +513,32 @@ int main(int argc, char *argv[]) {
         std::cout << "       Euribor Leg  NPV = " << underlying4->legNPV(1)
                   << std::endl;
 
-        
+
 
         std::cout << "\nWe generate a naive calibration basket and calibrate "
                      "\nthe GSR model to it:" << std::endl;
 
-        
+
         basket = swaption4->calibrationBasket(swapBase, *swaptionVol,
                                               BasketGeneratingEngine::Naive);
         for (auto& i : basket)
             i->setPricingEngine(swaptionEngine);
         gsr->calibrateVolatilitiesIterative(basket, method, ec);
-        
+
 
         printBasket(basket);
         printModelCalibration(basket, gsr->volatility());
-        
+
 
         std::cout << "\nThe npv of the bermudan swaption is" << std::endl;
 
-        
+
         Real npv6 = swaption4->NPV();
-        
+
 
         std::cout << "\nFloat swaption NPV (GSR) = " << std::setprecision(6)
                   << npv6 << std::endl;
-        
+
 
         std::cout << "\nIn this case it is also interesting to look at the "
                      "\nunderlying swap npv in the GSR model." << std::endl;
@@ -574,15 +578,15 @@ int main(int argc, char *argv[]) {
 
         swaption4->setPricingEngine(floatEngineMarkov);
 
-        
+
         Real npv7 = swaption4->NPV();
-        
+
 
         std::cout << "\nThe option npv is the markov model is:" << std::endl;
 
         std::cout << "\nFloat swaption NPV (Markov) = " << std::setprecision(6)
                   << npv7 << std::endl;
-        
+
 
         std::cout << "\nThis is not too far from the GSR price." << std::endl;
 
@@ -616,21 +620,21 @@ int main(int argc, char *argv[]) {
 
 
         markov->calibrate(basket, method, ec);
-        
+
 
         printModelCalibration(basket, markov->volatility());
-        
+
 
         std::cout << "\nNow let's have a look again at the underlying pricing."
                      "\nIt shouldn't have changed much, because the underlying"
                      "\nsmile is still matched." << std::endl;
 
-        
+
         Real npv8 = swaption4->result<Real>("underlyingValue");
-        
+
         std::cout << "\nFloat swap NPV (Markov) = " << std::setprecision(6)
                   << npv8 << std::endl;
-        
+
 
         std::cout << "\nThis is close to the previous value as expected."
                   << std::endl;

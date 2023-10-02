@@ -23,7 +23,12 @@
 #include <ql/pricingengines/capfloor/blackcapfloorengine.hpp>
 #include <ql/termstructures/volatility/optionlet/strippedoptionlet.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using std::vector;
 

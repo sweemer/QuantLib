@@ -23,7 +23,12 @@
 #include <ql/instruments/forwardvanillaoption.hpp>
 #include <ql/instruments/vanillaoption.hpp>
 #include <ql/pricingengines/mcsimulation.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

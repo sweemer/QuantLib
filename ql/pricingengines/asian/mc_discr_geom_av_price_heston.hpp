@@ -2,7 +2,7 @@
 
 /*
  Copyright (C) 2020 Jack Gillett
- 
+
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
 
@@ -27,7 +27,12 @@
 #include <ql/exercise.hpp>
 #include <ql/pricingengines/asian/mcdiscreteasianenginebase.hpp>
 #include <ql/processes/hestonprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

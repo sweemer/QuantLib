@@ -36,8 +36,12 @@
 #include <ql/termstructures/volatility/equityfx/localvoltermstructure.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/timegrid.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
     LocalVolRNDCalculator::LocalVolRNDCalculator(
@@ -144,7 +148,7 @@ namespace QuantLib {
 
         // left or right hand integral
         if (x > 0.5*(xr+xl)) {
-            while (pdf(xr, t) > 0.01*localVolProbEps_) 
+            while (pdf(xr, t) > 0.01*localVolProbEps_)
             {
                  addition*=1.1;
                  xr+=addition;
@@ -353,4 +357,3 @@ namespace QuantLib {
     }
 
 }
-

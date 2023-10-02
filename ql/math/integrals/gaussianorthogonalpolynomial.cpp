@@ -25,7 +25,12 @@
 #include <ql/math/distributions/gammadistribution.hpp>
 #include <ql/math/comparison.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 namespace QuantLib {
 
@@ -180,4 +185,3 @@ namespace QuantLib {
     }
 
 }
-

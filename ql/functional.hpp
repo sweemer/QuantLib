@@ -27,7 +27,11 @@
 #include <ql/qldefines.hpp>
 
 #if defined(QL_USE_STD_FUNCTION)
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <functional>
+#endif
 #else
 #include <boost/function.hpp>
 #include <boost/bind/bind.hpp>
@@ -84,4 +88,3 @@ namespace QuantLib {
 
 
 #endif
-

@@ -19,7 +19,12 @@
 
 #include <ql/experimental/volatility/extendedblackvariancecurve.hpp>
 #include <ql/math/interpolations/linearinterpolation.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -80,4 +85,3 @@ namespace QuantLib {
     }
 
 }
-

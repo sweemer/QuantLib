@@ -30,7 +30,12 @@ Mathl. Comput. Modelling, 967-973, 1989
 #include <ql/math/optimization/constraint.hpp>
 #include <ql/math/optimization/levenbergmarquardt.hpp>
 #include <ql/math/optimization/problem.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -146,7 +151,7 @@ namespace QuantLib {
             try{
                 //Evaluate new point
                 Real newValue = P.value(newPoint);
-				
+
                 //Determine if new point is accepted
                 if (probability_(currentValue, newValue, currentTemperature)) {
                     if (optimizeScheme_ == EveryNewPoint) {
@@ -214,7 +219,7 @@ namespace QuantLib {
             for (Size i = 0; i < n; i++)
                 temperatureBreached = temperatureBreached && currentTemperature[i] < endTemperature_;
         }
-        
+
         //Change end criteria type if appropriate
         if (k > maxK)
             ecType = EndCriteria::MaxIterations;

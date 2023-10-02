@@ -23,7 +23,12 @@
 
 #include <ql/models/marketmodels/callability/nodedataprovider.hpp>
 #include <ql/methods/montecarlo/parametricexercise.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <memory>
+#endif
 
 namespace QuantLib {
 

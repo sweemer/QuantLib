@@ -30,9 +30,14 @@
 #include <ql/types.hpp>
 #include <ql/errors.hpp>
 #include <ql/functional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <cmath>
 #include <complex>
+#endif
 
 namespace QuantLib {
 

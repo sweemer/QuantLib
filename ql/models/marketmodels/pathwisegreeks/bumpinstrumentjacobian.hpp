@@ -18,17 +18,20 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-
 #ifndef quantlib_bump_instrument_jacobian_hpp
 #define quantlib_bump_instrument_jacobian_hpp
 
-
 #include <ql/models/marketmodels/marketmodel.hpp>
 #include <ql/models/marketmodels/pathwisegreeks/vegabumpcluster.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <valarray>
+#endif
 
 namespace QuantLib
-{   
+{
     class VolatilityBumpInstrumentJacobian
     {
     public:
@@ -47,7 +50,7 @@ namespace QuantLib
 
         };
 
-    
+
         VolatilityBumpInstrumentJacobian(const VegaBumpCollection& bumps,
             const std::vector<Swaption>& swaptions,
             const std::vector<Cap>& caps);
@@ -73,7 +76,7 @@ namespace QuantLib
          mutable std::valarray<bool> computed_;
          mutable bool allComputed_;
          mutable std::vector<std::vector<Real> > derivatives_;
-         
+
          mutable std::vector<std::vector<Real> > onePercentBumps_;
          mutable Matrix bumpMatrix_;
     };
@@ -81,9 +84,9 @@ namespace QuantLib
     /*!
     Pass in a market model, a list of instruments, and possible bumps.
 
-    Get out pseudo-root bumps that shift each implied vol by one percent, and leave the other instruments fixed. 
+    Get out pseudo-root bumps that shift each implied vol by one percent, and leave the other instruments fixed.
 
-    If the contribution of an instrument is too correlated with other instruments used, discard it. 
+    If the contribution of an instrument is too correlated with other instruments used, discard it.
 
     */
 
@@ -97,7 +100,7 @@ namespace QuantLib
                                      Real tolerance);      // if vector projection before scaling less than this discard
 
             void GetVegaBumps(std::vector<std::vector<Matrix> >& theBumps) const; // this is precisely the vector to pass into PathwiseVegasAccountingEngine
-             
+
 
         private:
 
@@ -109,7 +112,7 @@ namespace QuantLib
     };
 
 
-  
+
 
 }
 

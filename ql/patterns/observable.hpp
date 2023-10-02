@@ -33,7 +33,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/patterns/singleton.hpp>
 #include <ql/shared_ptr.hpp>
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <set>
+#endif
 
 #if !defined(QL_USE_STD_SHARED_PTR) && BOOST_VERSION < 107400
 
@@ -263,10 +268,15 @@ namespace QuantLib {
 #else
 
 #include <boost/smart_ptr/owner_less.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <atomic>
 #include <mutex>
 #include <set>
 #include <thread>
+#endif
 
 namespace QuantLib {
 

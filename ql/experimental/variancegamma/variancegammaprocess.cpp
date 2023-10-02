@@ -21,7 +21,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/experimental/variancegamma/variancegammaprocess.hpp>
 #include <ql/math/distributions/normaldistribution.hpp>
 #include <ql/processes/eulerdiscretization.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

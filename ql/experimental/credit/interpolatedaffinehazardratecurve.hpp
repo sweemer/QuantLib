@@ -25,16 +25,21 @@
 #include <ql/termstructures/credit/probabilitytraits.hpp>
 #include <ql/termstructures/interpolatedcurve.hpp>
 #include <ql/termstructures/bootstraphelper.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
-    /*! DefaultProbabilityTermStructure based on interpolation of a 
-    deterministic hazard rate component plus a stochastic one factor 
+    /*! DefaultProbabilityTermStructure based on interpolation of a
+    deterministic hazard rate component plus a stochastic one factor
     rate.
     */
     /*
-    The hazard rate structure here refers to the deterministic term 
+    The hazard rate structure here refers to the deterministic term
     structure added on top of the affine model intensity. It is typically
     employed to match the current market implied probabilities. The total
     probabilities keep their meaning and are those of the affine model. An
@@ -291,7 +296,7 @@ namespace QuantLib {
     template <class T>
     Probability
     InterpolatedAffineHazardRateCurve<T>::survivalProbabilityImpl(
-        Time t) const 
+        Time t) const
     {
         // the way x0 is defined:
         Real initValHR = std::pow(model_->dynamics()->process()->x0(), 2);
@@ -304,7 +309,7 @@ namespace QuantLib {
             integral = this->interpolation_.primitive(t, true);
         } else {
             // flat hazard rate extrapolation
-            integral = 
+            integral =
                 this->interpolation_.primitive(this->times_.back(), true)
                      + this->data_.back()*(t - this->times_.back());
         }
@@ -314,15 +319,15 @@ namespace QuantLib {
     template <class T>
     Probability
     InterpolatedAffineHazardRateCurve<T>::conditionalSurvivalProbabilityImpl(
-        Time tFwd, Time tTarget, Real yVal) const 
+        Time tFwd, Time tTarget, Real yVal) const
     {
         QL_REQUIRE(tFwd <= tTarget, "Probability time in the past.");
         // Still leaves the possibility of sending tFwd=0 and an yVal different
         //   to the initial conditions. In an abstract sense thats all right as
         //   long as it is seen as a zero probability scenario.
         #if defined(QL_EXTRA_SAFETY_CHECKS)
-            QL_REQUIRE(tFwd > 0. || yVal == 
-                model_->dynamics()->process()->x0(), 
+            QL_REQUIRE(tFwd > 0. || yVal ==
+                model_->dynamics()->process()->x0(),
                 "Initial value different to process'.");
         #endif
         if (tFwd == 0.) return survivalProbabilityImpl(tTarget);
@@ -334,7 +339,7 @@ namespace QuantLib {
             integralTFwd = this->interpolation_.primitive(tFwd, true);
         } else {
             // flat hazard rate extrapolation
-            integralTFwd = 
+            integralTFwd =
                 this->interpolation_.primitive(this->times_.back(), true)
                      + this->data_.back()*(tFwd - this->times_.back());
         }
@@ -342,12 +347,12 @@ namespace QuantLib {
             integralTP = this->interpolation_.primitive(tTarget, true);
         } else {
             // flat hazard rate extrapolation
-            integralTP = 
+            integralTP =
                 this->interpolation_.primitive(this->times_.back(), true)
                      + this->data_.back()*(tTarget - this->times_.back());
         }
 
-        return std::exp(-(integralTP-integralTFwd)) * 
+        return std::exp(-(integralTP-integralTFwd)) *
             model_->discountBond(tFwd, tTarget, yVal );
     }
 

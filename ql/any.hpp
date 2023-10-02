@@ -27,7 +27,11 @@
 #include <ql/qldefines.hpp>
 
 #if defined(QL_USE_STD_ANY)
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <any>
+#endif
 #else
 #include <boost/any.hpp>
 #endif

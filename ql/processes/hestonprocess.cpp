@@ -29,8 +29,13 @@
 #include <ql/processes/hestonprocess.hpp>
 #include <ql/quotes/simplequote.hpp>
 #include <boost/math/distributions/non_central_chi_squared.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

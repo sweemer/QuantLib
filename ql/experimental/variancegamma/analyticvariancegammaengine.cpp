@@ -24,7 +24,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/math/integrals/kronrodintegral.hpp>
 #include <ql/math/integrals/segmentintegral.hpp>
 #include <ql/pricingengines/blackscholescalculator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

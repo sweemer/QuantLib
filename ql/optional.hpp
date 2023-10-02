@@ -27,7 +27,11 @@
 #include <ql/qldefines.hpp>
 
 #if defined(QL_USE_STD_OPTIONAL)
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <optional>
+#endif
 #else
 #include <boost/optional.hpp>
 #endif

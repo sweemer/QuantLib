@@ -27,16 +27,21 @@
 #include <ql/time/date.hpp>
 #include <ql/errors.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <random>
 #include <vector>
+#endif
 
 namespace QuantLib {
 
     class CatSimulation {
       public:
-        CatSimulation(Date start, 
-                      Date end) 
-        : start_(start), end_(end) 
+        CatSimulation(Date start,
+                      Date end)
+        : start_(start), end_(end)
         {}
 
         virtual ~CatSimulation() = default;
@@ -72,7 +77,7 @@ namespace QuantLib {
         unsigned int i_ = 0;
     };
 
-    class EventSet : public CatRisk {        
+    class EventSet : public CatRisk {
       public:
         EventSet(ext::shared_ptr<std::vector<std::pair<Date, Real> > > events,
                  Date eventsStart,
@@ -82,29 +87,29 @@ namespace QuantLib {
                                                      const Date& end) const override;
 
       private:
-        ext::shared_ptr<std::vector<std::pair<Date, Real> > > events_; 
+        ext::shared_ptr<std::vector<std::pair<Date, Real> > > events_;
         Date eventsStart_;
         Date eventsEnd_;
     };
 
     class BetaRiskSimulation : public CatSimulation {
       public:
-        BetaRiskSimulation(Date start, 
-                           Date end, 
-                           Real maxLoss, 
-                           Real lambda, 
-                           Real alpha, 
+        BetaRiskSimulation(Date start,
+                           Date end,
+                           Real maxLoss,
+                           Real lambda,
+                           Real alpha,
                            Real beta) ;
 
         bool nextPath(std::vector<std::pair<Date, Real> >& path) override;
         Real generateBeta();
-    
+
       private:
         Real maxLoss_;
-    
+
         Integer dayCount_;
         Real yearFraction_;
-    
+
         std::mt19937 rng_;
         std::exponential_distribution<Real> exponential_;
         std::gamma_distribution<Real> gammaAlpha_;
@@ -113,9 +118,9 @@ namespace QuantLib {
 
     class BetaRisk : public CatRisk {
       public:
-        BetaRisk(Real maxLoss, 
-                 Real years, 
-                 Real mean, 
+        BetaRisk(Real maxLoss,
+                 Real years,
+                 Real mean,
                  Real stdDev);
 
         ext::shared_ptr<CatSimulation> newSimulation(const Date& start,

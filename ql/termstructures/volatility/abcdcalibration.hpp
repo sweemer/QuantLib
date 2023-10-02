@@ -23,18 +23,19 @@
 #ifndef quantlib_abcdcalibration_hpp
 #define quantlib_abcdcalibration_hpp
 
-
 #include <ql/math/optimization/endcriteria.hpp>
 #include <ql/math/optimization/projectedcostfunction.hpp>
 #include <ql/math/array.hpp>
-
 #include <ql/shared_ptr.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
-
+#endif
 
 namespace QuantLib {
-    
+
     class Quote;
     class OptimizationMethod;
     class ParametersTransformation;

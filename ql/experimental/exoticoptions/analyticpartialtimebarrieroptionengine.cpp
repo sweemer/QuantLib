@@ -21,7 +21,12 @@
 #include <ql/experimental/exoticoptions/analyticpartialtimebarrieroptionengine.hpp>
 #include <ql/math/distributions/bivariatenormaldistribution.hpp>
 #include <ql/pricingengines/vanilla/analyticeuropeanengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -343,4 +348,3 @@ namespace QuantLib {
     }
 
 }
-

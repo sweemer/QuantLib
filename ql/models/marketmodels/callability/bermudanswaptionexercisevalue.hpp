@@ -24,7 +24,12 @@
 #include <ql/models/marketmodels/callability/exercisevalue.hpp>
 #include <ql/models/marketmodels/evolutiondescription.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <valarray>
+#endif
 
 namespace QuantLib {
 

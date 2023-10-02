@@ -20,7 +20,12 @@
 #include <ql/experimental/callablebonds/callablebondconstantvol.hpp>
 #include <ql/quotes/simplequote.hpp>
 #include <ql/termstructures/volatility/flatsmilesection.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -79,4 +84,3 @@ namespace QuantLib {
     }
 
 }
-

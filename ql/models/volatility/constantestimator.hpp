@@ -25,7 +25,12 @@
 #define quantlib_constant_estimator_hpp
 
 #include <ql/volatilitymodel.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

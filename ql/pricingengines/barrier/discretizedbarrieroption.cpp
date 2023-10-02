@@ -18,7 +18,12 @@
 */
 
 #include <ql/pricingengines/barrier/discretizedbarrieroption.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -59,7 +64,7 @@ namespace QuantLib {
 
         Time now = time();
         bool endTime = isOnTime(stoppingTimes_.back());
-        bool stoppingTime = false;         
+        bool stoppingTime = false;
         switch (arguments_.exercise->type()) {
           case Exercise::American:
             if (now <= stoppingTimes_[1] &&
@@ -91,7 +96,7 @@ namespace QuantLib {
                                       (*arguments_.payoff)(grid[j]));
                      }
                      else
-                         optvalues[j] = vanilla_.values()[j]; 
+                         optvalues[j] = vanilla_.values()[j];
                   }
                   else if (endTime)
                       optvalues[j] = arguments_.rebate;
@@ -112,7 +117,7 @@ namespace QuantLib {
                                       (*arguments_.payoff)(grid[j]));
                      }
                      else
-                         optvalues[j] = vanilla_.values()[j]; 
+                         optvalues[j] = vanilla_.values()[j];
                   }
                   else if (endTime)
                       optvalues[j] = arguments_.rebate;
@@ -186,7 +191,7 @@ namespace QuantLib {
            case Barrier::UpIn:
               for (Size j=0; j<optvalues.size()-1; ++j) {
                   if (grid[j] < barrier && grid[j+1] >= barrier) {
-                      // grid[j+1] above barrier (in), grid[j] under, 
+                      // grid[j+1] above barrier (in), grid[j] under,
                       // interpolate optvalues[j]
                       Real ltob = (barrier-grid[j]);
                       Real htob = (grid[j+1]-barrier);
@@ -200,7 +205,7 @@ namespace QuantLib {
            case Barrier::UpOut:
               for (Size j=0; j<optvalues.size()-1; ++j) {
                   if (grid[j] < barrier && grid[j+1] >= barrier) {
-                      // grid[j+1] above barrier (out), grid[j] under, 
+                      // grid[j+1] above barrier (out), grid[j] under,
                       // interpolate optvalues[j]
                       Real a = (barrier-grid[j])*unenhanced_.values()[j];
                       Real b = (grid[j+1]-barrier)*rebate;
@@ -213,4 +218,3 @@ namespace QuantLib {
     }
 
 }
-

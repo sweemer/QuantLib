@@ -23,7 +23,12 @@
 #include <ql/experimental/callablebonds/callablebond.hpp>
 #include <ql/math/solvers1d/brent.hpp>
 #include <ql/termstructures/yield/zerospreadedtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -372,7 +377,7 @@ namespace QuantLib {
                                  dayCounter,
                                  compounding,
                                  frequency);
-            
+
         if ( P == 0.0 )
             return 0;
         else
@@ -404,13 +409,13 @@ namespace QuantLib {
                                  dayCounter,
                                  compounding,
                                  frequency);
-            
+
         if ( P == 0.0 )
             return 0;
         else
             {
                 return (Ppp + Pmm - 2*P) / ( std::pow(bump,2) * P);
-            }        
+            }
 
     }
 
@@ -548,4 +553,3 @@ namespace QuantLib {
     }
 
 }
-

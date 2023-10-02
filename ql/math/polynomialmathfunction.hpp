@@ -23,10 +23,14 @@
 
 #include <ql/math/matrix.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
-    
+
     //! %Cubic functional form
     /*! \f[ f(t) = \sum_{i=0}^n{c_i t^i} \f] */
     class PolynomialFunction {

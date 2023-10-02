@@ -20,7 +20,12 @@
 
 #include <ql/exercise.hpp>
 #include <ql/pricingengines/lookback/analyticcontinuouspartialfloatinglookback.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -156,23 +161,22 @@ namespace QuantLib {
         if (!fullLookbackPeriod)
         {
             return eta*(underlying() * dividendDiscount() * n1 -
-                        lambda() * minmax() * riskFreeDiscount() * n2 + 
+                        lambda() * minmax() * riskFreeDiscount() * n2 +
                         underlying() * riskFreeDiscount() * lambda() / x *
                         (pow_s * n3 - dividendDiscount() / riskFreeDiscount() * pow_l * n4)
-                        + underlying() * dividendDiscount() * n5 + 
+                        + underlying() * dividendDiscount() * n5 +
                         riskFreeDiscount() * lambda() * minmax() * n6 -
-                        std::exp(-carry * (residualTime() - lookbackPeriodEndTime())) * 
-                        dividendDiscount() * (1 + 0.5 * vol * vol / carry) * lambda() * 
+                        std::exp(-carry * (residualTime() - lookbackPeriodEndTime())) *
+                        dividendDiscount() * (1 + 0.5 * vol * vol / carry) * lambda() *
                         underlying() * n7 * n8);
         }
         else
         {
             //Simpler calculation
             return eta*(underlying() * dividendDiscount() * n1 -
-                        lambda() * minmax() * riskFreeDiscount() * n2 + 
+                        lambda() * minmax() * riskFreeDiscount() * n2 +
                         underlying() * riskFreeDiscount() * lambda() / x *
                         (pow_s * n3 - dividendDiscount() / riskFreeDiscount() * pow_l * n4));
         }
     }
 }
-

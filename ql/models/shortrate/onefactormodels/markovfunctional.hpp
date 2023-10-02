@@ -30,7 +30,12 @@
 #include <ql/termstructures/volatility/optionlet/optionletvolatilitystructure.hpp>
 #include <ql/termstructures/volatility/smilesection.hpp>
 #include <ql/termstructures/volatility/swaption/swaptionvolstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

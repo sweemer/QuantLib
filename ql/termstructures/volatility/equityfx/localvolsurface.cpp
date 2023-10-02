@@ -21,7 +21,12 @@
 #include <ql/termstructures/volatility/equityfx/blackvoltermstructure.hpp>
 #include <ql/termstructures/volatility/equityfx/localvolsurface.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -85,7 +90,7 @@ namespace QuantLib {
         DiscountFactor dr = riskFreeTS_->discount(t, true);
         DiscountFactor dq = dividendTS_->discount(t, true);
         Real forwardValue = underlying_->value()*dq/dr;
-        
+
         // strike derivatives
         Real strike, y, dy, strikep, strikem;
         Real w, wp, wm, dwdy, d2wdy2;
@@ -105,9 +110,9 @@ namespace QuantLib {
         if (t==0.0) {
             dt = 0.0001;
             DiscountFactor drpt = riskFreeTS_->discount(t+dt, true);
-            DiscountFactor dqpt = dividendTS_->discount(t+dt, true);           
+            DiscountFactor dqpt = dividendTS_->discount(t+dt, true);
             Real strikept = strike*dr*dqpt/(drpt*dq);
-        
+
             wpt = blackTS_->blackVariance(t+dt, strikept, true);
             QL_ENSURE(wpt>=w,
                       "decreasing variance at strike " << strike
@@ -119,10 +124,10 @@ namespace QuantLib {
             DiscountFactor drmt = riskFreeTS_->discount(t-dt, true);
             DiscountFactor dqpt = dividendTS_->discount(t+dt, true);
             DiscountFactor dqmt = dividendTS_->discount(t-dt, true);
-            
+
             Real strikept = strike*dr*dqpt/(drpt*dq);
             Real strikemt = strike*dr*dqmt/(drmt*dq);
-            
+
             wpt = blackTS_->blackVariance(t+dt, strikept, true);
             wmt = blackTS_->blackVariance(t-dt, strikemt, true);
 
@@ -132,7 +137,7 @@ namespace QuantLib {
             QL_ENSURE(w>=wmt,
                       "decreasing variance at strike " << strike
                       << " between time " << t-dt << " and time " << t);
-         
+
             dwdt = (wpt-wmt)/(2.0*dt);
         }
 
@@ -155,4 +160,3 @@ namespace QuantLib {
     }
 
 }
-

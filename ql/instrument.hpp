@@ -30,8 +30,13 @@
 #include <ql/utilities/null.hpp>
 #include <ql/time/date.hpp>
 #include <ql/any.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
 #include <string>
+#endif
 
 namespace QuantLib {
 

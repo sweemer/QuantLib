@@ -25,7 +25,12 @@
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -104,7 +109,7 @@ namespace QuantLib {
         Real theta_correction;
         // Haug arbitrary criterium is:
         //for (i=0; i<11; i++) {
-        for (i=0;  (lastContribution>relativeAccuracy_ && i<maxIterations_) 
+        for (i=0;  (lastContribution>relativeAccuracy_ && i<maxIterations_)
                  || i < Size(lambda*t); i++) {
 
             // constant vol/rate assumption. It should be relaxed
@@ -177,4 +182,3 @@ namespace QuantLib {
     }
 
 }
-

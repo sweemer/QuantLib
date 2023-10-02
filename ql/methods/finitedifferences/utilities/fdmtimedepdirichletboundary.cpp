@@ -25,8 +25,13 @@
 #include <ql/methods/finitedifferences/operators/fdmlinearop.hpp>
 #include <ql/methods/finitedifferences/utilities/fdmindicesonboundary.hpp>
 #include <ql/methods/finitedifferences/utilities/fdmtimedepdirichletboundary.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

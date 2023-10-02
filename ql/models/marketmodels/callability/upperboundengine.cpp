@@ -28,8 +28,13 @@
 #include <ql/models/marketmodels/products/multistep/callspecifiedmultiproduct.hpp>
 #include <ql/models/marketmodels/products/multistep/exerciseadapter.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -344,4 +349,3 @@ namespace QuantLib {
     }
 
 }
-

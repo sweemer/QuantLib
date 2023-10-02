@@ -27,7 +27,11 @@
 #include <ql/utilities/null.hpp>
 #include <ql/methods/finitedifferences/meshers/fdm1dmesher.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

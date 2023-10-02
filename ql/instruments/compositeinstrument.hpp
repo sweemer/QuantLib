@@ -25,8 +25,13 @@
 #define quantlib_composite_instrument_hpp
 
 #include <ql/instrument.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <list>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

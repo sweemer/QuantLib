@@ -28,7 +28,12 @@
 #include <ql/pricingengines/barrier/fdhestonrebateengine.hpp>
 #include <ql/pricingengines/barrier/fdhestondoublebarrierengine.hpp>
 #include <ql/pricingengines/vanilla/fdhestonvanillaengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

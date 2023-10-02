@@ -21,8 +21,13 @@
 
 #include <ql/errors.hpp>
 #include <ql/time/calendars/jointcalendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <sstream>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

@@ -18,13 +18,18 @@
 */
 
 #include <ql/experimental/math/tcopulapolicy.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <numeric>
 #include <algorithm>
+#endif
 
 namespace QuantLib {
 
     TCopulaPolicy::TCopulaPolicy(
-        const std::vector<std::vector<Real> >& factorWeights, 
+        const std::vector<std::vector<Real> >& factorWeights,
         const initTraits& vals)
     {
         for (int tOrder : vals.tOrders) {
@@ -33,8 +38,8 @@ namespace QuantLib {
 
             distributions_.emplace_back(tOrder);
             // inverses T variaces used in normalization of the random factors
-            // For low values of the T order this number is very close to zero 
-            // and it enters the expressions dividing them, which introduces 
+            // For low values of the T order this number is very close to zero
+            // and it enters the expressions dividing them, which introduces
             // numerical errors.
             varianceFactors_.push_back(std::sqrt((tOrder - 2.) / tOrder));
         }
@@ -47,7 +52,7 @@ namespace QuantLib {
 
             Real factorsNorm = std::inner_product(factorWeight.begin(), factorWeight.end(),
                                                   factorWeight.begin(), Real(0.));
-            QL_REQUIRE(factorsNorm < 1., 
+            QL_REQUIRE(factorsNorm < 1.,
                 "Non normal random factor combination.");
             Real idiosyncFctr = std::sqrt(1.-factorsNorm);
 
@@ -63,11 +68,11 @@ namespace QuantLib {
     }
 
     std::vector<Real> TCopulaPolicy::allFactorCumulInverter(
-        const std::vector<Real>& probs) const 
+        const std::vector<Real>& probs) const
     {
     #if defined(QL_EXTRA_SAFETY_CHECKS)
-        QL_REQUIRE(probs.size()-latentVarsCumul_.size() 
-            == distributions_.size()-1, 
+        QL_REQUIRE(probs.size()-latentVarsCumul_.size()
+            == distributions_.size()-1,
             "Incompatible sample and latent model sizes");
     #endif
 

@@ -29,7 +29,12 @@
 #include <ql/termstructure.hpp>
 #include <ql/interestrate.hpp>
 #include <ql/quote.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

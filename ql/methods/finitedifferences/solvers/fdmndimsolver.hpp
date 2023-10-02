@@ -34,7 +34,11 @@
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
 #include <ql/methods/finitedifferences/stepconditions/fdmstepconditioncomposite.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <numeric>
+#endif
 
 namespace QuantLib {
 

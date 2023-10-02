@@ -32,9 +32,14 @@
 #include <ql/time/daycounters/actual365fixed.hpp>
 #include <ql/time/calendars/target.hpp>
 #include <ql/currencies/europe.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <iomanip>
 #include <string>
+#endif
 
 using namespace std;
 using namespace QuantLib;
@@ -71,7 +76,7 @@ int main(int, char* []) {
         }
         std::vector<Issuer> issuers;
         for(Size i=0; i<hazardRates.size(); i++) {
-            std::vector<QuantLib::Issuer::key_curve_pair> curves(1, 
+            std::vector<QuantLib::Issuer::key_curve_pair> curves(1,
                 std::make_pair(NorthAmericaCorpDefaultKey(
                     EURCurrency(), QuantLib::SeniorSec,
                     Period(), 1. // amount threshold
@@ -84,10 +89,10 @@ int main(int, char* []) {
             thePool->add(names[i], issuers[i], NorthAmericaCorpDefaultKey(
                     EURCurrency(), QuantLib::SeniorSec, Period(), 1.));
 
-        std::vector<DefaultProbKey> defaultKeys(hazardRates.size(), 
+        std::vector<DefaultProbKey> defaultKeys(hazardRates.size(),
             NorthAmericaCorpDefaultKey(EURCurrency(), SeniorSec, Period(), 1.));
         auto theBskt = ext::make_shared<Basket>(
-            todaysDate, 
+            todaysDate,
             names, std::vector<Real>(hazardRates.size(), 100.), thePool,
          //   0.0, 0.78);
             0.03, .06);
@@ -129,7 +134,7 @@ int main(int, char* []) {
         TCopulaPolicy::initTraits initT;
         initT.tOrders = std::vector<Integer>(2, 3);
         auto ktTLossLM = ext::make_shared<TConstantLossLM>(fctrsWeights,
-            recoveries, 
+            recoveries,
             //LatentModelIntegrationType::GaussianQuadrature,
               LatentModelIntegrationType::Trapezoid,
             initT);
@@ -185,7 +190,7 @@ int main(int, char* []) {
         std::cout << theBskt->expectedTrancheLoss(calcDate) << std::endl;
 
 
-        // Spot Loss latent model: 
+        // Spot Loss latent model:
         #ifndef QL_PATCH_SOLARIS
         std::vector<std::vector<Real>> fctrsWeightsRR(2 * hazardRates.size(),
             std::vector<Real>(1, std::sqrt(factorValue)));
@@ -223,7 +228,7 @@ int main(int, char* []) {
         std::vector<Period> bcTenors = {{1, Years}, {5, Years}};
         std::vector<Real> bcLossPercentages = {0.03, 0.12};
         std::vector<std::vector<Handle<Quote>>> correls;
-        // 
+        //
         std::vector<Handle<Quote>> corr1Y;
         // 3%
         corr1Y.emplace_back(
@@ -255,7 +260,7 @@ int main(int, char* []) {
 
         theBskt->setLossModel(bcLMG_LHP_Bilin);
 
-        std::cout << "Base Correlation GLHP Expected 10-Yr Losses: "  
+        std::cout << "Base Correlation GLHP Expected 10-Yr Losses: "
             << std::endl;
         std::cout << theBskt->expectedTrancheLoss(calcDate) << std::endl;
         #endif
@@ -270,4 +275,3 @@ int main(int, char* []) {
         return 1;
     }
 }
-

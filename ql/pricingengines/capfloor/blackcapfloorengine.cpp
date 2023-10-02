@@ -26,7 +26,12 @@
 #include <ql/termstructures/volatility/optionlet/constantoptionletvol.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -112,14 +117,14 @@ namespace QuantLib {
                         stdDevs[i] = std::sqrt(vol_->blackVariance(fixingDate,
                                                                    strike));
                         vegas[i] = blackFormulaStdDevDerivative(strike,
-                            forward, stdDevs[i], discountedAccrual, displacement_) 
+                            forward, stdDevs[i], discountedAccrual, displacement_)
                             * sqrtTime;
                         deltas[i] = blackFormulaAssetItmProbability(Option::Call,
                             strike, forward, stdDevs[i], displacement_);
                     }
                     // include caplets with past fixing date
                     values[i] = blackFormula(Option::Call,
-                        strike, forward, stdDevs[i], discountedAccrual, 
+                        strike, forward, stdDevs[i], discountedAccrual,
                         displacement_);
                 }
                 if (type == CapFloor::Floor || type == CapFloor::Collar) {
@@ -130,10 +135,10 @@ namespace QuantLib {
                         stdDevs[i] = std::sqrt(vol_->blackVariance(fixingDate,
                                                                    strike));
                         floorletVega = blackFormulaStdDevDerivative(strike,
-                            forward, stdDevs[i], discountedAccrual, displacement_) 
+                            forward, stdDevs[i], discountedAccrual, displacement_)
                             * sqrtTime;
                         floorletDelta = Integer(Option::Put) * blackFormulaAssetItmProbability(
-                                                        Option::Put, strike, forward, 
+                                                        Option::Put, strike, forward,
                                                         stdDevs[i], displacement_);
                     }
                     Real floorlet = blackFormula(Option::Put,
@@ -146,7 +151,7 @@ namespace QuantLib {
                         // a collar is long a cap and short a floor
                         values[i] -= floorlet;
                         vegas[i] -= floorletVega;
-                        deltas[i] -= floorletDelta; 
+                        deltas[i] -= floorletDelta;
                     }
                 }
                 value += values[i];

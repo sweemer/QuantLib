@@ -26,7 +26,12 @@
 
 #include <ql/methods/montecarlo/sample.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -55,7 +60,7 @@ namespace QuantLib {
         : dimensionality_(dimensionality), rng_(rng),
           sequence_(std::vector<Real> (dimensionality), 1.0),
           int32Sequence_(dimensionality) {
-          QL_REQUIRE(dimensionality>0, 
+          QL_REQUIRE(dimensionality>0,
                      "dimensionality must be greater than 0");
         }
 

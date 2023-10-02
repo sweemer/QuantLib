@@ -28,7 +28,12 @@
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
 #include <ql/pricingengines/asian/fdblackscholesasianengine.hpp>
 #include <ql/processes/blackscholesprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -68,7 +73,7 @@ namespace QuantLib {
                  ? spot : arguments_.runningAccumulator/arguments_.pastFixings;
 
         const Real normInvEps = InverseCumulativeNormal()(1-0.0001);
-        const Real sigmaSqrtT 
+        const Real sigmaSqrtT
             = process_->blackVolatility()->blackVol(maturity, payoff->strike())
                                                         *std::sqrt(maturity);
         const Real r = sigmaSqrtT*normInvEps;

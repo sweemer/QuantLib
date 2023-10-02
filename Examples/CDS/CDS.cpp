@@ -43,8 +43,12 @@
 #include <ql/currencies/europe.hpp>
 #include <ql/quotes/simplequote.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <iomanip>
+#endif
 
 using namespace std;
 using namespace QuantLib;

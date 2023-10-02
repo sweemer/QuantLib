@@ -23,22 +23,27 @@
 #include <ql/models/shortrate/onefactormodel.hpp>
 #include <ql/stochasticprocess.hpp>
 #include <ql/termstructures/credit/hazardratestructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
-    
+
     /*! Survival probability term structure based on a one factor stochastic
     model of the default intensity.
     */
     /*
     While deriving from the hazard rate class the HRTS refers only to the
-    deterministic part of the model. The probabilities depend on this 
+    deterministic part of the model. The probabilities depend on this
     component and the stochastic part and are rewritten here.
-    Derived classes need to specify the deterministic part 
+    Derived classes need to specify the deterministic part
     of the hazard rate if any (the one returned by 'hazardRateImpl'). It
     is needed for the conditional/forward probabilities.
      */
-    class OneFactorAffineSurvivalStructure 
+    class OneFactorAffineSurvivalStructure
         : public HazardRateStructure {
     public:
         // implement remaining constructors.....
@@ -103,7 +108,7 @@ namespace QuantLib {
                                                  Real yVal,
                                                  bool extrapolate = false) const {
           return conditionalSurvivalProbability(timeFromReference(dFwd), timeFromReference(dTgt),
-                                                yVal, extrapolate); 
+                                                yVal, extrapolate);
         }
         Probability conditionalSurvivalProbability(
                 Time tFwd, Time tgt, Real yVal,
@@ -114,7 +119,7 @@ namespace QuantLib {
             #endif
             checkRange(tFwd, extrapolate);
             checkRange(tgt, extrapolate);
-            
+
             // \todo ADD JUMPS TREATMENT
 
             return conditionalSurvivalProbabilityImpl(tFwd, tgt, yVal);
@@ -142,15 +147,15 @@ namespace QuantLib {
           return 0.;
       }
 
-        ext::shared_ptr<OneFactorAffineModel> model_;        
+        ext::shared_ptr<OneFactorAffineModel> model_;
     };
-    
+
     inline Probability
         OneFactorAffineSurvivalStructure::survivalProbabilityImpl(
         Time t) const
     {
         Real initValHR =
-            model_->dynamics()->shortRate(0., 
+            model_->dynamics()->shortRate(0.,
                 model_->dynamics()->process()->x0());
 
         return model_->discountBond(0., t, initValHR);
@@ -162,10 +167,10 @@ namespace QuantLib {
         return model_->discountBond(tFwd, tgt, yVal);
     }
 
-    inline Real 
+    inline Real
         OneFactorAffineSurvivalStructure::defaultDensityImpl(Time t) const {
-        Real initValHR = 
-            model_->dynamics()->shortRate(0., 
+        Real initValHR =
+            model_->dynamics()->shortRate(0.,
                 model_->dynamics()->process()->x0());;
 
         return hazardRateImpl(t)*survivalProbabilityImpl(t) /

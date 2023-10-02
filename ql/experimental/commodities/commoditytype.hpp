@@ -26,10 +26,15 @@
 
 #include <ql/qldefines.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iosfwd>
 #include <map>
 #include <string>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

@@ -27,7 +27,12 @@
 #include <ql/pricingengines/asian/mc_discr_geom_av_price_heston.hpp>
 #include <ql/pricingengines/asian/mcdiscreteasianenginebase.hpp>
 #include <ql/processes/hestonprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

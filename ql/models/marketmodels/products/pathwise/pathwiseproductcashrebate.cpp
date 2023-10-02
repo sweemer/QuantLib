@@ -20,9 +20,14 @@
 #include <ql/models/marketmodels/curvestate.hpp>
 #include <ql/models/marketmodels/products/pathwise/pathwiseproductcashrebate.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
-#include <utility>
 
-namespace QuantLib 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
+
+namespace QuantLib
 {
 
 
@@ -54,28 +59,28 @@ namespace QuantLib
 
 
     std::vector<Time>
-    MarketModelPathwiseCashRebate::possibleCashFlowTimes() const 
+    MarketModelPathwiseCashRebate::possibleCashFlowTimes() const
     {
         return paymentTimes_;
     }
 
-    Size MarketModelPathwiseCashRebate::numberOfProducts() const 
+    Size MarketModelPathwiseCashRebate::numberOfProducts() const
     {
         return numberOfProducts_;
     }
 
-    Size MarketModelPathwiseCashRebate::maxNumberOfCashFlowsPerProductPerStep() const 
+    Size MarketModelPathwiseCashRebate::maxNumberOfCashFlowsPerProductPerStep() const
     {
         return 1;
     }
 
-    void MarketModelPathwiseCashRebate::reset() 
+    void MarketModelPathwiseCashRebate::reset()
     {
        currentIndex_=0;
     }
 
     std::vector<Size>
-    MarketModelPathwiseCashRebate::suggestedNumeraires() const 
+    MarketModelPathwiseCashRebate::suggestedNumeraires() const
     {
         QL_FAIL("not implemented (yet?)");
     }
@@ -89,9 +94,9 @@ namespace QuantLib
     bool MarketModelPathwiseCashRebate::nextTimeStep(
             const CurveState&,
             std::vector<Size>& numberCashFlowsThisStep,
-            std::vector<std::vector<MarketModelPathwiseMultiProduct::CashFlow> >& cashFlowsGenerated) 
+            std::vector<std::vector<MarketModelPathwiseMultiProduct::CashFlow> >& cashFlowsGenerated)
     {
-        for (Size i=0; i<numberOfProducts_; ++i) 
+        for (Size i=0; i<numberOfProducts_; ++i)
         {
             numberCashFlowsThisStep[i] = 1;
             cashFlowsGenerated[i][0].timeIndex = currentIndex_;
@@ -99,14 +104,14 @@ namespace QuantLib
 
             for (Size k=1; k <= evolution_.numberOfRates(); ++k)
                  cashFlowsGenerated[i][0].amount[k] = 0.0;
- 
+
         }
         ++currentIndex_;
         return true;
     }
 
     std::unique_ptr<MarketModelPathwiseMultiProduct>
-    MarketModelPathwiseCashRebate::clone() const 
+    MarketModelPathwiseCashRebate::clone() const
     {
         return std::unique_ptr<MarketModelPathwiseMultiProduct>(new MarketModelPathwiseCashRebate(*this));
     }

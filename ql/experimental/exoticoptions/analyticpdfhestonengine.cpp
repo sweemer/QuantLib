@@ -24,7 +24,12 @@
 #include <ql/experimental/exoticoptions/analyticpdfhestonengine.hpp>
 #include <ql/math/integrals/gausslobattointegral.hpp>
 #include <ql/methods/finitedifferences/utilities/hestonrndcalculator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -81,4 +86,3 @@ namespace QuantLib {
         return (payoff != 0.0) ? payoff*Pv(x_t, t)*rD : Real(0.0);
     }
 }
-

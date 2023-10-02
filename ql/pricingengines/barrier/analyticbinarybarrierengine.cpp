@@ -22,14 +22,19 @@
 #include <ql/math/distributions/normaldistribution.hpp>
 #include <ql/pricingengines/barrier/analyticbinarybarrierengine.hpp>
 #include <ql/pricingengines/vanilla/analyticeuropeanengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
-    // calc helper object 
+    // calc helper object
     class AnalyticBinaryBarrierEngine_helper
     {
-    
+
     public:
         AnalyticBinaryBarrierEngine_helper(
              const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
@@ -168,7 +173,7 @@ namespace QuantLib {
         ext::shared_ptr<AssetOrNothingPayoff> aoo =
             ext::dynamic_pointer_cast<AssetOrNothingPayoff>(payoff_);
         if (aoo != nullptr) {
-            mu += 1.0; 
+            mu += 1.0;
             K = spot * dividendDiscount / discount; // forward
         }
 
@@ -226,14 +231,14 @@ namespace QuantLib {
                   // down-in and call
                   if (strike >= barrier) {
                      // B3 (eta=1, phi=1)
-                     alpha = H_S_2mu * cum_y1;  
+                     alpha = H_S_2mu * cum_y1;
                   } else {
                      // B1-B2+B4 (eta=1, phi=1)
-                     alpha = cum_x1 - cum_x2 + H_S_2mu * cum_y2; 
+                     alpha = cum_x1 - cum_x2 + H_S_2mu * cum_y2;
                   }
                }
                else {
-                  // down-in and put 
+                  // down-in and put
                   if (strike >= barrier) {
                      // B2-B3+B4 (eta=1, phi=-1)
                      alpha = cum_x2 + H_S_2mu*(-cum_y1 + cum_y2);
@@ -249,20 +254,20 @@ namespace QuantLib {
                   // up-in and call
                   if (strike >= barrier) {
                      // B1 (eta=-1, phi=1)
-                     alpha = cum_x1;  
+                     alpha = cum_x1;
                   } else {
                      // B2-B3+B4 (eta=-1, phi=1)
                      alpha = cum_x2 + H_S_2mu * (-cum_y1 + cum_y2);
                   }
                }
                else {
-                  // up-in and put 
+                  // up-in and put
                   if (strike >= barrier) {
                      // B1-B2+B4 (eta=-1, phi=-1)
                      alpha = cum_x1 - cum_x2 + H_S_2mu * cum_y2;
                   } else {
                      // B3 (eta=-1, phi=-1)
-                     alpha = H_S_2mu * cum_y1;  
+                     alpha = H_S_2mu * cum_y1;
                   }
                }
                break;
@@ -272,20 +277,20 @@ namespace QuantLib {
                   // down-out and call
                   if (strike >= barrier) {
                      // B1-B3 (eta=1, phi=1)
-                     alpha = cum_x1 - H_S_2mu * cum_y1; 
+                     alpha = cum_x1 - H_S_2mu * cum_y1;
                   } else {
                      // B2-B4 (eta=1, phi=1)
-                     alpha = cum_x2 - H_S_2mu * cum_y2; 
+                     alpha = cum_x2 - H_S_2mu * cum_y2;
                   }
                }
                else {
-                  // down-out and put 
+                  // down-out and put
                   if (strike >= barrier) {
                      // B1-B2+B3-B4 (eta=1, phi=-1)
                      alpha = cum_x1 - cum_x2 + H_S_2mu * (cum_y1-cum_y2);
                   } else {
                      // always 0
-                     alpha = 0;  
+                     alpha = 0;
                   }
                }
                break;
@@ -294,14 +299,14 @@ namespace QuantLib {
                   // up-out and call
                   if (strike >= barrier) {
                      // always 0
-                     alpha = 0;  
+                     alpha = 0;
                   } else {
                      // B1-B2+B3-B4 (eta=-1, phi=1)
                      alpha = cum_x1 - cum_x2 + H_S_2mu * (cum_y1-cum_y2);
                   }
                }
                else {
-                  // up-out and put 
+                  // up-out and put
                   if (strike >= barrier) {
                      // B2-B4 (eta=-1, phi=-1)
                      alpha = cum_x2 - H_S_2mu * cum_y2;
@@ -321,4 +326,3 @@ namespace QuantLib {
 
 
 }
-

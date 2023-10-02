@@ -32,9 +32,14 @@
 #include <ql/time/date.hpp>
 #include <ql/time/businessdayconvention.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <set>
 #include <vector>
 #include <string>
+#endif
 
 namespace QuantLib {
 
@@ -92,7 +97,7 @@ namespace QuantLib {
 
         /*! Returns the set of added holidays for the given calendar */
         const std::set<Date>& addedHolidays() const;
-        
+
         /*! Returns the set of removed holidays for the given calendar */
         const std::set<Date>& removedHolidays() const;
 

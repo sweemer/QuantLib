@@ -19,7 +19,12 @@
 */
 
 #include <ql/pricingengines/vanilla/discretizedvanillaoption.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -77,4 +82,3 @@ namespace QuantLib {
     }
 
 }
-

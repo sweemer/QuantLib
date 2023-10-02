@@ -29,7 +29,12 @@
 #include <ql/math/randomnumbers/mt19937uniformrng.hpp>
 #include <ql/math/optimization/problem.hpp>
 #include <ql/math/optimization/constraint.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 namespace QuantLib {
 

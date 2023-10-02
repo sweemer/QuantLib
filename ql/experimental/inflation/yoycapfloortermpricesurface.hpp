@@ -29,7 +29,12 @@
 #include <ql/termstructures/inflation/piecewiseyoyinflationcurve.hpp>
 #include <ql/termstructures/inflation/inflationhelpers.hpp>
 #include <ql/experimental/inflation/polynomial2Dspline.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 namespace QuantLib {
 

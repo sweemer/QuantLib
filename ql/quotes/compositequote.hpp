@@ -28,7 +28,12 @@
 #include <ql/handle.hpp>
 #include <ql/quote.hpp>
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

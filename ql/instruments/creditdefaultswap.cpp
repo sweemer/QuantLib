@@ -32,7 +32,12 @@
 #include <ql/time/calendars/weekendsonly.hpp>
 #include <ql/time/schedule.hpp>
 #include <ql/optional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -133,7 +138,7 @@ namespace QuantLib {
         // Set the maturity date.
         maturity_ = schedule.dates().back();
 
-        // Deal with the accrual rebate. We use the standard conventions for accrual calculation introduced with the 
+        // Deal with the accrual rebate. We use the standard conventions for accrual calculation introduced with the
         // CDS Big Bang in 2009.
         if (rebatesAccrual) {
 

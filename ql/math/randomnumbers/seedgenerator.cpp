@@ -18,7 +18,13 @@
 */
 
 #include <ql/math/randomnumbers/seedgenerator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <ctime>
+#endif
+
 #if defined(BOOST_NO_STDC_NAMESPACE)
     namespace std { using ::time; }
 #endif

@@ -27,8 +27,12 @@
 #include <ql/methods/finitedifferences/operators/fdmlinearoplayout.hpp>
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
     namespace {
@@ -109,4 +113,3 @@ namespace QuantLib {
         results_.value = stepCondition->maxValue(state);
     }
 }
-

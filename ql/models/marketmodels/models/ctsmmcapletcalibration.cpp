@@ -27,7 +27,12 @@
 #include <ql/models/marketmodels/models/pseudorootfacade.hpp>
 #include <ql/models/marketmodels/swapforwardmappings.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

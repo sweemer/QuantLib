@@ -63,9 +63,14 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/termstructures/volatility/abcdcalibration.hpp>
 #include <ql/math/optimization/simplex.hpp>
 #include <ql/quotes/simplequote.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <sstream>
 #include <iostream>
 #include <ctime>
+#endif
 
 using namespace QuantLib;
 

@@ -25,7 +25,12 @@
 #define quantlib_math_independent_copula_h
 
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <functional>
+#endif
 
 namespace QuantLib {
 
@@ -52,7 +57,7 @@ namespace QuantLib {
 
         Real operator()(Real x, Real y) const;
     };
-    
+
 }
 
 #endif

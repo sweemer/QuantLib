@@ -32,7 +32,12 @@
 #include <ql/quote.hpp>
 #include <ql/termstructures/credit/probabilitytraits.hpp>
 #include <ql/termstructures/iterativebootstrap.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

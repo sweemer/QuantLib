@@ -31,7 +31,12 @@
 #include <ql/experimental/math/polarstudenttrng.hpp>
 #include <ql/handle.hpp>
 #include <ql/quote.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 /*! \file latentmodel.hpp
     \brief Generic multifactor latent variable model.
@@ -48,9 +53,9 @@ namespace QuantLib {
             QL_DEPRECATED
             typedef std::vector<Real> result_type;
 
-            std::vector<Real> operator()(Real d, std::vector<Real> v) 
+            std::vector<Real> operator()(Real d, std::vector<Real> v)
             {
-                std::transform(v.begin(), v.end(), v.begin(), 
+                std::transform(v.begin(), v.end(), v.begin(),
                                [=](Real x) -> Real { return x * d; });
                 return v;
             }
@@ -60,11 +65,11 @@ namespace QuantLib {
     //! \name Latent model direct integration facility.
     //@{
     /* Things trying to achieve here:
-    1.- Unify the two branches of integrators in the library, they do not 
-      hang from a common base class and here a common ptr for the 
+    1.- Unify the two branches of integrators in the library, they do not
+      hang from a common base class and here a common ptr for the
       factory is needed.
     2.- Have a common signature for the integration call.
-    3.- Factory construction so integrable latent models can choose the 
+    3.- Factory construction so integrable latent models can choose the
       integration algorithm separately.
     */
     class LMIntegration {
@@ -75,9 +80,9 @@ namespace QuantLib {
             const std::vector<Real>& arg)>& f) const = 0;
         // integral of a vector function
         /* I had to use a different name, since the compiler does not
-        recognise the overload; MSVC sees the argument as 
-        ext::function<Signature> in both cases....   
-        I could do the as with the quadratures and have this as a template 
+        recognise the overload; MSVC sees the argument as
+        ext::function<Signature> in both cases....
+        I could do the as with the quadratures and have this as a template
         function and spez for the vector case but I prefer to understand
         why the overload fails....
                     FIX ME
@@ -92,17 +97,17 @@ namespace QuantLib {
 
     //CRTP-ish for joining the integrations, class above to have the factory
     template <class I_T>
-    class IntegrationBase : 
+    class IntegrationBase :
         public I_T, public LMIntegration {// diamond on 'integrate'
      // this class template always to be fully specialized:
      private:
        IntegrationBase() = default;
     };
     //@}
-    
+
     // gcc reports value collision with heston engine (?!) thats why the name
     namespace LatentModelIntegrationType {
-        typedef 
+        typedef
         enum LatentModelIntegrationType {
             #ifndef QL_PATCH_SOLARIS
             GaussianQuadrature,
@@ -117,10 +122,10 @@ namespace QuantLib {
     /* class template specializations. I havent use CRTP type cast directly
     because the signature of the integrators is different, grid integration
     needs the domain. */
-    template<> class IntegrationBase<GaussianQuadMultidimIntegrator> : 
+    template<> class IntegrationBase<GaussianQuadMultidimIntegrator> :
     public GaussianQuadMultidimIntegrator, public LMIntegration {
     public:
-        IntegrationBase(Size dimension, Size order) 
+        IntegrationBase(Size dimension, Size order)
         : GaussianQuadMultidimIntegrator(dimension, order) {}
         Real integrate(const ext::function<Real(const std::vector<Real>& arg)>& f) const override {
             return GaussianQuadMultidimIntegrator::integrate<Real>(f);
@@ -135,13 +140,13 @@ namespace QuantLib {
 
     #endif
 
-    template<> class IntegrationBase<MultidimIntegral> : 
+    template<> class IntegrationBase<MultidimIntegral> :
         public MultidimIntegral, public LMIntegration {
     public:
         IntegrationBase(
-            const std::vector<ext::shared_ptr<Integrator> >& integrators, 
-            Real a, Real b) 
-        : MultidimIntegral(integrators), 
+            const std::vector<ext::shared_ptr<Integrator> >& integrators,
+            Real a, Real b)
+        : MultidimIntegral(integrators),
           a_(integrators.size(),a), b_(integrators.size(),b) {}
         Real integrate(const ext::function<Real(const std::vector<Real>& arg)>& f) const override {
             return MultidimIntegral::operator()(f, a_, b_);
@@ -155,69 +160,69 @@ namespace QuantLib {
 
     /*!
     \brief Generic multifactor latent variable model.\par
-        In this model set up one considers latent (random) variables 
+        In this model set up one considers latent (random) variables
         \f$ Y_i \f$ described by:
         \f[
         \begin{array}{ccccc}
-        Y_1 & = & \sum_k M_k a_{1,k} & + \sqrt{1-\sum_k a_{1,k}^2} Z_1 & 
+        Y_1 & = & \sum_k M_k a_{1,k} & + \sqrt{1-\sum_k a_{1,k}^2} Z_1 &
             \sim \Phi_{Y_1}\nonumber \\
         ... & = &      ... & ...   & \nonumber \\
-        Y_i & = & \sum_k M_k a_{i,k} & + \sqrt{1-\sum_k a_{i,k}^2} Z_i & 
+        Y_i & = & \sum_k M_k a_{i,k} & + \sqrt{1-\sum_k a_{i,k}^2} Z_i &
             \sim \Phi_{Y_i}\nonumber \\
         ... & = &      ... & ...   & \nonumber \\
-        Y_N & = & \sum_k M_k a_{N,k} & + \sqrt{1-\sum_k a_{N,k}^2} Z_N & 
+        Y_N & = & \sum_k M_k a_{N,k} & + \sqrt{1-\sum_k a_{N,k}^2} Z_N &
             \sim \Phi_{Y_N}
         \end{array}
         \f]
-        where the systemic \f$ M_k \f$ and idiosyncratic \f$ Z_i \f$ (this last 
-        one known as error term in some contexts) random variables have 
-        independent zero-mean unit-variance distributions. A restriction of the 
-        model implemented here is that the N idiosyncratic variables all follow 
-        the same probability law \f$ \Phi_Z(z)\f$ (but they are still 
-        independent random variables) Also the model is normalized 
-        so that: \f$-1\leq a_{i,k} \leq 1\f$ (technically the \f$Y_i\f$ are 
-        convex linear combinations). The correlation between \f$Y_i\f$ and 
-        \f$Y_j\f$ is then \f$\sum_k a_{i,k} a_{j,k}\f$. 
-        \f$\Phi_{Y_i}\f$ denotes the cumulative distribution function of 
+        where the systemic \f$ M_k \f$ and idiosyncratic \f$ Z_i \f$ (this last
+        one known as error term in some contexts) random variables have
+        independent zero-mean unit-variance distributions. A restriction of the
+        model implemented here is that the N idiosyncratic variables all follow
+        the same probability law \f$ \Phi_Z(z)\f$ (but they are still
+        independent random variables) Also the model is normalized
+        so that: \f$-1\leq a_{i,k} \leq 1\f$ (technically the \f$Y_i\f$ are
+        convex linear combinations). The correlation between \f$Y_i\f$ and
+        \f$Y_j\f$ is then \f$\sum_k a_{i,k} a_{j,k}\f$.
+        \f$\Phi_{Y_i}\f$ denotes the cumulative distribution function of
         \f$Y_i\f$ which in general differs for each latent variable.\par
         In its single factor set up this model is usually employed in derivative
-        pricing and it is best to use it through integration of the desired 
+        pricing and it is best to use it through integration of the desired
         statistical properties of the model; in its multifactorial version (with
         typically around a dozen factors) it is used in the context of portfolio
         risk metrics; because of the number of variables it is best to opt for a
-        simulation to compute model properties/magnitudes. 
-        For this reason this class template provides a random factor sample 
-        interface and an integration interface that will be instantiated by 
-        derived concrete models as needed. The class is neutral on the 
+        simulation to compute model properties/magnitudes.
+        For this reason this class template provides a random factor sample
+        interface and an integration interface that will be instantiated by
+        derived concrete models as needed. The class is neutral on the
         integration and random generation algorithms\par
-        The latent variables are typically treated as unobservable magnitudes 
-        and they serve to model one or several magnitudes related to them 
+        The latent variables are typically treated as unobservable magnitudes
+        and they serve to model one or several magnitudes related to them
         through some function
         \f[
         \begin{array}{ccc}
-        F_i(Y_i) & = & 
+        F_i(Y_i) & = &
             F_i(\sum_k M_k a_{i,k} + \sqrt{1-\sum_k a_{i,k}^2} Z_i )\nonumber \\
         & = & F_i(M_1,..., M_k, ..., M_K, Z_i)
         \end{array}
         \f]
-        The transfer function can have a more generic form: 
-        \f$F_i(Y_1,....,Y_N)\f$ but here the model is restricted to a one to 
-        one relation between the latent variables and the modelled ones. Also 
-        it is assumed that \f$F_i(y_i; \tau)\f$ is monotonic in \f$y_i\f$; it 
-        can then be inverted and the relation of the cumulative probability of 
+        The transfer function can have a more generic form:
+        \f$F_i(Y_1,....,Y_N)\f$ but here the model is restricted to a one to
+        one relation between the latent variables and the modelled ones. Also
+        it is assumed that \f$F_i(y_i; \tau)\f$ is monotonic in \f$y_i\f$; it
+        can then be inverted and the relation of the cumulative probability of
         \f$F_i\f$ and \f$Y_i\f$ is simple:
         \f[
-        \int_{\infty}^b \phi_{F_i} df = 
+        \int_{\infty}^b \phi_{F_i} df =
             \int_{\infty}^{F_i^{-1}(b)} \phi_{Y_i} dy
         \f]
-        If  \f$t\f$ is some value of the functional or modelled variable, 
-        \f$y\f$ is mapped to \f$t\f$ such that percentiles match, i.e. 
+        If  \f$t\f$ is some value of the functional or modelled variable,
+        \f$y\f$ is mapped to \f$t\f$ such that percentiles match, i.e.
         \f$F_Y(y)=Q_i(t)\f$ or \f$y=F_Y^{-1}(Q_i(t))\f$.
-        The class provides an integration facility of arbitrary functions 
+        The class provides an integration facility of arbitrary functions
         dependent on the model states. It also provides random number generation
         interfaces for usage of the model in monte carlo simulations.\par
-        Now let \f$\Phi_Z(z)\f$ be the cumulated distribution function of (all 
-        equal as mentioned) \f$Z_i\f$. For a given realization of \f$M_k\f$, 
+        Now let \f$\Phi_Z(z)\f$ be the cumulated distribution function of (all
+        equal as mentioned) \f$Z_i\f$. For a given realization of \f$M_k\f$,
         this determines the distribution of \f$y\f$:
         \f[
         Prob \,(Y_i < y|M_k) = \Phi_Z \left( \frac{y-\sum_k a_{i,k}\,M_k}
@@ -231,13 +236,13 @@ namespace QuantLib {
         \right)
         \f]
         The distribution functions of \f$ M_k, Z_i \f$ are specified in
-        specific copula template classes. The distribution function 
+        specific copula template classes. The distribution function
         of \f$ Y_i \f$ is then given by the convolution
         \f[
-        F_{Y_{i}}(y) = Prob\,(Y_i<y) = 
+        F_{Y_{i}}(y) = Prob\,(Y_i<y) =
         \int_{-\infty}^\infty\,\cdots\,\int_{-\infty}^{\infty}\:
         D_Z(z)\,\prod_k D_{M_{k}}(m_k) \quad
-        \Theta \left(y - \sum_k a_{i,k}m_k - 
+        \Theta \left(y - \sum_k a_{i,k}m_k -
             \sqrt{1-\sum_k a_{i,k}^2}\,z\right)\,d\bar{m}\,dz,
         \qquad
         \Theta (x) = \left\{
@@ -251,38 +256,38 @@ namespace QuantLib {
         This convolution can also be written
         \f[
         F_{Y_{i}}(y) = Prob \,(Y_i < y) =
-        \int_{-\infty}^\infty\,\cdots\,\int_{-\infty}^{\infty} 
+        \int_{-\infty}^\infty\,\cdots\,\int_{-\infty}^{\infty}
             D_{M_{k}}(m_k)\,dm_k\:
         \int_{-\infty}^{g(y,\vec{a},\vec{m})} D_Z(z)\,dz, \qquad
         g(y,\vec{a},\vec{m}) = \frac{y - \sum_k a_{i,k}m_k}
             {\sqrt{1-\sum_k a_{i,k}^2}}, \qquad \sum_k a_{i,k}^2 < 1
         \f]
         In general, \f$ F_{Y_{i}}(y) \f$ needs to be computed numerically.\par
-        The policy class template separates the copula function (the 
-        distributions involved) and the functionality (i.e. what the latent  
-        model represents: a default probability, a recovery...). Since the  
-        copula methods for the 
-        probabilities are to be called repeatedly from an integration or a MC 
-        simulation, virtual tables are avoided and template parameter mechnics 
+        The policy class template separates the copula function (the
+        distributions involved) and the functionality (i.e. what the latent
+        model represents: a default probability, a recovery...). Since the
+        copula methods for the
+        probabilities are to be called repeatedly from an integration or a MC
+        simulation, virtual tables are avoided and template parameter mechnics
         is preferred.\par
-        There is nothing at this level enforncing the requirement 
-        on the factor distributions to be of zero mean and unit variance. Thats 
-        the user responsibility and the model fails to behave correctly if it 
+        There is nothing at this level enforncing the requirement
+        on the factor distributions to be of zero mean and unit variance. Thats
+        the user responsibility and the model fails to behave correctly if it
         is not the case.\par
-        Derived classes should implement a modelled magnitude (default time, 
+        Derived classes should implement a modelled magnitude (default time,
         etc) and will provide probability distributions and conditional values.
-        They could also provide functionality for the parameter inversion 
-        problem, the (e.g.) time at which the modeled variable first takes a 
-        given value. This problem has solution/sense depending on the transfer 
+        They could also provide functionality for the parameter inversion
+        problem, the (e.g.) time at which the modeled variable first takes a
+        given value. This problem has solution/sense depending on the transfer
         function \f$F_i(Y_i)\f$ characteristics.
 
-        To make direct integration and simulation time efficient virtual 
-        functions have been avoided in accessing methods in the copula policy 
+        To make direct integration and simulation time efficient virtual
+        functions have been avoided in accessing methods in the copula policy
         and in the sampling of the random factors
     */
     template <class copulaPolicyImpl>
-    class LatentModel 
-        : public virtual Observer , public virtual Observable 
+    class LatentModel
+        : public virtual Observer , public virtual Observable
     {//observer if factors as quotes
     public:
       void update() override;
@@ -302,7 +307,7 @@ namespace QuantLib {
         //! Density function of M, the market/systemic factors.
         Probability density(const std::vector<Real>& m) const {
             #if defined(QL_EXTRA_SAFETY_CHECKS)
-                QL_REQUIRE(m.size() == nFactors_, 
+                QL_REQUIRE(m.size() == nFactors_,
                     "Factor size must match that of model.");
             #endif
             return copula_.density(m);
@@ -311,18 +316,18 @@ namespace QuantLib {
         Real inverseCumulativeDensity(Probability p, Size iFactor) const {
             return copula_.inverseCumulativeDensity(p, iFactor);
         }
-        /*! Inverse cumulative value of the i-th random latent variable with a 
+        /*! Inverse cumulative value of the i-th random latent variable with a
          given probability. */
         Real inverseCumulativeY(Probability p, Size iVariable) const {
             return copula_.inverseCumulativeY(p, iVariable);
         }
-        /*! Inverse cumulative value of the idiosyncratic variable with a given 
+        /*! Inverse cumulative value of the idiosyncratic variable with a given
         probability. */
         Real inverseCumulativeZ(Probability p) const {
             return copula_.inverseCumulativeZ(p);
         }
         /*! All factor cumulative inversion. Used in integrations and sampling.
-            Inverts all the cumulative random factors probabilities in the 
+            Inverts all the cumulative random factors probabilities in the
             model. These are all the systemic factors plus all the idiosyncratic
             ones, so the size of the inversion is the number of systemic factors
             plus the number of latent modelled variables*/
@@ -340,10 +345,10 @@ namespace QuantLib {
             i.e. all the idiosyncratic values are expected to be
             present even if only the relevant one is used.
         */
-        Real latentVarValue(const std::vector<Real>& allFactors, 
-                            Size iVar) const 
+        Real latentVarValue(const std::vector<Real>& allFactors,
+                            Size iVar) const
         {
-            return std::inner_product(factorWeights_[iVar].begin(), 
+            return std::inner_product(factorWeights_[iVar].begin(),
                 // systemic term:
                 factorWeights_[iVar].end(), allFactors.begin(),
                 // idiosyncratic term:
@@ -359,73 +364,73 @@ namespace QuantLib {
     //  protected:
         //! \name Latent model random factor number generator facility.
         //@{
-        /*!  Allows generation or random samples of the latent variable. 
+        /*!  Allows generation or random samples of the latent variable.
 
-            Generates samples of all the factors in the latent model according 
-            to the given copula as random sequence. The default implementation 
-            given uses the inversion in the copula policy (which must be 
+            Generates samples of all the factors in the latent model according
+            to the given copula as random sequence. The default implementation
+            given uses the inversion in the copula policy (which must be
             present).
-            USNG is expected to be a uniform sequence generator in the default 
-            implementation. 
+            USNG is expected to be a uniform sequence generator in the default
+            implementation.
         */
         /*
             Several (very different) usages make the spez non trivial
-            The final goal is to obtain a sequence generator of the factor 
+            The final goal is to obtain a sequence generator of the factor
             samples, several routes are possible depending on the algorithms:
-            
-            1.- URNG -> Sequence Gen -> CopulaInversion  
+
+            1.- URNG -> Sequence Gen -> CopulaInversion
               e.g.: CopulaInversion(RandomSequenceGenerator<MersenneTwisterRNG>)
             2.- PseudoRSG ------------> CopulaInversion
               e.g.: CopulaInversion(SobolRSG)
-            3.- URNG -> SpecificMapping -> Sequence Gen  (bypasses the copula 
+            3.- URNG -> SpecificMapping -> Sequence Gen  (bypasses the copula
                 for performance)
               e.g.: RandomSequenceGenerator<BoxMullerGaussianRng<
-                MersenneTwisterRNG> > 
-            
-            Notice that the order the three algorithms involved (uniform gen, 
+                MersenneTwisterRNG> >
+
+            Notice that the order the three algorithms involved (uniform gen,
             sequence construction, distribution mapping) is not always the same.
-            (in fact there could be some other ways to generate but these are 
+            (in fact there could be some other ways to generate but these are
             the ones in the library now.)
             Difficulties arise when wanting to use situation 3.- whith a generic
             RNG, leaving it unspecified
-            
+
             Derived classes might specialize (on the copula
-            type) to another type of generator if a more efficient algorithm 
-            that the distribution inversion is available; rewritig then the 
+            type) to another type of generator if a more efficient algorithm
+            that the distribution inversion is available; rewritig then the
             nextSequence method for a particular copula implementation.
-            Some combinations of generators might make no sense, while it 
+            Some combinations of generators might make no sense, while it
             could be possible to block template classes corresponding to those
             cases its not done (yet?) (e.g. a BoxMuller under a TCopula.)
-            Dimensionality coherence (between the generator and the copula) 
+            Dimensionality coherence (between the generator and the copula)
             should have been checked by the client code.
             In multithread usage the sequence generator is expect to be already
             in position.
-            To sample the latent variable itself users should call 
+            To sample the latent variable itself users should call
             LatentModel::latentVarValue with these samples.
         */
         // Cant use InverseCumulativeRsg since the inverse there has to return a
         //   real number and here a vector is needed, the function inverted here
         //   is multivalued.
-        template <class USNG, 
-            // dummy template parameter to allow for 'full' specialization of 
+        template <class USNG,
+            // dummy template parameter to allow for 'full' specialization of
             // inner class without specialization of the outer.
             bool = true>
         class FactorSampler {
         public:
             typedef Sample<std::vector<Real> > sample_type;
-            explicit FactorSampler(const copulaType& copula, 
-                BigNatural seed = 0) 
+            explicit FactorSampler(const copulaType& copula,
+                BigNatural seed = 0)
             : sequenceGen_(copula.numFactors(), seed), // base case construction
               x_(std::vector<Real>(copula.numFactors()), 1.0),
               copula_(copula) { }
-            /*! Returns a sample of the factor set \f$ M_k\,Z_i\f$. 
-            This method has the vocation of being specialized at particular 
-            types of the copula with a more efficient inversion to generate the 
+            /*! Returns a sample of the factor set \f$ M_k\,Z_i\f$.
+            This method has the vocation of being specialized at particular
+            types of the copula with a more efficient inversion to generate the
             random variables modelled (e.g. Box-Muller for a gaussian).
-            Here a default implementation is provided based directly on the 
+            Here a default implementation is provided based directly on the
             inversion of the cumulative distribution from the copula.
             Care has to be taken in potential specializations that the generator
-            algorithm is compatible with an eventual concurrence of the 
+            algorithm is compatible with an eventual concurrence of the
             simulations.
              */
             const sample_type& nextSequence() const {
@@ -442,18 +447,18 @@ namespace QuantLib {
         };
         //@}
     protected:
-        /* \todo Move integrator traits like number of quadrature points, 
-        integration domain dimensions, etc to the copula through a static 
-        member function. Since they depend on the nature of the probability 
+        /* \todo Move integrator traits like number of quadrature points,
+        integration domain dimensions, etc to the copula through a static
+        member function. Since they depend on the nature of the probability
         density distribution thats where they belong.
-        This is why theres one factory per copula policy template parameter 
+        This is why theres one factory per copula policy template parameter
         (even if this is not used...yet)
         */
         class IntegrationFactory {
         public:
             static ext::shared_ptr<LMIntegration> createLMIntegration(
-                Size dimension, 
-                LatentModelIntegrationType::LatentModelIntegrationType type = 
+                Size dimension,
+                LatentModelIntegrationType::LatentModelIntegrationType type =
                     #ifndef QL_PATCH_SOLARIS
                     LatentModelIntegrationType::GaussianQuadrature)
                     #else
@@ -463,7 +468,7 @@ namespace QuantLib {
                 switch(type) {
                     #ifndef QL_PATCH_SOLARIS
                     case LatentModelIntegrationType::GaussianQuadrature:
-                        return 
+                        return
                             ext::make_shared<
                             IntegrationBase<GaussianQuadMultidimIntegrator> >(
                                 dimension, 25);
@@ -475,17 +480,17 @@ namespace QuantLib {
                             integrals.push_back(
                             ext::make_shared<TrapezoidIntegral<Default> >(
                                 1.e-4, 20));
-                        /* This integration domain is tailored for the T 
+                        /* This integration domain is tailored for the T
                         distribution; it is too wide for normals or Ts of high
-                        order. 
-                        \todo This needs to be solved by having the copula to 
-                        provide the integration traits for any integration 
+                        order.
+                        \todo This needs to be solved by having the copula to
+                        provide the integration traits for any integration
                         algorithm since it is the copula that knows the relevant
                         domain for its density distributions. Also to be able to
-                        block integrations which will fail; like a quadrature  
+                        block integrations which will fail; like a quadrature
                         here in some cases.
                         */
-                        return 
+                        return
                           ext::make_shared<IntegrationBase<MultidimIntegral> >
                                (integrals, -35., 35.);
                         }
@@ -510,28 +515,28 @@ namespace QuantLib {
         /*! Constructs a LM with an arbitrary number of latent variables
           and factors given by the dimensions of the passed matrix.
             @param factorsWeights Ordering is factorWeights_[iVar][iFactor]
-            @param ini Initialization variables. Trait type from the copula 
-              policy to allow for static policies (this solution needs to be 
-              revised, possibly drop the static policy and create a policy 
+            @param ini Initialization variables. Trait type from the copula
+              policy to allow for static policies (this solution needs to be
+              revised, possibly drop the static policy and create a policy
               member in LatentModel)
         */
         explicit LatentModel(
-            const std::vector<std::vector<Real> >& factorsWeights, 
-            const typename copulaType::initTraits& ini = 
+            const std::vector<std::vector<Real> >& factorsWeights,
+            const typename copulaType::initTraits& ini =
                 copulaType::initTraits());
-        /*! Constructs a LM with an arbitrary number of latent variables 
+        /*! Constructs a LM with an arbitrary number of latent variables
           depending only on one random factor but contributing to each latent
           variable through different weights.
             @param factorsWeight Ordering is factorWeights_[iVariable]
-            @param ini Initialization variables. Trait type from the copula 
-              policy to allow for static policies (this solution needs to be 
-              revised, possibly drop the static policy and create a policy 
+            @param ini Initialization variables. Trait type from the copula
+              policy to allow for static policies (this solution needs to be
+              revised, possibly drop the static policy and create a policy
               member in LatentModel)
         */
         explicit LatentModel(const std::vector<Real>& factorsWeight,
-            const typename copulaType::initTraits& ini = 
+            const typename copulaType::initTraits& ini =
                 copulaType::initTraits());
-        /*! Constructs a LM with an arbitrary number of latent variables 
+        /*! Constructs a LM with an arbitrary number of latent variables
           depending only on one random factor with the same weight for all
           latent variables.
 
@@ -545,7 +550,7 @@ namespace QuantLib {
         explicit LatentModel(Real correlSqr,
                              Size nVariables,
                              const typename copulaType::initTraits& ini = copulaType::initTraits());
-        /*! Constructs a LM with an arbitrary number of latent variables 
+        /*! Constructs a LM with an arbitrary number of latent variables
           depending only on one random factor with the same weight for all
           latent variables. The weight is observed and this constructor is
           intended to be used when the model relates to a market value.
@@ -559,10 +564,10 @@ namespace QuantLib {
         */
         explicit LatentModel(const Handle<Quote>& singleFactorCorrel,
             Size nVariables,
-            const typename copulaType::initTraits& ini = 
+            const typename copulaType::initTraits& ini =
                 copulaType::initTraits());
 
-        //! Provides values of the factors \f$ a_{i,k} \f$ 
+        //! Provides values of the factors \f$ a_{i,k} \f$
         const std::vector<std::vector<Real> >& factorWeights() const {
             return factorWeights_;
         }
@@ -572,10 +577,10 @@ namespace QuantLib {
         //! Latent variable correlations:
         Real latentVariableCorrel(Size iVar1, Size iVar2) const {
             // true for any normalized combination
-            Real init = (iVar1 == iVar2 ? 
+            Real init = (iVar1 == iVar2 ?
                 idiosyncFctrs_[iVar1] * idiosyncFctrs_[iVar1] : Real(0.));
-            return std::inner_product(factorWeights_[iVar1].begin(), 
-                factorWeights_[iVar1].end(), factorWeights_[iVar2].begin(), 
+            return std::inner_product(factorWeights_[iVar1].begin(),
+                factorWeights_[iVar1].end(), factorWeights_[iVar2].begin(),
                     init);
         }
         //! \name Integration facility interface
@@ -585,7 +590,7 @@ namespace QuantLib {
         */
         Real integratedExpectedValue(
             const ext::function<Real(const std::vector<Real>& v1)>& f) const {
-            // function composition: composes the integrand with the density 
+            // function composition: composes the integrand with the density
             //   through a product.
             return integration()->integrate(
                 [&](const std::vector<Real>& x){ return copula_.density(x) * f(x); });
@@ -603,8 +608,8 @@ namespace QuantLib {
         }
     protected:
         // Integrable models must provide their integrator.
-        // Arguable, not having the integration in the LM class saves that 
-        //   memory but have an entry in the VT... 
+        // Arguable, not having the integration in the LM class saves that
+        //   memory but have an entry in the VT...
         virtual const ext::shared_ptr<LMIntegration>& integration() const {
             QL_FAIL("Integration non implemented in Latent model.");
         }
@@ -612,29 +617,29 @@ namespace QuantLib {
 
         // Ordering is: factorWeights_[iVariable][iFactor]
         mutable std::vector<std::vector<Real> > factorWeights_;
-        /* This is a duplicated value from the data above chosen for memory 
+        /* This is a duplicated value from the data above chosen for memory
         reasons.
-        I have opted for this one value redundant memory rather than have the 
-        memory load of the observable in all factors. Typically Latent models 
-        are used in two very different ways: with many factors and not linked 
-        to a market observable (typical matrix size above is of tens of 
-        thousands entries) or with just one observable value and the matrix is 
-        just a scalar. Otherwise, to remove the redundancy, the matrix 
+        I have opted for this one value redundant memory rather than have the
+        memory load of the observable in all factors. Typically Latent models
+        are used in two very different ways: with many factors and not linked
+        to a market observable (typical matrix size above is of tens of
+        thousands entries) or with just one observable value and the matrix is
+        just a scalar. Otherwise, to remove the redundancy, the matrix
         factorWeights_ should be one of Quotes Handles.
-        Yet it is not entirely true that quotes might be used only in pricing, 
+        Yet it is not entirely true that quotes might be used only in pricing,
         think sensitivity analysis....
         \todo Reconsider this, see how expensive truly is.
         */
         mutable Handle<Quote> cachedMktFactor_;
 
         // updated only by correlation observability and constructors.
-        // \sqrt{1-\sum_k \beta_{i,k}^2} the addition being along the factors. 
+        // \sqrt{1-\sum_k \beta_{i,k}^2} the addition being along the factors.
         // It has therefore the size of the basket. Cached for perfomance
         mutable std::vector<Real> idiosyncFctrs_;
         //! Number of systemic factors.
         mutable Size nFactors_;//matches idiosyncFctrs_[0].size();i=0 or any
         //! Number of latent model variables, idiosyncratic terms or model dim
-        mutable Size nVariables_;// matches idiosyncFctrs_.size() 
+        mutable Size nVariables_;// matches idiosyncFctrs_.size()
 
         mutable copulaType copula_;
     };
@@ -651,16 +656,16 @@ namespace QuantLib {
         const std::vector<std::vector<Real> >& factorWeights,
         const typename Impl::initTraits& ini)
     : factorWeights_(factorWeights),
-      nFactors_(factorWeights[0].size()), 
+      nFactors_(factorWeights[0].size()),
       nVariables_(factorWeights.size()), copula_(factorWeights, ini)
     {
         for(Size i=0; i<factorWeights.size(); i++) {
             idiosyncFctrs_.push_back(std::sqrt(1.-
-                    std::inner_product(factorWeights[i].begin(), 
-                factorWeights[i].end(), 
+                    std::inner_product(factorWeights[i].begin(),
+                factorWeights[i].end(),
                 factorWeights[i].begin(), Real(0.))));
             // while at it, check sizes are coherent:
-            QL_REQUIRE(factorWeights[i].size() == nFactors_, 
+            QL_REQUIRE(factorWeights[i].size() == nFactors_,
                 "Name " << i << " provides a different number of factors");
         }
     }
@@ -686,9 +691,9 @@ namespace QuantLib {
         Size nVariables,
         const typename Impl::initTraits& ini)
     : factorWeights_(nVariables, std::vector<Real>(1, correlSqr)),
-      idiosyncFctrs_(nVariables, 
+      idiosyncFctrs_(nVariables,
         std::sqrt(1.-correlSqr*correlSqr)),
-      nFactors_(1), 
+      nFactors_(1),
       nVariables_(nVariables),
       copula_(factorWeights_, ini)
     { }
@@ -698,12 +703,12 @@ namespace QuantLib {
         const Handle<Quote>& singleFactorCorrel,
         Size nVariables,
         const typename Impl::initTraits& ini)
-    : factorWeights_(nVariables, std::vector<Real>(1, 
+    : factorWeights_(nVariables, std::vector<Real>(1,
         std::sqrt(singleFactorCorrel->value()))),
       cachedMktFactor_(singleFactorCorrel),
-      idiosyncFctrs_(nVariables, 
+      idiosyncFctrs_(nVariables,
         std::sqrt(1.-singleFactorCorrel->value())),
-      nFactors_(1), 
+      nFactors_(1),
       nVariables_(nVariables),
       copula_(factorWeights_, ini)
     {
@@ -714,14 +719,14 @@ namespace QuantLib {
 
     template <class Impl>
     void LatentModel<Impl>::update() {
-        /* only registration with the single market correl quote. If we get 
+        /* only registration with the single market correl quote. If we get
         register with something else remember that the quote stores correlation
         and the model need factor values; which for one factor models are the
         square root of the correlation.
         */
-        factorWeights_ = std::vector<std::vector<Real> >(nVariables_, 
+        factorWeights_ = std::vector<std::vector<Real> >(nVariables_,
             std::vector<Real>(1, std::sqrt(cachedMktFactor_->value())));
-        idiosyncFctrs_ = std::vector<Real>(nVariables_, 
+        idiosyncFctrs_ = std::vector<Real>(nVariables_,
             std::sqrt(1.-cachedMktFactor_->value()));
         copula_ = copulaType(factorWeights_, copula_.getInitTraits());
         notifyObservers();
@@ -731,13 +736,13 @@ namespace QuantLib {
 
     //----Template partial specializations of the random FactorSampler--------
     /*
-    Notice that while the default template needs a sequence generator the 
-    specializations need a number generator. This is forced at the time the 
-    concrete policy class is used in the template parameter, if it has been 
-    specialized it needs the sample type typedef to match at compilation. 
-    
+    Notice that while the default template needs a sequence generator the
+    specializations need a number generator. This is forced at the time the
+    concrete policy class is used in the template parameter, if it has been
+    specialized it needs the sample type typedef to match at compilation.
+
     Notice here the outer class template is specialized only, leaving the inner
-    generator still a class template. Apparently old versions of gcc (3.x) bug 
+    generator still a class template. Apparently old versions of gcc (3.x) bug
     on this one not recognizing the specialization.
     */
     /*! \brief  Specialization for direct Gaussian Box-Muller generation.\par
@@ -753,8 +758,8 @@ namespace QuantLib {
         //Size below must be == to the numb of factors idiosy + systemi
         typedef Sample<std::vector<Real> > sample_type;
         explicit FactorSampler(const GaussianCopulaPolicy& copula,
-                               BigNatural seed = 0) 
-        : boxMullRng_(copula.numFactors(), 
+                               BigNatural seed = 0)
+        : boxMullRng_(copula.numFactors(),
             BoxMullerGaussianRng<urng_type>(urng_type(seed))){ }
         const sample_type& nextSequence() const {
                 return boxMullRng_.nextSequence();
@@ -764,15 +769,15 @@ namespace QuantLib {
     };
 
     /*! \brief Specialization for direct T samples generation.\par
-    The PolarT is a rejection algorithm so do not use it within a 
+    The PolarT is a rejection algorithm so do not use it within a
     multithreaded simulation.
-    The RandomSequenceGenerator class does not admit heterogeneous 
-    distribution samples so theres a trick here since the template parameter is 
+    The RandomSequenceGenerator class does not admit heterogeneous
+    distribution samples so theres a trick here since the template parameter is
     not what it is used internally.
     */
     template<class TC> template<class URNG, bool dummy>//uniform number expected
     class LatentModel<TC>
-        ::FactorSampler<RandomSequenceGenerator<PolarStudentTRng<URNG> > , 
+        ::FactorSampler<RandomSequenceGenerator<PolarStudentTRng<URNG> > ,
             dummy> {
         typedef URNG urng_type;
     public:
@@ -801,7 +806,7 @@ namespace QuantLib {
 
 #endif
 
-}                    
+}
 
 
 #endif

@@ -21,7 +21,12 @@
 #include <ql/instruments/doublebarrieroption.hpp>
 #include <ql/instruments/impliedvolatility.hpp>
 #include <ql/pricingengines/barrier/analyticdoublebarrierengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <memory>
+#endif
 
 namespace QuantLib {
 
@@ -33,7 +38,7 @@ namespace QuantLib {
         const ext::shared_ptr<StrikedTypePayoff>& payoff,
         const ext::shared_ptr<Exercise>& exercise)
     : OneAssetOption(payoff, exercise),
-      barrierType_(barrierType), barrier_lo_(barrier_lo), 
+      barrierType_(barrierType), barrier_lo_(barrier_lo),
       barrier_hi_(barrier_hi), rebate_(rebate) {}
 
     void DoubleBarrierOption::setupArguments(PricingEngine::arguments* args) const {
@@ -111,4 +116,3 @@ namespace QuantLib {
     }
 
 }
-

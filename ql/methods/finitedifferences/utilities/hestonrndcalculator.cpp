@@ -26,8 +26,13 @@
 #include <ql/processes/hestonprocess.hpp>
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

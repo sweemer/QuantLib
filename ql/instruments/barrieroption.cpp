@@ -25,7 +25,12 @@
 #include <ql/instruments/impliedvolatility.hpp>
 #include <ql/pricingengines/barrier/analyticbarrierengine.hpp>
 #include <ql/pricingengines/barrier/fdblackscholesbarrierengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <memory>
+#endif
 
 namespace QuantLib {
 
@@ -148,4 +153,3 @@ namespace QuantLib {
     }
 
 }
-

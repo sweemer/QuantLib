@@ -23,7 +23,12 @@
 #include <ql/cashflows/simplecashflow.hpp>
 #include <ql/instruments/zerocouponinflationswap.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

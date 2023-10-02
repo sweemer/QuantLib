@@ -25,7 +25,12 @@
 #include <ql/pricingengines/blackformula.hpp>
 #include <ql/pricingengines/vanilla/baroneadesiwhaleyengine.hpp>
 #include <ql/pricingengines/vanilla/juquadraticengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -158,12 +163,12 @@ namespace QuantLib {
                 Real d1_S = (std::log(forwardPrice/payoff->strike()) + 0.5*variance)
                     / std::sqrt(variance);
                 //There is a typo in the original paper from Ju-Zhong
-                //the first term is the Black-Scholes delta/gamma.    
+                //the first term is the Black-Scholes delta/gamma.
                 results_.delta = phi * dividendDiscount * cumNormalDist (phi * d1_S)
                     + (lambda / (spot * (1 - chi)) + chi_prime / ((1 - chi)*(1 - chi))) *
                     (phi * (Sk - payoff->strike()) - black_Sk) * std::pow((spot/Sk), lambda);
 
-                results_.gamma = dividendDiscount * normalDist (phi*d1_S) 
+                results_.gamma = dividendDiscount * normalDist (phi*d1_S)
                     / (spot * std::sqrt(variance))
                     + (2 * lambda * chi_prime / (spot * (1 - chi) * (1 - chi))
                         + 2 * chi_prime * chi_prime / ((1 - chi) * (1 - chi) * (1 - chi))

@@ -32,7 +32,11 @@
 #include <ql/methods/finitedifferences/meshers/fdm1dmesher.hpp>
 #include <ql/methods/finitedifferences/utilities/riskneutraldensitycalculator.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 	class TimeGrid;

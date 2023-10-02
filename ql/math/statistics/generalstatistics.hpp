@@ -27,9 +27,14 @@
 
 #include <ql/utilities/null.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <algorithm>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -140,7 +145,7 @@ namespace QuantLib {
         std::pair<Real,Size> expectationValue(const Func& f) const {
             return expectationValue(f, [](Real x) { return true; });
         }
-        
+
         /*! \f$ y \f$-th percentile, defined as the value \f$ \bar{x} \f$
             such that
             \f[ y = \frac{\sum_{x_i < \bar{x}} w_i}{

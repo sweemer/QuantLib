@@ -33,17 +33,21 @@
 #include <ql/time/daycounters/actualactual.hpp>
 #include <ql/time/daycounters/actual360.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <iomanip>
+#endif
 
 using namespace std;
 using namespace QuantLib;
 
 /*
-  This example reproduces Table 2 on page 11 of 
+  This example reproduces Table 2 on page 11 of
   A Formula for Interest Rate Swaps Valuation under
   Counterparty Risk in presence of Netting Agreements
-  
+
   Damiano Brigo and Massimo Masetti; May 4, 2005
  */
 
@@ -62,7 +66,7 @@ int main(int, char* []) {
 
         auto yieldIndx = ext::make_shared<Euribor3M>();
         Size tenorsSwapMkt[] = {5, 10, 15, 20, 25, 30};
-        
+
         // rates ignoring counterparty risk:
         Rate ratesSwapmkt[] = {.03249, .04074, .04463, .04675, .04775, .04811};
 
@@ -86,14 +90,14 @@ int main(int, char* []) {
 
         std::vector<Handle<DefaultProbabilityTermStructure>>
             defaultIntensityTS;
-        
-        Size defaultTenors[] = {0, 12, 36, 60, 84, 120, 180, 240, 300, 
+
+        Size defaultTenors[] = {0, 12, 36, 60, 84, 120, 180, 240, 300,
                                 360};// months
         // Three risk levels:
-        Real intensitiesLow[] = {0.0036, 0.0036, 0.0065, 0.0099, 0.0111, 
-                                 0.0177, 0.0177, 0.0177, 0.0177, 0.0177, 
+        Real intensitiesLow[] = {0.0036, 0.0036, 0.0065, 0.0099, 0.0111,
+                                 0.0177, 0.0177, 0.0177, 0.0177, 0.0177,
                                  0.0177};
-        Real intensitiesMedium[] = {0.0202, 0.0202, 0.0231, 0.0266, 0.0278, 
+        Real intensitiesMedium[] = {0.0202, 0.0202, 0.0231, 0.0266, 0.0278,
                                     0.0349, 0.0349, 0.0349, 0.0349, 0.0349,
                                     0.0349};
         Real intensitiesHigh[] = {0.0534, 0.0534, 0.0564, 0.06, 0.0614, 0.0696,
@@ -105,7 +109,7 @@ int main(int, char* []) {
         std::vector<Real> intesitiesVLow, intesitiesVMedium, intesitiesVHigh;
 
         for(Size i=0; i<sizeof(defaultTenors)/sizeof(Size); i++) {
-            defaultTSDates.push_back(TARGET().advance(todaysDate, 
+            defaultTSDates.push_back(TARGET().advance(todaysDate,
                 Period(defaultTenors[i], Months)));
             intesitiesVLow.push_back(intensitiesLow[i]);
             intesitiesVMedium.push_back(intensitiesMedium[i]);
@@ -122,24 +126,24 @@ int main(int, char* []) {
             ext::make_shared<InterpolatedHazardRateCurve<BackwardFlat>>(defaultTSDates, intesitiesVHigh,
                                                           Actual360(), TARGET()));
 
-        Volatility blackVol = 0.15;   
+        Volatility blackVol = 0.15;
         auto ctptySwapCvaLow = ext::make_shared<CounterpartyAdjSwapEngine>(
-                 Handle<YieldTermStructure>(swapTS), 
+                 Handle<YieldTermStructure>(swapTS),
                  blackVol,
-                 defaultIntensityTS[0], 
+                 defaultIntensityTS[0],
                  ctptyRRLow);
 
         auto ctptySwapCvaMedium = ext::make_shared<CounterpartyAdjSwapEngine>(
-                 Handle<YieldTermStructure>(swapTS), 
-                 blackVol, 
+                 Handle<YieldTermStructure>(swapTS),
+                 blackVol,
                  defaultIntensityTS[1],
                  ctptyRRMedium);
         auto ctptySwapCvaHigh = ext::make_shared<CounterpartyAdjSwapEngine>(
-                 Handle<YieldTermStructure>(swapTS), 
+                 Handle<YieldTermStructure>(swapTS),
                  blackVol,
                  defaultIntensityTS[2],
                  ctptyRRHigh);
-        
+
         defaultIntensityTS[0]->enableExtrapolation();
         defaultIntensityTS[1]->enableExtrapolation();
         defaultIntensityTS[2]->enableExtrapolation();
@@ -156,10 +160,10 @@ int main(int, char* []) {
         Swap::Type swapType = Swap::Payer;
         auto yieldIndxS = ext::make_shared<Euribor3M>(Handle<YieldTermStructure>(swapTS));
         std::vector<VanillaSwap> riskySwaps;
-        for(Size i=0; i<sizeof(tenorsSwapMkt)/sizeof(Size); i++) 
+        for(Size i=0; i<sizeof(tenorsSwapMkt)/sizeof(Size); i++)
             riskySwaps.push_back(MakeVanillaSwap(tenorsSwapMkt[i]*Years,
                 yieldIndxS,
-                ratesSwapmkt[i], 
+                ratesSwapmkt[i],
                 0*Days)
             .withSettlementDays(2)
             .withFixedLegDayCount(fixedLegDayCounter)
@@ -173,7 +177,7 @@ int main(int, char* []) {
 
         cout << "-- Correction in the contract fix rate in bp --" << endl;
         /* The paper plots correction to be substracted, here is printed
-           with its sign 
+           with its sign
         */
         for(Size i=0; i<riskySwaps.size(); i++) {
             cout << fixed << setprecision(3);
@@ -189,18 +193,18 @@ int main(int, char* []) {
             cout << setw(5);
             // Low Risk:
             riskySwaps[i].setPricingEngine(ctptySwapCvaLow);
-            cout << " | " << setw(6) 
+            cout << " | " << setw(6)
                  << 10000.*(riskySwaps[i].fairRate() - nonRiskyFair);
             //cout << " | " << setw(6) << riskySwaps[i].NPV() ;
 
             // Medium Risk:
             riskySwaps[i].setPricingEngine(ctptySwapCvaMedium);
-            cout << " | " << setw(6) 
+            cout << " | " << setw(6)
                  << 10000.*(riskySwaps[i].fairRate() - nonRiskyFair);
             //cout << " | " << setw(6) << riskySwaps[i].NPV() ;
 
             riskySwaps[i].setPricingEngine(ctptySwapCvaHigh);
-            cout << " | " << setw(6) 
+            cout << " | " << setw(6)
                  << 10000.*(riskySwaps[i].fairRate() - nonRiskyFair);
             //cout << " | " << setw(6) << riskySwaps[i].NPV() ;
 
@@ -218,4 +222,3 @@ int main(int, char* []) {
         return 1;
     }
 }
-

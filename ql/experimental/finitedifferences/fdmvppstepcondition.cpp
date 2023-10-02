@@ -26,7 +26,12 @@
 #include <ql/methods/finitedifferences/operators/fdmlinearopiterator.hpp>
 #include <ql/methods/finitedifferences/operators/fdmlinearoplayout.hpp>
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
     FdmVPPStepCondition::FdmVPPStepCondition(

@@ -19,7 +19,12 @@
 */
 
 #include <ql/math/pascaltriangle.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iterator>
+#endif
 
 namespace QuantLib {
 

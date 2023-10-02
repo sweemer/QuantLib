@@ -49,8 +49,12 @@
 #include <ql/math/interpolations/cubicinterpolation.hpp>
 #include <ql/math/interpolations/loginterpolation.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <iomanip>
+#endif
 
 using namespace QuantLib;
 

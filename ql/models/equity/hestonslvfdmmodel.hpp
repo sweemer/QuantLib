@@ -32,7 +32,11 @@
 #include <ql/methods/finitedifferences/meshers/fdmmeshercomposite.hpp>
 #include <ql/methods/finitedifferences/utilities/fdmhestongreensfct.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <list>
+#endif
 
 namespace QuantLib {
 
@@ -111,4 +115,3 @@ class SimpleQuote;
 
 
 #endif
-

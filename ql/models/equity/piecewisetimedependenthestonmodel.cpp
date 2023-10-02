@@ -19,7 +19,12 @@
 
 #include <ql/models/equity/piecewisetimedependenthestonmodel.hpp>
 #include <ql/quotes/simplequote.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -50,15 +55,14 @@ namespace QuantLib {
     const TimeGrid& PiecewiseTimeDependentHestonModel::timeGrid() const {
         return timeGrid_;
     }
-    
-    const Handle<YieldTermStructure>& 
+
+    const Handle<YieldTermStructure>&
     PiecewiseTimeDependentHestonModel::dividendYield() const {
         return dividendYield_;
     }
 
-    const Handle<YieldTermStructure>& 
+    const Handle<YieldTermStructure>&
     PiecewiseTimeDependentHestonModel::riskFreeRate() const {
         return riskFreeRate_;
     }
 }
-

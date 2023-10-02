@@ -23,12 +23,18 @@
 
 #include <ql/models/marketmodels/products/multiproductmultistep.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
+
 namespace QuantLib {
 
     class StrikedTypePayoff;
 
-    class MultiStepPeriodCapletSwaptions : public MultiProductMultiStep 
+    class MultiStepPeriodCapletSwaptions : public MultiProductMultiStep
     {
       public:
         MultiStepPeriodCapletSwaptions(
@@ -61,7 +67,7 @@ namespace QuantLib {
         Size period_;
         Size offset_;
         Size numberFRAs_;
-        Size  numberBigFRAs_; 
+        Size  numberBigFRAs_;
 
         // things that vary in a path
         Size currentIndex_;

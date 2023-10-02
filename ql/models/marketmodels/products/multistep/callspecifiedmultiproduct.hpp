@@ -25,7 +25,12 @@
 #include <ql/models/marketmodels/multiproduct.hpp>
 #include <ql/methods/montecarlo/exercisestrategy.hpp>
 #include <ql/utilities/clone.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <valarray>
+#endif
 
 namespace QuantLib {
 

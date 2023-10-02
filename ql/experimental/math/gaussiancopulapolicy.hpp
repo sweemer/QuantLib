@@ -21,24 +21,29 @@
 #define quantlib_gaussian_copula_policy_hpp
 
 #include <ql/math/distributions/normaldistribution.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <numeric>
 #include <algorithm>
+#endif
 
 namespace QuantLib {
 
-    /*! Gaussian Latent Model's copula policy. Its simplicity is a result of 
+    /*! Gaussian Latent Model's copula policy. Its simplicity is a result of
       the convolution stability of the Gaussian distribution.
     */
-    /* This is the only case that would have allowed the policy to be static, 
+    /* This is the only case that would have allowed the policy to be static,
     but other copulas will need parameters and initialization.*/
     struct GaussianCopulaPolicy {
 
         typedef int initTraits;
 
         explicit GaussianCopulaPolicy(
-            const std::vector<std::vector<Real> >& factorWeights = 
-                std::vector<std::vector<Real> >(), 
+            const std::vector<std::vector<Real> >& factorWeights =
+                std::vector<std::vector<Real> >(),
             const initTraits& dummy = int())
         : numFactors_(factorWeights.size() + factorWeights[0].size())
         {
@@ -46,13 +51,13 @@ namespace QuantLib {
             for (const auto& factorWeight : factorWeights) {
                 Real factorsNorm = std::inner_product(factorWeight.begin(), factorWeight.end(),
                                                       factorWeight.begin(), Real(0.));
-                QL_REQUIRE(factorsNorm < 1., 
+                QL_REQUIRE(factorsNorm < 1.,
                     "Non normal random factor combination.");
             }
             /* check factor matrix is squared .......... */
         }
 
-        /*! Number of independent random factors. 
+        /*! Number of independent random factors.
         This is the only methos that ould stop the class from being static, it
         is needed for the MC generator construction.
         */
@@ -65,7 +70,7 @@ namespace QuantLib {
             return initTraits();
         }
 
-        /*! Cumulative probability of a given latent variable 
+        /*! Cumulative probability of a given latent variable
             The iVariable parameter is the index of the requested variable.
         */
         Probability cumulativeY(Real val, Size iVariable) const {
@@ -76,36 +81,36 @@ namespace QuantLib {
             return cumulative_(z);
         }
         /*! Probability density of a given realization of values of the systemic
-          factors (remember they are independent). In the normal case, since 
-          they all follow the same law it is just a trivial product of the same 
-          density. 
-          Intended to be used in numerical integration of an arbitrary function 
+          factors (remember they are independent). In the normal case, since
+          they all follow the same law it is just a trivial product of the same
+          density.
+          Intended to be used in numerical integration of an arbitrary function
           depending on those values.
         */
         Probability density(const std::vector<Real>& m) const {
             return std::accumulate(m.begin(), m.end(), Real(1.),
                                    [&](Real x, Real y) -> Real { return x*density_(y); });
         }
-        /*! Returns the inverse of the cumulative distribution of the (modelled) 
+        /*! Returns the inverse of the cumulative distribution of the (modelled)
           latent variable (as indexed by iVariable). The normal stability avoids
           the convolution of the factors' distributions
         */
         Real inverseCumulativeY(Probability p, Size iVariable) const {
             return InverseCumulativeNormal::standard_value(p);
         }
-        /*! Returns the inverse of the cumulative distribution of the 
+        /*! Returns the inverse of the cumulative distribution of the
         idiosyncratic factor (identically distributed for all latent variables)
         */
         Real inverseCumulativeZ(Probability p) const {
             return InverseCumulativeNormal::standard_value(p);
         }
-        /*! Returns the inverse of the cumulative distribution of the 
+        /*! Returns the inverse of the cumulative distribution of the
           systemic factor iFactor.
         */
         Real inverseCumulativeDensity(Probability p, Size iFactor) const {
             return InverseCumulativeNormal::standard_value(p);
         }
-        //! 
+        //!
         //to use this (by default) version, the generator must be a uniform one.
         std::vector<Real> allFactorCumulInverter(const std::vector<Real>& probs) const {
             std::vector<Real> result;

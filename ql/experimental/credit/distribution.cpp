@@ -24,8 +24,13 @@
 #include <ql/experimental/credit/distribution.hpp>
 #include <ql/math/comparison.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <functional>
+#endif
 
 namespace QuantLib {
 
@@ -237,7 +242,7 @@ namespace QuantLib {
     //-------------------------------------------------------------------------
         QL_REQUIRE (attachmentPoint < detachmentPoint,
                  "attachment >= detachment point");
-        QL_REQUIRE (x_.back() > attachmentPoint && 
+        QL_REQUIRE (x_.back() > attachmentPoint &&
                     x_.back()+dx_.back() >= detachmentPoint,
                  "attachment or detachment too large");
 
@@ -259,9 +264,9 @@ namespace QuantLib {
             x_.erase(detachPosit + 1, x_.end());
 
         size_ = x_.size();
-        cumulativeDensity_.erase(cumulativeDensity_.begin() + size_, 
+        cumulativeDensity_.erase(cumulativeDensity_.begin() + size_,
             cumulativeDensity_.end());
-        cumulativeDensity_.back() = 1.; 
+        cumulativeDensity_.back() = 1.;
         count_.erase(count_.begin() + size_, count_.end());
         dx_.erase(dx_.begin() + size_, dx_.end());
 
@@ -270,7 +275,7 @@ namespace QuantLib {
             i = std::min(std::max(i - attachmentPoint, 0.), detachmentPoint - attachmentPoint);
         }
 
-        density_.clear(); 
+        density_.clear();
         excessProbability_.clear();
         cumulativeExcessProbability_.clear(); //? reuse?
         density_.push_back((cumulativeDensity_[0]-0.)/dx_[0]);
@@ -327,7 +332,7 @@ namespace QuantLib {
     //-------------------------------------------------------------------------
     Real Distribution::expectedShortfall (Real percValue) {
     //-------------------------------------------------------------------------
-        QL_REQUIRE(percValue >= 0. && percValue <= 1., 
+        QL_REQUIRE(percValue >= 0. && percValue <= 1.,
             "Incorrect percentile");
         normalize();
         Real expected = 0;
@@ -336,7 +341,7 @@ namespace QuantLib {
         if(iVal == size_-1) return x_.back();
 
         for (int i = iVal; i < size_; i++)
-            expected += x_[i] * 
+            expected += x_[i] *
                 (cumulativeDensity_[i] - cumulativeDensity_[i-1]);
         return expected/(1.-cumulativeDensity_.at(iVal));
     }

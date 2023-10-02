@@ -27,7 +27,11 @@
 #include <ql/qldefines.hpp>
 
 #if defined(QL_USE_STD_SHARED_PTR)
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <memory>
+#endif
 #else
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -60,4 +64,3 @@ namespace QuantLib {
 
 
 #endif
-

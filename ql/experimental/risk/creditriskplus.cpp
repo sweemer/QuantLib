@@ -18,8 +18,13 @@
 */
 
 #include <ql/experimental/risk/creditriskplus.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
 #include <utility>
+#endif
 
 using std::sqrt;
 

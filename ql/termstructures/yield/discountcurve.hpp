@@ -31,7 +31,12 @@
 #include <ql/termstructures/interpolatedcurve.hpp>
 #include <ql/math/interpolations/loginterpolation.hpp>
 #include <ql/math/comparison.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -155,7 +160,7 @@ namespace QuantLib {
     #ifndef __DOXYGEN__
 
     // template definitions
-    
+
     template <class T>
     DiscountFactor InterpolatedDiscountCurve<T>::discountImpl(Time t) const {
         if (t <= this->times_.back())

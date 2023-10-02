@@ -29,7 +29,12 @@
 #include <ql/pricingengines/swaption/blackswaptionengine.hpp>
 #include <ql/quotes/simplequote.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

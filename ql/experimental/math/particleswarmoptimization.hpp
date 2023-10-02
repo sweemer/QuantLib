@@ -34,7 +34,11 @@ Computation, 6(2): 58–73.
 #include <ql/experimental/math/levyflightdistribution.hpp>
 #include <ql/math/randomnumbers/seedgenerator.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <random>
+#endif
 
 namespace QuantLib {
 

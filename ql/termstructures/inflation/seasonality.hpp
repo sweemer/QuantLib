@@ -25,7 +25,12 @@
 #include <ql/time/daycounter.hpp>
 #include <ql/time/frequency.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -189,4 +194,3 @@ namespace QuantLib {
 }  // end of namespace QuantLib
 
 #endif
-

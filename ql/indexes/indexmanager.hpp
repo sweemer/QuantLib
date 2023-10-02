@@ -27,8 +27,13 @@
 #include <ql/patterns/singleton.hpp>
 #include <ql/timeseries.hpp>
 #include <ql/utilities/observablevalue.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <cctype>
+#endif
 
 namespace QuantLib {
 

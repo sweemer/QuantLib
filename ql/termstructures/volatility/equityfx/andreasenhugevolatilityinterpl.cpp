@@ -34,9 +34,14 @@
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/timegrid.hpp>
 #include <ql/utilities/null.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <limits>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

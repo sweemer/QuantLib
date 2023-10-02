@@ -29,8 +29,13 @@
 #include <ql/math/interpolations/extrapolation.hpp>
 #include <ql/math/comparison.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <algorithm>
+#endif
 
 namespace QuantLib {
 

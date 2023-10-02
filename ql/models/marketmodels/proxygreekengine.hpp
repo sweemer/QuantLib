@@ -26,7 +26,12 @@
 
 #include <ql/math/statistics/sequencestatistics.hpp>
 #include <ql/utilities/clone.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <valarray>
+#endif
 
 namespace QuantLib {
 

@@ -29,7 +29,12 @@
 #include <ql/pricingengines/asian/analytic_discr_geom_av_price.hpp>
 #include <ql/pricingengines/asian/mc_discr_geom_av_price.hpp>
 #include <ql/processes/blackscholesprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

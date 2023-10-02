@@ -20,8 +20,13 @@
 #include <ql/cashflows/cashflows.hpp>
 #include <ql/experimental/catbonds/montecarlocatbondengine.hpp>
 #include <ql/optional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -101,7 +106,7 @@ namespace QuantLib {
             if(notionalPath.loss()>0) { //optimization, most paths will not include any loss
                 totalNPV += pathNpv(includeSettlementDateFlows, settlementDate, notionalPath);
                 lossProbability+=1;
-                if (notionalPath.loss()==1) 
+                if (notionalPath.loss()==1)
                     exhaustionProbability+=1;
                 expectedLoss+=notionalPath.loss();
             } else {
@@ -115,8 +120,8 @@ namespace QuantLib {
         return totalNPV/(pathCount*discountCurve_->discount(npvDate));
     }
 
-    Real MonteCarloCatBondEngine::pathNpv(bool includeSettlementDateFlows, 
-                                          Date settlementDate, 
+    Real MonteCarloCatBondEngine::pathNpv(bool includeSettlementDateFlows,
+                                          Date settlementDate,
                                           const NotionalPath& notionalPath) const {
         Real totalNPV = 0.0;
         for (auto& cashflow : arguments_.cashflows) {

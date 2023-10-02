@@ -27,9 +27,14 @@
 #include <ql/any.hpp>
 #include <ql/instrument.hpp>
 #include <ql/money.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iosfwd>
 #include <utility>
 #include <vector>
+#endif
 
 namespace QuantLib {
 

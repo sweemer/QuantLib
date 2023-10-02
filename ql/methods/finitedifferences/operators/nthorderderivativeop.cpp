@@ -25,7 +25,11 @@
 #include <ql/methods/finitedifferences/operators/numericaldifferentiation.hpp>
 #include <ql/methods/finitedifferences/operators/nthorderderivativeop.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <set>
+#endif
 
 namespace QuantLib {
 
@@ -86,4 +90,3 @@ namespace QuantLib {
     }
 
 }
-

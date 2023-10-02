@@ -18,7 +18,12 @@
 */
 
 #include <ql/experimental/barrieroption/discretizeddoublebarrieroption.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -58,7 +63,7 @@ namespace QuantLib {
 
         Time now = time();
         bool endTime = isOnTime(stoppingTimes_.back());
-        bool stoppingTime = false;         
+        bool stoppingTime = false;
         switch (arguments_.exercise->type()) {
           case Exercise::American:
             if (now <= stoppingTimes_[1] &&
@@ -90,7 +95,7 @@ namespace QuantLib {
                                       (*arguments_.payoff)(grid[j]));
                      }
                      else
-                         optvalues[j] = vanilla()[j]; 
+                         optvalues[j] = vanilla()[j];
                   }
                   else if (grid[j] >= arguments_.barrier_hi) {
                      // knocked in up
@@ -99,7 +104,7 @@ namespace QuantLib {
                                       (*arguments_.payoff)(grid[j]));
                      }
                      else
-                         optvalues[j] = vanilla()[j]; 
+                         optvalues[j] = vanilla()[j];
                   }
                   else if (endTime)
                       optvalues[j] = arguments_.rebate;
@@ -192,7 +197,7 @@ namespace QuantLib {
                      optvalues[j+1] = std::max(0.0, (ltob*t1+htob*u1)/htol); // derman std
                   }
                   else if (grid[j] < barrier_hi && grid[j+1] >= barrier_hi) {
-                     // grid[j+1] above barrier_hi (in), grid[j] under, 
+                     // grid[j+1] above barrier_hi (in), grid[j] under,
                      // interpolate optvalues[j]
                      Real ltob = (barrier_hi-grid[j]);
                      Real htob = (grid[j+1]-barrier_hi);
@@ -214,7 +219,7 @@ namespace QuantLib {
                      optvalues[j+1] = std::max(0.0, (a+b)/c);
                   }
                   else if (grid[j] < barrier_hi && grid[j+1] >= barrier_hi) {
-                     // grid[j+1] above barrier_hi (out), grid[j] under, 
+                     // grid[j+1] above barrier_hi (out), grid[j] under,
                      // interpolate optvalues[j]
                      Real a = (barrier_hi-grid[j])*unenhanced_.values()[j];
                      Real b = (grid[j+1]-barrier_hi)*rebate;

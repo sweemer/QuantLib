@@ -30,7 +30,12 @@
 #include <ql/qldefines.hpp>
 #include <ql/math/array.hpp>
 #include <ql/functional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 

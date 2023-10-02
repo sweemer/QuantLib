@@ -21,7 +21,12 @@
 #include <ql/exercise.hpp>
 #include <ql/math/integrals/segmentintegral.hpp>
 #include <ql/pricingengines/vanilla/integralengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -84,4 +89,3 @@ namespace QuantLib {
     }
 
 }
-

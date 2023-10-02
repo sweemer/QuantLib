@@ -29,7 +29,12 @@
 #include <ql/instruments/swaption.hpp>
 #include <ql/models/shortrate/onefactormodel.hpp>
 #include <ql/pricingengines/genericmodelengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -38,7 +43,7 @@ namespace QuantLib {
         \warning The engine might assume that the exercise date equals the
                  start date of the passed swap unless the model provides
                  an implementation of the discountBondOption method with
-                 start delay 
+                 start delay
     */
 
     class JamshidianSwaptionEngine
@@ -67,4 +72,3 @@ namespace QuantLib {
 
 
 #endif
-

@@ -27,7 +27,11 @@
 #include <ql/math/functional.hpp>
 #include <ql/math/integrals/filonintegral.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 namespace QuantLib {
     FilonIntegral::FilonIntegral(Type type, Real t, Size intervals)

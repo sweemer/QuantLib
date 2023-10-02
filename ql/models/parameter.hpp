@@ -27,8 +27,13 @@
 #include <ql/handle.hpp>
 #include <ql/math/optimization/constraint.hpp>
 #include <ql/qldefines.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
 #include <vector>
+#endif
 
 namespace QuantLib {
 

@@ -18,7 +18,12 @@
 */
 
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <stdexcept>
+#endif
 
 namespace {
 
@@ -99,4 +104,3 @@ namespace QuantLib {
 
     const char* Error::what() const noexcept { return message_->c_str(); }
 }
-

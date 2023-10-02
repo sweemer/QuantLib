@@ -26,7 +26,12 @@
 #define quantlib_math_husler_reiss_copula_hpp
 
 #include <ql/math/distributions/normaldistribution.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <functional>
+#endif
 
 namespace QuantLib {
 

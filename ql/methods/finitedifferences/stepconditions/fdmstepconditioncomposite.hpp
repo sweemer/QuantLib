@@ -31,7 +31,11 @@
 #include <ql/instruments/dividendschedule.hpp>
 #include <ql/methods/finitedifferences/stepcondition.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <list>
+#endif
 
 namespace QuantLib {
 
@@ -39,7 +43,7 @@ namespace QuantLib {
     class Exercise;
     class FdmSnapshotCondition;
     class FdmInnerValueCalculator;
-    
+
     class FdmStepConditionComposite : public StepCondition<Array> {
     public:
         typedef std::list<ext::shared_ptr<StepCondition<Array> > > Conditions;
@@ -62,7 +66,7 @@ namespace QuantLib {
              const ext::shared_ptr<FdmInnerValueCalculator>& calculator,
              const Date& refDate,
              const DayCounter& dayCounter);
-        
+
     private:
         std::vector<Time> stoppingTimes_;
         const Conditions conditions_;

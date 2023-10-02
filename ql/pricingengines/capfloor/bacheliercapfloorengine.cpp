@@ -24,7 +24,12 @@
 #include <ql/termstructures/volatility/optionlet/strippedoptionletadapter.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -116,7 +121,7 @@ namespace QuantLib {
                         floorletVega = bachelierBlackFormulaStdDevDerivative(strike,
                             forward, stdDevs[i], discountedAccrual) * sqrtTime;
                         floorletDelta = Integer(Option::Put) * bachelierBlackFormulaAssetItmProbability(
-                                                        Option::Put, strike, forward, 
+                                                        Option::Put, strike, forward,
                                                         stdDevs[i]);
                     }
                     Real floorlet = bachelierBlackFormula(Option::Put,

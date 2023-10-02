@@ -22,8 +22,13 @@
 
 #include <ql/math/array.hpp>
 #include <ql/math/interpolation.hpp>
+
 #if defined(QL_EXTRA_SAFETY_CHECKS)
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <set>
+#endif
 #endif
 
 namespace QuantLib {

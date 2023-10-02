@@ -29,6 +29,10 @@
 #include <ql/types.hpp>
 #include <ql/errors.hpp>
 #include <ql/utilities/null.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iterator>
 #include <functional>
 #include <algorithm>
@@ -38,6 +42,7 @@
 #include <iomanip>
 #include <memory>
 #include <type_traits>
+#endif
 
 namespace QuantLib {
 

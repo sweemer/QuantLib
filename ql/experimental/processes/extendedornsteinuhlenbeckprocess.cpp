@@ -20,7 +20,12 @@
 #include <ql/experimental/processes/extendedornsteinuhlenbeckprocess.hpp>
 #include <ql/math/integrals/gausslobattointegral.hpp>
 #include <ql/processes/ornsteinuhlenbeckprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -54,7 +59,7 @@ namespace QuantLib {
     Real ExtendedOrnsteinUhlenbeckProcess::x0() const {
         return ouProcess_->x0();
     }
-    
+
     Real ExtendedOrnsteinUhlenbeckProcess::drift(Time t, Real x) const {
         return ouProcess_->drift(t, x) + speed_*b_(t);
     }
@@ -111,4 +116,3 @@ namespace QuantLib {
         }
     }
 }
-

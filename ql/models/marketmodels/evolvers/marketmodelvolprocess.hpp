@@ -20,18 +20,23 @@
 #ifndef quantlib_market_model_vol_process_hpp
 #define quantlib_market_model_vol_process_hpp
 #include <ql/types.hpp>
-#include <vector>
 
-namespace QuantLib 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <vector>
+#endif
+
+namespace QuantLib
 {
 
-  
+
     /*!
    Displaced diffusion LMM with uncorrelated vol process. Called "Shifted BGM" with Heston vol by Brace in "Engineering BGM."
    Vol process is an external input.
-    
+
     */
-    class MarketModelVolProcess 
+    class MarketModelVolProcess
     {
       public:
           MarketModelVolProcess() = default;
@@ -46,9 +51,9 @@ namespace QuantLib
 
           virtual const std::vector<Real>& stateVariables() const=0;
           virtual Size numberStateVariables() const=0;
-     
+
       private:
- 
+
     };
 
 }

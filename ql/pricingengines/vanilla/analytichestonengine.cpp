@@ -35,7 +35,12 @@
 #include <ql/math/functional.hpp>
 #include <ql/pricingengines/blackcalculator.hpp>
 #include <ql/pricingengines/vanilla/analytichestonengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 #if defined(QL_PATCH_MSVC)
 #pragma warning(disable: 4180)

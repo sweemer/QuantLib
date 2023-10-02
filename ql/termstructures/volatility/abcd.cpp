@@ -22,7 +22,12 @@
 
 #include <ql/termstructures/volatility/abcd.hpp>
 #include <ql/math/comparison.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
+#endif
 
 namespace QuantLib {
 

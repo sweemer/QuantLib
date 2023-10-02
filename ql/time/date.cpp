@@ -29,9 +29,6 @@
 #include <ql/errors.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <functional>
-#include <iomanip>
-#include <ctime>
 
 #ifdef QL_HIGH_RESOLUTION_DATE
 #if BOOST_VERSION < 106700
@@ -39,6 +36,14 @@
 #else
 #include <boost/container_hash/hash.hpp>
 #endif
+#endif
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <functional>
+#include <iomanip>
+#include <ctime>
 #endif
 
 #if defined(BOOST_NO_STDC_NAMESPACE)

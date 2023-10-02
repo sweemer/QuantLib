@@ -19,8 +19,13 @@
 #include <ql/models/marketmodels/curvestate.hpp>
 #include <ql/models/marketmodels/products/multistep/multisteptarn.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -57,9 +62,9 @@ namespace QuantLib {
                                                                  genCashFlows)
     {
         Rate liborRate = currentState.forwardRate(currentIndex_);
-        
+
         numberCashFlowsThisStep[0] =2;
-        
+
         genCashFlows[0][0].amount = (liborRate+floatingSpreads_[currentIndex_])*accrualsFloating_[currentIndex_];
         genCashFlows[0][0].timeIndex = lastIndex_ + currentIndex_;
 
@@ -104,11 +109,10 @@ namespace QuantLib {
         return 2;
     }
 
-    void MultiStepTarn::reset() 
+    void MultiStepTarn::reset()
     {
        currentIndex_=0;
        couponPaid_ = 0.0;
     }
 
 }
-

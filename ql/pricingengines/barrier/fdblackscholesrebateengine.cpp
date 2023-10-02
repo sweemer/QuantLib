@@ -28,7 +28,12 @@
 #include <ql/methods/finitedifferences/utilities/fdmdirichletboundary.hpp>
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
 #include <ql/pricingengines/barrier/fdblackscholesrebateengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -94,10 +99,10 @@ namespace QuantLib {
                 xMin, xMax, 0.0001, 1.5,
                 std::make_pair(Null<Real>(), Null<Real>()),
                 dividendSchedule));
-        
+
         const ext::shared_ptr<FdmMesher> mesher (
             new FdmMesherComposite(equityMesher));
-        
+
         // 2. Calculator
         const ext::shared_ptr<StrikedTypePayoff> rebatePayoff(
                 new CashOrNothingPayoff(Option::Call, 0.0, arguments_.rebate));
@@ -107,11 +112,11 @@ namespace QuantLib {
         // 3. Step conditions
         QL_REQUIRE(arguments_.exercise->type() == Exercise::European,
                    "only european style option are supported");
-        
+
         const ext::shared_ptr<FdmStepConditionComposite> conditions =
             FdmStepConditionComposite::vanillaComposite(
-                                dividendSchedule, arguments_.exercise, 
-                                mesher, calculator, 
+                                dividendSchedule, arguments_.exercise,
+                                mesher, calculator,
                                 process_->riskFreeRate()->referenceDate(),
                                 process_->riskFreeRate()->dayCounter());
 

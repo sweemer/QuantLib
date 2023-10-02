@@ -21,7 +21,12 @@
 #include <ql/methods/finitedifferences/solvers/fdm3dimsolver.hpp>
 #include <ql/methods/finitedifferences/solvers/fdmhestonhullwhitesolver.hpp>
 #include <ql/methods/finitedifferences/utilities/fdmquantohelper.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -42,7 +47,7 @@ namespace QuantLib {
         const ext::shared_ptr<FdmLinearOpComposite> op(
 			ext::make_shared<FdmHestonHullWhiteOp>(solverDesc_.mesher,
                                      hestonProcess_.currentLink(),
-                                     hwProcess_.currentLink(), 
+                                     hwProcess_.currentLink(),
                                      corrEquityShortRate_));
 
         solver_ = ext::make_shared<Fdm3DimSolver>(solverDesc_, schemeDesc_, op);
@@ -55,12 +60,12 @@ namespace QuantLib {
         return solver_->interpolateAt(x, v, r);
     }
 
-    Real FdmHestonHullWhiteSolver::deltaAt(Real s, Real v, Rate r, Real eps) 
+    Real FdmHestonHullWhiteSolver::deltaAt(Real s, Real v, Rate r, Real eps)
     const {
         return (valueAt(s+eps, v, r) - valueAt(s-eps, v, r))/(2*eps);
     }
 
-    Real FdmHestonHullWhiteSolver::gammaAt(Real s, Real v, Rate r, Real eps) 
+    Real FdmHestonHullWhiteSolver::gammaAt(Real s, Real v, Rate r, Real eps)
     const {
         return (valueAt(s+eps, v, r)+valueAt(s-eps, v,r )
                 -2*valueAt(s, v, r))/(eps*eps);

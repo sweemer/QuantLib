@@ -23,7 +23,12 @@
 #include <ql/settings.hpp>
 #include <ql/time/imm.hpp>
 #include <ql/time/schedule.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -367,10 +372,10 @@ namespace QuantLib {
         // specifications, unless otherwise specified in the
         // confirmation of the deal or unless we're creating a CDS
         // schedule
-        if (terminationDateConvention != Unadjusted 
-            && *rule_ != DateGeneration::CDS 
+        if (terminationDateConvention != Unadjusted
+            && *rule_ != DateGeneration::CDS
             && *rule_ != DateGeneration::CDS2015) {
-            dates_.back() = calendar_.adjust(dates_.back(), 
+            dates_.back() = calendar_.adjust(dates_.back(),
                                              terminationDateConvention);
         }
 

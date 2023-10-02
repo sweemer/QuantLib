@@ -29,7 +29,12 @@
 #include <ql/math/optimization/constraint.hpp>
 #include <ql/math/optimization/costfunction.hpp>
 #include <ql/math/optimization/method.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

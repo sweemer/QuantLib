@@ -25,7 +25,12 @@
 #include <ql/models/marketmodels/correlations/timehomogeneousforwardcorrelation.hpp>
 #include <ql/models/marketmodels/models/flatvol.hpp>
 #include <ql/models/marketmodels/piecewiseconstantcorrelation.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using std::vector;
 
@@ -203,4 +208,3 @@ namespace QuantLib {
     }
 
 }
-

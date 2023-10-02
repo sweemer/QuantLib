@@ -28,7 +28,12 @@
 #include <ql/methods/finitedifferences/utilities/fdmdirichletboundary.hpp>
 #include <ql/methods/finitedifferences/utilities/fdminnervaluecalculator.hpp>
 #include <ql/pricingengines/barrier/fdhestonrebateengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -124,10 +129,10 @@ namespace QuantLib {
         QL_REQUIRE(arguments_.exercise->type() == Exercise::European,
                    "only european style option are supported");
 
-        const ext::shared_ptr<FdmStepConditionComposite> conditions = 
+        const ext::shared_ptr<FdmStepConditionComposite> conditions =
              FdmStepConditionComposite::vanillaComposite(
-                                 dividendSchedule, arguments_.exercise, 
-                                 mesher, calculator, 
+                                 dividendSchedule, arguments_.exercise,
+                                 mesher, calculator,
                                  process->riskFreeRate()->referenceDate(),
                                  process->riskFreeRate()->dayCounter());
 

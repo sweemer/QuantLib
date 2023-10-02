@@ -21,8 +21,13 @@
 #include <ql/instruments/makeois.hpp>
 #include <ql/instruments/makevanillaswap.hpp>
 #include <ql/time/schedule.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <sstream>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -193,8 +198,8 @@ namespace QuantLib {
                 ModifiedFollowing,
                 overnightIndex->dayCounter(),
                 overnightIndex),
-      overnightIndex_(overnightIndex), 
-      telescopicValueDates_(telescopicValueDates), 
+      overnightIndex_(overnightIndex),
+      telescopicValueDates_(telescopicValueDates),
       averagingMethod_(averagingMethod) {}
 
 

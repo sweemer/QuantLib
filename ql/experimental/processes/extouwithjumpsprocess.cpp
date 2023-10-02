@@ -2,7 +2,7 @@
 
 /*
  Copyright (C) 2011 Klaus Spanderen
- 
+
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
 
@@ -23,7 +23,12 @@
 
 #include <ql/experimental/processes/extendedornsteinuhlenbeckprocess.hpp>
 #include <ql/experimental/processes/extouwithjumpsprocess.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -40,7 +45,7 @@ namespace QuantLib {
 
     Size ExtOUWithJumpsProcess::size() const {
         return 2;
-    }    
+    }
     Size ExtOUWithJumpsProcess::factors() const {
         return 3;
     }
@@ -64,7 +69,7 @@ namespace QuantLib {
             Y0_
         };
     }
-    
+
     Array ExtOUWithJumpsProcess::drift(Time t, const Array& x) const {
         return {
             ouProcess_->drift(t, x[0]),
@@ -73,25 +78,25 @@ namespace QuantLib {
     }
 
     Matrix ExtOUWithJumpsProcess::diffusion(Time t, const Array& x) const {
-        Matrix retVal(2, 2, 0.0);    
+        Matrix retVal(2, 2, 0.0);
         retVal[0][0] = ouProcess_->diffusion(t, x[0]);
-        
+
         return retVal;
     }
 
     Array ExtOUWithJumpsProcess::evolve(
         Time t0, const Array& x0, Time dt, const Array& dw) const {
-        
+
         Array retVal(2);
         retVal[0] = ouProcess_->evolve(t0, x0[0], dt, dw[0]);
         retVal[1] = x0[1]*std::exp(-beta_*dt);
-                
-        const Real u1 = std::max(QL_EPSILON, std::min(cumNormalDist_(dw[1]), 
+
+        const Real u1 = std::max(QL_EPSILON, std::min(cumNormalDist_(dw[1]),
                                                       1.0-QL_EPSILON));
 
         const Time interarrival = -1.0/jumpIntensity_*std::log(u1);
         if (interarrival < dt) {
-            const Real u2 = std::max(QL_EPSILON, std::min(cumNormalDist_(dw[2]), 
+            const Real u2 = std::max(QL_EPSILON, std::min(cumNormalDist_(dw[2]),
                                                           1.0-QL_EPSILON));
             const Real jumpSize = -1.0/eta_*std::log(u2);
             retVal[1] += jumpSize;

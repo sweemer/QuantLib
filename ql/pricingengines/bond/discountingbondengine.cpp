@@ -21,7 +21,12 @@
 #include <ql/cashflows/cashflows.hpp>
 #include <ql/pricingengines/bond/discountingbondengine.hpp>
 #include <ql/optional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

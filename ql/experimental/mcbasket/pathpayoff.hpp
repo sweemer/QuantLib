@@ -28,7 +28,12 @@
 #include <ql/patterns/visitor.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/handle.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <functional>
+#endif
 
 namespace QuantLib {
 
@@ -47,7 +52,7 @@ namespace QuantLib {
 
 
         /*
-          This function returns all the payoff and early termination payments 
+          This function returns all the payoff and early termination payments
           for a single path. If the option is cancelled at time i, all payments
           on and before i are taken into account + the value of exercises[i].
           i.e.: cancellation at i does not cancel payments[i]!
@@ -58,10 +63,10 @@ namespace QuantLib {
           in that case, exercises[] will not be accessed.
          */
 
-        virtual void value(const Matrix       & path, 
+        virtual void value(const Matrix       & path,
                            const std::vector<Handle<YieldTermStructure> > & forwardTermStructures,
-                           Array              & payments, 
-                           Array              & exercises, 
+                           Array              & payments,
+                           Array              & exercises,
                            std::vector<Array> & states) const = 0;
 
         /*

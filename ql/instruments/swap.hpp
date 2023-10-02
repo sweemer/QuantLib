@@ -28,7 +28,12 @@
 
 #include <ql/instrument.hpp>
 #include <ql/cashflow.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iosfwd>
+#endif
 
 namespace QuantLib {
 

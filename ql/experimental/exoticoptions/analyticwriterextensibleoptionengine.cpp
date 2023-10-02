@@ -20,7 +20,12 @@
 #include <ql/experimental/exoticoptions/analyticwriterextensibleoptionengine.hpp>
 #include <ql/math/distributions/bivariatenormaldistribution.hpp>
 #include <ql/pricingengines/blackformula.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using namespace std;
 

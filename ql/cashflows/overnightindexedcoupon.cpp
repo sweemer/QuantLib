@@ -26,8 +26,13 @@
 #include <ql/cashflows/overnightindexedcoupon.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/utilities/vectors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
 #include <algorithm>
+#endif
 
 using std::vector;
 
@@ -146,7 +151,7 @@ namespace QuantLib {
                     const Date& refPeriodStart,
                     const Date& refPeriodEnd,
                     const DayCounter& dayCounter,
-                    bool telescopicValueDates, 
+                    bool telescopicValueDates,
                     RateAveraging::Type averagingMethod)
     : FloatingRateCoupon(paymentDate, nominal, startDate, endDate,
                          overnightIndex ? overnightIndex->fixingDays() : 0,
@@ -370,7 +375,7 @@ namespace QuantLib {
                                        detail::get(spreads_, i, 0.0),
                                        refStart, refEnd,
                                        paymentDayCounter_,
-                                       telescopicValueDates_, 
+                                       telescopicValueDates_,
                                        averagingMethod_)));
         }
         return cashflows;

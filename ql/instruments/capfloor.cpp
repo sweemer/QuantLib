@@ -30,7 +30,12 @@
 #include <ql/quotes/simplequote.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -73,7 +78,7 @@ namespace QuantLib {
                 break;
             case Normal:
                 engine_ = ext::shared_ptr<PricingEngine>(new
-                    BachelierCapFloorEngine(discountCurve_, h, 
+                    BachelierCapFloorEngine(discountCurve_, h,
                                                             Actual365Fixed()));
                 break;
             default:

@@ -27,7 +27,12 @@
 
 #include <ql/experimental/commodities/unitofmeasureconversion.hpp>
 #include <ql/patterns/singleton.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <list>
+#endif
 
 namespace QuantLib {
 

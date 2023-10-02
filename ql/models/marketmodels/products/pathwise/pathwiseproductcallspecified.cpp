@@ -21,7 +21,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/models/marketmodels/products/pathwise/pathwiseproductcallspecified.hpp>
 #include <ql/models/marketmodels/products/pathwise/pathwiseproductcashrebate.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -175,8 +180,3 @@ namespace QuantLib {
     void CallSpecifiedPathwiseMultiProduct::disableCallability() { callable_ = false; }
 
     }
-
-
-
-
-

@@ -25,8 +25,13 @@
 #include <ql/models/marketmodels/pathwisemultiproduct.hpp>
 #include <ql/models/marketmodels/evolutiondescription.hpp>
 #include <ql/models/marketmodels/curvestates/lmmcurvestate.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <memory>
+#endif
 
 namespace QuantLib {
 
@@ -35,8 +40,8 @@ namespace QuantLib {
 
     /*!
     Swap for doing Greeks. Fairly useless when used directly, but if we want to look a breakable swap
-    it becomes useful. 
-   
+    it becomes useful.
+
     */
 class MarketModelPathwiseSwap : public MarketModelPathwiseMultiProduct
     {

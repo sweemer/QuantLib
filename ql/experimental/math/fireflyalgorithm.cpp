@@ -19,9 +19,14 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 #include <ql/experimental/math/fireflyalgorithm.hpp>
 #include <ql/math/randomnumbers/sobolrsg.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <cmath>
 #include <utility>
+#endif
 
 namespace QuantLib {
     FireflyAlgorithm::FireflyAlgorithm(Size M,
@@ -80,7 +85,7 @@ namespace QuantLib {
         Size iterationStat = 0;
         Size maxIteration = endCriteria.maxIterations();
         Size maxIStationary = endCriteria.maxStationaryStateIterations();
-        
+
         startState(P, endCriteria);
 
         bool isFA = Mfa_ > 0;
@@ -116,19 +121,19 @@ namespace QuantLib {
             if(Mfa_ < M_){
                 Size indexBest = values_[0].second;
                 Array& xBest = x_[indexBest];
-                for (Size i = Mfa_; i < M_; i++) { 
+                for (Size i = Mfa_; i < M_; i++) {
                     if (!isFA) {
                         //Pure DE requires random index
                         indexBest = distribution_(generator_);
                         xBest = x_[indexBest];
                     }
-                    do { 
+                    do {
                         indexR1 = distribution_(generator_);
                     } while(indexR1 == indexBest);
-                    do { 
+                    do {
                         indexR2 = distribution_(generator_);
                     } while(indexR2 == indexBest || indexR2 == indexR1);
-                    
+
                     Size index = values_[i].second;
                     Array& x   = x_[index];
                     Array& xR1 = x_[indexR1];
@@ -163,7 +168,7 @@ namespace QuantLib {
                     }
                 }
             }
-                
+
             //Firefly algorithm
             if(isFA){
                 //According to the intensity, determine best global position
@@ -243,4 +248,3 @@ namespace QuantLib {
         }
     }
 }
-

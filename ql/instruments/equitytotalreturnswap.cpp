@@ -22,7 +22,12 @@ Copyright (C) 2023 Marcin Rybacki
 #include <ql/cashflows/overnightindexedcoupon.hpp>
 #include <ql/indexes/equityindex.hpp>
 #include <ql/instruments/equitytotalreturnswap.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -121,14 +126,14 @@ namespace QuantLib {
                                                  Natural paymentDelay)
     : EquityTotalReturnSwap(std::move(equityIndex),
                             interestRateIndex,
-                            type, 
-                            nominal, 
-                            std::move(schedule), 
+                            type,
+                            nominal,
+                            std::move(schedule),
                             std::move(dayCounter),
                             margin,
                             gearing,
                             std::move(paymentCalendar),
-                            paymentConvention, 
+                            paymentConvention,
                             paymentDelay) {
         legs_[1] = createInterestLeg<IborIndex, IborLeg>(
             schedule_, interestRateIndex, nominal_, dayCounter_, margin_, gearing_,
@@ -150,14 +155,14 @@ namespace QuantLib {
                                                  Natural paymentDelay)
     : EquityTotalReturnSwap(std::move(equityIndex),
                             interestRateIndex,
-                            type, 
-                            nominal, 
-                            std::move(schedule), 
+                            type,
+                            nominal,
+                            std::move(schedule),
                             std::move(dayCounter),
                             margin,
                             gearing,
                             std::move(paymentCalendar),
-                            paymentConvention, 
+                            paymentConvention,
                             paymentDelay) {
         legs_[1] = createInterestLeg<OvernightIndex, OvernightLeg>(
             schedule_, interestRateIndex, nominal_, dayCounter_, margin_, gearing_,

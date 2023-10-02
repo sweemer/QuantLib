@@ -18,7 +18,12 @@
 */
 
 #include <ql/experimental/asian/analytic_cont_geom_av_price_heston.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

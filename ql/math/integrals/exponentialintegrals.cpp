@@ -25,7 +25,11 @@
 #include <ql/mathconstants.hpp>
 #include <ql/math/integrals/exponentialintegrals.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 #ifndef M_EULER_MASCHERONI
     #define M_EULER_MASCHERONI 0.5772156649015328606065121

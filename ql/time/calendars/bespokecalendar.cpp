@@ -18,8 +18,13 @@
 */
 
 #include <ql/time/calendars/bespokecalendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <sstream>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -53,4 +58,3 @@ namespace QuantLib {
     }
 
 }
-

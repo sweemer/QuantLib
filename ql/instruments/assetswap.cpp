@@ -26,7 +26,12 @@
 #include <ql/cashflows/simplecashflow.hpp>
 #include <ql/instruments/assetswap.hpp>
 #include <ql/pricingengines/swap/discountingswapengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using std::vector;
 
@@ -372,7 +377,7 @@ namespace QuantLib {
             QL_REQUIRE(endDiscounts_[1]!=Null<DiscountFactor>(),
                        "fair non par repayment not available for expired leg");
             Real notional = bond_->notional(upfrontDate_);
-            fairNonParRepayment_ = nonParRepayment_ - payer_[0] * 
+            fairNonParRepayment_ = nonParRepayment_ - payer_[0] *
                 NPV_*npvDateDiscount_/endDiscounts_[1]/(notional/100.0);
             return fairNonParRepayment_;
         }

@@ -31,8 +31,13 @@
 #include <ql/processes/blackscholesprocess.hpp>
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/termstructures/yield/flatforward.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <type_traits>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -151,7 +156,7 @@ namespace QuantLib {
                 }
             }
 
-            if (optimum_steps > maxTimeSteps_) 
+            if (optimum_steps > maxTimeSteps_)
                optimum_steps = maxTimeSteps_; // too high, limit
         }
 
@@ -167,7 +172,7 @@ namespace QuantLib {
         option.initialize(lattice, maturity);
 
         // Partial derivatives calculated from various points in the
-        // binomial tree 
+        // binomial tree
         // (see J.C.Hull, "Options, Futures and other derivatives", 6th edition, pp 397/398)
 
         // Rollback to third-last step, and get underlying prices (s2) &

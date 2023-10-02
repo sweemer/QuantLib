@@ -29,9 +29,14 @@
 #include <ql/shared_ptr.hpp>
 #include <boost/assert.hpp>
 #include <boost/current_function.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <exception>
 #include <sstream>
 #include <string>
+#endif
 
 namespace QuantLib {
 
@@ -139,4 +144,3 @@ QL_MULTILINE_ASSERTION_END
 
 
 #endif
-

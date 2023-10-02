@@ -28,7 +28,12 @@
 #include <ql/types.hpp>
 #include <ql/patterns/visitor.hpp>
 #include <ql/errors.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <functional>
+#endif
 
 namespace QuantLib {
 

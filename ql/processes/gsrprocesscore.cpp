@@ -18,7 +18,12 @@
 */
 
 #include <ql/processes/gsrprocesscore.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 using std::exp;
 using std::pow;

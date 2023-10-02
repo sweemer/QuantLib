@@ -30,7 +30,12 @@
 #include <ql/termstructures/iterativebootstrap.hpp>
 #include <ql/termstructures/localbootstrap.hpp>
 #include <ql/termstructures/yield/bootstraptraits.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

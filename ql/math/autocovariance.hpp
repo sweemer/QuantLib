@@ -26,10 +26,15 @@
 
 #include <ql/math/fastfouriertransform.hpp>
 #include <ql/math/array.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
 #include <vector>
 #include <algorithm>
 #include <functional>
+#endif
 
 namespace QuantLib {
 

@@ -32,9 +32,14 @@
 #include <ql/experimental/credit/basket.hpp>
 #include <ql/experimental/math/latentmodel.hpp>
 #include <ql/functional.hpp>
-#include <numeric>
 
-/* Intended to replace GaussianLHPCDOEngine in 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <numeric>
+#endif
+
+/* Intended to replace GaussianLHPCDOEngine in
     ql/experimental/credit/syntheticcdoengines.hpp
    Moved from an engine to a loss model, CDO engines might refer to it.
 */
@@ -42,23 +47,23 @@
 namespace QuantLib {
 
     /*!
-      Portfolio loss model with analytical expected tranche loss for a large 
+      Portfolio loss model with analytical expected tranche loss for a large
       homogeneous pool with Gaussian one-factor copula. See for example
       "The Normal Inverse Gaussian Distribution for Synthetic CDO pricing.",
       Anna Kalemanova, Bernd Schmid, Ralf Werner,
       Journal of Derivatives, Vol. 14, No. 3, (Spring 2007), pp. 80-93.
       http://www.defaultrisk.com/pp_crdrv_91.htm
 
-      It can be used to price a credit derivative or to provide risk metrics of 
+      It can be used to price a credit derivative or to provide risk metrics of
       a portfolio.
 
       \todo It should be checking that basket exposures are deterministic (fixed
       or programmed amortizing) otherwise the model is not fit for the basket.
 
-      \todo Bugging on tranched baskets with upper limit over maximum 
+      \todo Bugging on tranched baskets with upper limit over maximum
         attainable loss?
      */
-    class GaussianLHPLossModel : public DefaultLossModel, 
+    class GaussianLHPLossModel : public DefaultLossModel,
         public LatentModel<GaussianCopulaPolicy> {
     public:
         typedef GaussianCopulaPolicy copulaType;
@@ -130,7 +135,7 @@ namespace QuantLib {
 
     protected:
         // This is wrong, it is not accounting for the current defaults ....
-        // returns the loss value in actual loss units, returns the loss value 
+        // returns the loss value in actual loss units, returns the loss value
         // for the underlying portfolio, untranched
         Real percentilePortfolioLossFraction(const Date& d, Real perctl) const;
         Real expectedRecovery(const Date& d, Size iName, const DefaultProbKey& ik) const override {
@@ -152,39 +157,39 @@ namespace QuantLib {
 
         Probability averageProb(const Date& d) const {// not an overload of Deflossmodel ???<<<<<???
             // weighted average by programmed exposure.
-            const std::vector<Probability> probs = 
+            const std::vector<Probability> probs =
                 basket_->remainingProbabilities(d);//use remaining basket
-            const std::vector<Real> remainingNots = 
+            const std::vector<Real> remainingNots =
                 basket_->remainingNotionals(d);
-            return std::inner_product(probs.begin(), probs.end(), 
+            return std::inner_product(probs.begin(), probs.end(),
                 remainingNots.begin(), Real(0.)) / basket_->remainingNotional(d);
         }
 
         /* One could define the average recovery without the probability
-        factor, weighting only by notional instead, but that way the expected 
-        loss of the average/aggregated and the original portfolio would not 
-        coincide. This introduces however a time dependence in the recovery 
+        factor, weighting only by notional instead, but that way the expected
+        loss of the average/aggregated and the original portfolio would not
+        coincide. This introduces however a time dependence in the recovery
         value.
-        Weighting by notional implies time dependent weighting since the basket 
+        Weighting by notional implies time dependent weighting since the basket
         might amortize.
         */
         Real averageRecovery(
             const Date& d) const //no explicit time dependence in this model
         {
-            const std::vector<Probability> probs = 
+            const std::vector<Probability> probs =
                 basket_->remainingProbabilities(d);
             std::vector<Real> recoveries;
             for(Size i=0; i<basket_->remainingSize(); i++)
                 recoveries.push_back(rrQuotes_[i]->value());
             std::vector<Real> notionals = basket_->remainingNotionals(d);
-            Real denominator = std::inner_product(notionals.begin(), 
+            Real denominator = std::inner_product(notionals.begin(),
                 notionals.end(), probs.begin(), Real(0.));
             if(denominator == 0.) return 0.;
 
             std::transform(notionals.begin(), notionals.end(), probs.begin(),
                 notionals.begin(), std::multiplies<>());
 
-            return std::inner_product(recoveries.begin(), recoveries.end(), 
+            return std::inner_product(recoveries.begin(), recoveries.end(),
                 notionals.begin(), Real(0.)) / denominator;
         }
 
@@ -196,15 +201,15 @@ namespace QuantLib {
         std::vector<Handle<RecoveryRateQuote> > rrQuotes_;
         // calculation buffers
 
-        /* The problem with defining a fixed average recovery on a portfolio 
+        /* The problem with defining a fixed average recovery on a portfolio
         with uneven exposures is that it does not preserve portfolio
-        moments like the expected loss. To achieve it one should define the 
-        averarage recovery with a time dependence: 
+        moments like the expected loss. To achieve it one should define the
+        averarage recovery with a time dependence:
         $\hat{R}(t) = \frac{\sum_i R_i N_i P_i(t)}{\sum_i N_i P_i(t)}$
         But the date dependence increases significantly the calculations cost.
         Notice that this problem dissapears if the recoveries are all equal.
         */
-        
+
         Real beta_;
         BivariateCumulativeNormalDistribution biphi_;
         static CumulativeNormalDistribution const phi_;

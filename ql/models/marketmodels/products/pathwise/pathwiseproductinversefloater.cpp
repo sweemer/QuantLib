@@ -20,9 +20,14 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/models/marketmodels/curvestate.hpp>
 #include <ql/models/marketmodels/products/pathwise/pathwiseproductinversefloater.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
-#include <utility>
 
-namespace QuantLib 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
+
+namespace QuantLib
 {
 
 
@@ -63,7 +68,7 @@ namespace QuantLib
     bool MarketModelPathwiseInverseFloater::nextTimeStep(
         const CurveState& currentState,
         std::vector<Size>& numberCashFlowsThisStep,
-        std::vector<std::vector<MarketModelPathwiseMultiProduct::CashFlow> >& cashFlowsGenerated) 
+        std::vector<std::vector<MarketModelPathwiseMultiProduct::CashFlow> >& cashFlowsGenerated)
     {
         numberCashFlowsThisStep[0] =1 ;
         for (Size i=1; i <= lastIndex_; ++i)
@@ -74,8 +79,8 @@ namespace QuantLib
         Real floatingCoupon = (liborRate+floatingSpreads_[currentIndex_])*floatingAccruals_[currentIndex_];
         cashFlowsGenerated[0][0].timeIndex = currentIndex_;
         cashFlowsGenerated[0][0].amount[0] =multiplier_*(inverseFloatingCoupon - floatingCoupon);
- 
- 
+
+
 
         if (inverseFloatingCoupon > 0.0)
         {
@@ -99,7 +104,7 @@ namespace QuantLib
     }
 
     std::unique_ptr<MarketModelPathwiseMultiProduct>
-    MarketModelPathwiseInverseFloater::clone() const 
+    MarketModelPathwiseInverseFloater::clone() const
     {
         return std::unique_ptr<MarketModelPathwiseMultiProduct>(new MarketModelPathwiseInverseFloater(*this));
     }
@@ -120,7 +125,7 @@ namespace QuantLib
 
     std::vector<Time> MarketModelPathwiseInverseFloater::possibleCashFlowTimes() const
     {
-        return paymentTimes_; 
+        return paymentTimes_;
     }
 
     Size MarketModelPathwiseInverseFloater::numberOfProducts() const
@@ -140,4 +145,3 @@ namespace QuantLib
     }
 
 }
-

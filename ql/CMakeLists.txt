@@ -375,7 +375,7 @@ set(QL_SOURCES
     math/integrals/integral.cpp
     math/integrals/kronrodintegral.cpp
     math/integrals/segmentintegral.cpp
-    math/interpolations/chebyshevinterpolation.cpp    
+    math/interpolations/chebyshevinterpolation.cpp
     math/matrix.cpp
     math/matrixutilities/basisincompleteordered.cpp
     math/matrixutilities/bicgstab.cpp
@@ -932,6 +932,10 @@ set(QL_SOURCES
     version.cpp
 )
 
+if(MSVC)
+    list(PREPEND QL_SOURCES "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.37.32822/modules/std.ixx")
+endif()
+
 set(QL_HEADERS
     any.hpp
     auto_link.hpp
@@ -1454,7 +1458,7 @@ set(QL_HEADERS
     math/interpolations/backwardflatlinearinterpolation.hpp
     math/interpolations/bicubicsplineinterpolation.hpp
     math/interpolations/bilinearinterpolation.hpp
-    math/interpolations/chebyshevinterpolation.hpp    
+    math/interpolations/chebyshevinterpolation.hpp
     math/interpolations/convexmonotoneinterpolation.hpp
     math/interpolations/cubicinterpolation.hpp
     math/interpolations/extrapolation.hpp

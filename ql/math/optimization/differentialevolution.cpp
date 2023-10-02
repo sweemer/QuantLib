@@ -19,8 +19,13 @@
 */
 
 #include <ql/math/optimization/differentialevolution.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <cmath>
+#endif
 
 namespace QuantLib {
 

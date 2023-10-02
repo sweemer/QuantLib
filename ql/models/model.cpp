@@ -23,7 +23,12 @@
 #include <ql/math/optimization/projection.hpp>
 #include <ql/models/model.hpp>
 #include <ql/utilities/null_deleter.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using std::vector;
 

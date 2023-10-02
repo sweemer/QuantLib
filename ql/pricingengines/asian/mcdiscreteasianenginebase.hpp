@@ -29,7 +29,12 @@
 #include <ql/exercise.hpp>
 #include <ql/instruments/asianoption.hpp>
 #include <ql/pricingengines/mcsimulation.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -88,13 +93,13 @@ namespace QuantLib {
             }
 
             results_.value = this->mcModel_->sampleAccumulator().mean();
-            
+
             if (this->controlVariate_) {
                 // control variate might lead to small negative
                 // option values for deep OTM options
                 this->results_.value = std::max(0.0, this->results_.value);
             }
-                
+
             if (RNG::allowsErrorEstimate)
                 results_.errorEstimate =
                     this->mcModel_->sampleAccumulator().errorEstimate();

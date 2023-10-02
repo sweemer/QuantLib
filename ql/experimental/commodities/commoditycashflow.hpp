@@ -26,8 +26,13 @@
 
 #include <ql/cashflow.hpp>
 #include <ql/money.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

@@ -30,7 +30,12 @@
 #include <ql/math/comparison.hpp>
 #include <ql/experimental/credit/defaulttype.hpp>
 #include <ql/experimental/credit/defaultprobabilitykey.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 namespace QuantLib {
 

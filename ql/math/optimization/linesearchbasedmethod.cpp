@@ -22,7 +22,12 @@
 #include <ql/math/optimization/linesearch.hpp>
 #include <ql/math/optimization/linesearchbasedmethod.hpp>
 #include <ql/math/optimization/problem.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

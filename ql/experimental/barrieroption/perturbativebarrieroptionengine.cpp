@@ -25,17 +25,22 @@
 #include <ql/experimental/barrieroption/perturbativebarrieroptionengine.hpp>
 #include <ql/functional.hpp>
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <cmath>
 #include <utility>
+#endif
 
 using namespace std;
 
 namespace {
 
-    inline QuantLib::Real SIGN(const QuantLib::Real& a, const QuantLib::Real& b) 
+    inline QuantLib::Real SIGN(const QuantLib::Real& a, const QuantLib::Real& b)
     {
-        if (b > 0.0) 
+        if (b > 0.0)
             return std::fabs(a);
         else
             return -std::fabs(a);
@@ -1536,7 +1541,7 @@ namespace QuantLib {
         QL_REQUIRE(order_ <= 2, "order must be <= 2");
 
         int igm = zeroGamma_ ? 0 : 1;
-        
+
         results_.value = BarrierUPD(kprice, stock, hbarr,
                                     tauMin, tauMax, order_, igm,
                                     integr_adapter(process_),
@@ -1547,4 +1552,3 @@ namespace QuantLib {
     }
 
 }
-

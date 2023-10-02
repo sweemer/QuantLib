@@ -24,8 +24,13 @@
 #include <ql/pricingengines/asian/analytic_discr_geom_av_price.hpp>
 #include <ql/pricingengines/blackcalculator.hpp>
 #include <ql/pricingengines/greeks.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <numeric>
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -164,4 +169,3 @@ namespace QuantLib {
                                            results_.gamma);
     }
 }
-

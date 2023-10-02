@@ -31,7 +31,11 @@
 #include <ql/indexes/ibor/euribor.hpp>
 #include <ql/time/daycounters/actualactual.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
+#endif
 
 #define LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
@@ -273,4 +277,3 @@ int main(int, char* []) {
         return 1;
     }
 }
-

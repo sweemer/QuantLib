@@ -24,7 +24,12 @@
 #include <ql/experimental/finitedifferences/fdmextoujumpsolver.hpp>
 #include <ql/experimental/processes/extouwithjumpsprocess.hpp>
 #include <ql/methods/finitedifferences/solvers/fdm2dimsolver.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -42,14 +47,13 @@ namespace QuantLib {
         ext::shared_ptr<FdmLinearOpComposite>op(
             new FdmExtOUJumpOp(solverDesc_.mesher, process_.currentLink(),
                                rTS_, solverDesc_.bcSet, 32));
-        
+
         solver_ = ext::make_shared<Fdm2DimSolver>(
                               solverDesc_, schemeDesc_, op);
     }
-    
+
     Real FdmExtOUJumpSolver::valueAt(Real x, Real y) const {
         calculate();
         return solver_->interpolateAt(x, y);
     }
 }
-

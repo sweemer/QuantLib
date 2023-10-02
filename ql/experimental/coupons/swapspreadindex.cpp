@@ -16,9 +16,14 @@
  or FITNESS FOR A PARTICULAR PURPOSE. See the license for more details. */
 
 #include <ql/experimental/coupons/swapspreadindex.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
 #include <sstream>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

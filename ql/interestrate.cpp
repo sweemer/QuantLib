@@ -19,9 +19,14 @@
 
 #include <ql/interestrate.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
 #include <sstream>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

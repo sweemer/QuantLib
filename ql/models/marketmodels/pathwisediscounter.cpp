@@ -18,7 +18,12 @@
 */
 #include <ql/models/marketmodels/pathwisediscounter.hpp>
 #include <ql/models/marketmodels/utilities.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
+#endif
 
 namespace QuantLib
 {

@@ -28,8 +28,12 @@
 #include <ql/instruments/bonds/cpibond.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
 #include <ql/time/schedule.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -86,4 +90,3 @@ namespace QuantLib {
         }
     }
 }
-

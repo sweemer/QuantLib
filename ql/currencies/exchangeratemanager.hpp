@@ -28,9 +28,14 @@
 #include <ql/exchangerate.hpp>
 #include <ql/patterns/singleton.hpp>
 #include <ql/time/date.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <list>
 #include <map>
 #include <utility>
+#endif
 
 namespace QuantLib {
 

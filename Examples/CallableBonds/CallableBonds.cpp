@@ -32,10 +32,14 @@
 #include <ql/time/calendars/unitedstates.hpp>
 #include <ql/time/daycounters/actualactual.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
 #include <cmath>
 #include <iomanip>
 #include <iostream>
+#endif
 
 using namespace std;
 using namespace QuantLib;
@@ -310,4 +314,3 @@ int main(int, char* [])
         return 1;
     }
 }
-

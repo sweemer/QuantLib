@@ -32,8 +32,13 @@
 #include <ql/methods/montecarlo/earlyexercisepathpricer.hpp>
 #include <ql/methods/montecarlo/pathpricer.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
 #include <memory>
+#endif
 
 namespace QuantLib {
 

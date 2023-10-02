@@ -26,7 +26,12 @@
 
 #include <ql/math/interpolations/interpolation2d.hpp>
 #include <ql/math/matrixutilities/qrdecomposition.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 /*
   Grid Explanation:

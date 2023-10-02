@@ -27,9 +27,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/patterns/singleton.hpp>
 #include <ql/functional.hpp>
 
-
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <iomanip>
+#endif
 
 using namespace QuantLib;
 using namespace std;
@@ -50,16 +53,16 @@ int main() {
 
     std::cout << std::endl;
 
-    /* 
-    Integrates the function above over several dimensions, the size of the 
+    /*
+    Integrates the function above over several dimensions, the size of the
     vector argument is the dimension one.
-    Both algorithms are not really on the same stand since the quadrature 
-    will be incorrect to use if the integrand is not appropriately behaved. Over 
-    dimension 3 you might need to modify the points in the integral to retain a 
+    Both algorithms are not really on the same stand since the quadrature
+    will be incorrect to use if the integrand is not appropriately behaved. Over
+    dimension 3 you might need to modify the points in the integral to retain a
     sensible computing time.
     */
     Size dimension = 3;
-    Real exactSol = std::pow(std::exp(-.25) * 
+    Real exactSol = std::pow(std::exp(-.25) *
         std::sqrt(M_PI), static_cast<Real>(dimension));
 
     ext::function<Real(const std::vector<Real>& arg)> f = integrand();

@@ -25,7 +25,12 @@
 #define quantlib_singleton_hpp
 
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <type_traits>
+#endif
 
 namespace QuantLib {
 

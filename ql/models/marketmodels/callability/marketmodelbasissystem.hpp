@@ -22,7 +22,12 @@
 #define quantlib_market_model_basis_system_hpp
 
 #include <ql/models/marketmodels/callability/nodedataprovider.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <memory>
+#endif
 
 namespace QuantLib {
 

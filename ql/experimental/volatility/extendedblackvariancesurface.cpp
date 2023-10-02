@@ -19,7 +19,12 @@
 
 #include <ql/experimental/volatility/extendedblackvariancesurface.hpp>
 #include <ql/math/interpolations/bilinearinterpolation.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
@@ -104,4 +109,3 @@ namespace QuantLib {
     }
 
 }
-

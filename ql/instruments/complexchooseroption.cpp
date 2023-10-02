@@ -20,7 +20,12 @@
 #include <ql/instruments/complexchooseroption.hpp>
 #include <ql/instruments/payoffs.hpp>
 #include <ql/exercise.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

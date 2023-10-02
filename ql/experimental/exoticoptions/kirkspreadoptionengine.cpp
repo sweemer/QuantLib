@@ -20,7 +20,12 @@
 #include <ql/exercise.hpp>
 #include <ql/experimental/exoticoptions/kirkspreadoptionengine.hpp>
 #include <ql/math/distributions/normaldistribution.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using namespace std;
 
@@ -101,4 +106,3 @@ namespace QuantLib {
     }
 
 }
-

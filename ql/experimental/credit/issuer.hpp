@@ -28,8 +28,13 @@
 #include <ql/experimental/credit/defaultevent.hpp>
 #include <ql/experimental/credit/defaultprobabilitykey.hpp>
 #include <ql/termstructures/defaulttermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <set>
 #include <vector>
+#endif
 
 namespace QuantLib {
 

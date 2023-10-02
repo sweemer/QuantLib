@@ -20,7 +20,12 @@
 #include <ql/indexes/interestrateindex.hpp>
 #include <ql/models/marketmodels/historicalratesanalysis.hpp>
 #include <ql/time/calendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

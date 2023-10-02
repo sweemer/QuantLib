@@ -20,7 +20,12 @@
 #include <ql/models/shortrate/onefactormodels/hullwhite.hpp>
 #include <ql/quotes/futuresconvadjustmentquote.hpp>
 #include <ql/time/imm.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 

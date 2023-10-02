@@ -23,7 +23,12 @@
 #include <ql/cashflows/cashflows.hpp>
 #include <ql/cashflows/floatingratecoupon.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <ostream>
+#endif
 
 namespace QuantLib {
 

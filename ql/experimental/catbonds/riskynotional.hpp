@@ -27,9 +27,14 @@
 #include <ql/errors.hpp>
 #include <ql/shared_ptr.hpp>
 #include <ql/time/date.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <utility>
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -70,7 +75,7 @@ namespace QuantLib {
                               NotionalPath& path) const = 0;
 
     protected:
-      ext::shared_ptr<EventPaymentOffset> paymentOffset_;       
+      ext::shared_ptr<EventPaymentOffset> paymentOffset_;
     };
 
     class DigitalNotionalRisk : public NotionalRisk {

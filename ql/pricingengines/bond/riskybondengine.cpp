@@ -21,16 +21,20 @@
 #include <ql/pricingengines/bond/riskybondengine.hpp>
 #include <ql/cashflows/cashflows.hpp>
 #include <ql/cashflows/coupon.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 namespace QuantLib {
 
     RiskyBondEngine::RiskyBondEngine(Handle<DefaultProbabilityTermStructure> defaultTS,
                                      Real recoveryRate,
                                      Handle<YieldTermStructure> yieldTS)
-    : defaultTS_(std::move(defaultTS)), 
-      recoveryRate_(recoveryRate), 
+    : defaultTS_(std::move(defaultTS)),
+      recoveryRate_(recoveryRate),
       yieldTS_(std::move(yieldTS)) {
         registerWith(defaultTS_);
         registerWith(yieldTS_);
@@ -58,7 +62,7 @@ namespace QuantLib {
                     Date defaultDate = d1 + (d2 - d1) / 2;
                     Real weightedRecovery = coupon->nominal() * recoveryRate() *
                                     (defaultTS()->survivalProbability(d1) -
-                                     defaultTS()->survivalProbability(d2)); 
+                                     defaultTS()->survivalProbability(d2));
                     NPV += weightedRecovery * yieldTS()->discount(defaultDate);
                     if (d2 > settlementDate)
                         settlementValue += weightedRecovery * yieldTS()->discount(defaultDate);

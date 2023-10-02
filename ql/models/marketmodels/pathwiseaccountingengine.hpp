@@ -18,7 +18,6 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-
 #ifndef quantlib_pathwise_accounting_engine_hpp
 #define quantlib_pathwise_accounting_engine_hpp
 
@@ -26,10 +25,14 @@
 #include <ql/models/marketmodels/pathwisediscounter.hpp>
 #include <ql/math/statistics/sequencestatistics.hpp>
 #include <ql/models/marketmodels/pathwisegreeks/ratepseudorootjacobian.hpp>
-
 #include <ql/utilities/clone.hpp>
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <vector>
+#endif
 
 namespace QuantLib {
 
@@ -39,9 +42,9 @@ namespace QuantLib {
 
     //! Engine collecting cash flows along a market-model simulation for doing pathwise computation of Deltas
     // using Giles--Glasserman smoking adjoints method
-    // note only works with displaced LMM, and requires knowledge of pseudo-roots and displacements 
+    // note only works with displaced LMM, and requires knowledge of pseudo-roots and displacements
     // This is tested in MarketModelTest::testPathwiseGreeks
-    class PathwiseAccountingEngine 
+    class PathwiseAccountingEngine
     {
       public:
         PathwiseAccountingEngine(
@@ -91,7 +94,7 @@ namespace QuantLib {
         Matrix partials_; // dimensions are factor and rate
 
         std::vector<Real> deflatorAndDerivatives_;
-        
+
         std::vector<std::vector<Size> > numberCashFlowsThisIndex_;
         std::vector<Matrix> totalCashFlowsThisIndex_; // need product cross times cross which sensitivity
 
@@ -102,17 +105,17 @@ namespace QuantLib {
 
    //! Engine collecting cash flows along a market-model simulation for doing pathwise computation of Deltas and vegas
     // using Giles--Glasserman smoking adjoints method
-    // note only works with displaced LMM, 
-    // 
-    // The method is intimately connected with log-normal Euler evolution 
-    // 
+    // note only works with displaced LMM,
+    //
+    // The method is intimately connected with log-normal Euler evolution
+    //
     // We must work with discretely compounding MM account
     // To compute a vega means changing the pseudo-square root at each time step
     // So for each vega, we have a vector of matrices. So we need a vector of vectors of matrices to compute all the vegas.
     // We do the outermost vector by time step and inner one by which vega.
     // This is tested in MarketModelTest::testPathwiseVegas
 
-    class PathwiseVegasAccountingEngine 
+    class PathwiseVegasAccountingEngine
     {
       public:
         PathwiseVegasAccountingEngine(
@@ -143,7 +146,7 @@ namespace QuantLib {
 
         std::vector<RatePseudoRootJacobian> jacobianComputers_;
 
-        
+
         bool doDeflation_;
 
 
@@ -171,7 +174,7 @@ namespace QuantLib {
 
         std::vector<Real> deflatorAndDerivatives_;
         std::vector<Real> fullDerivatives_;
-        
+
         std::vector<std::vector<Size> > numberCashFlowsThisIndex_;
         std::vector<Matrix> totalCashFlowsThisIndex_; // need product cross times cross which sensitivity
 
@@ -181,19 +184,19 @@ namespace QuantLib {
 
    //! Engine collecting cash flows along a market-model simulation for doing pathwise computation of Deltas and vegas
     // using Giles--Glasserman smoking adjoints method
-    // note only works with displaced LMM, 
-    // 
-    // The method is intimately connected with log-normal Euler evolution 
-    // 
+    // note only works with displaced LMM,
+    //
+    // The method is intimately connected with log-normal Euler evolution
+    //
     // We must work with discretely compounding MM account
     // To compute a vega means changing the pseudo-square root at each time step
     // So for each vega, we have a vector of matrices. So we need a vector of vectors of matrices to compute all the vegas.
     // We do the outermost vector by time step and inner one by which vega.
     // This implementation is different in that all the linear combinations by the bumps are done as late as possible,
-    // whereas PathwiseVegasAccountingEngine does them as early as possible. 
+    // whereas PathwiseVegasAccountingEngine does them as early as possible.
     // This is tested in MarketModelTest::testPathwiseVegas
 
-    class PathwiseVegasOuterAccountingEngine 
+    class PathwiseVegasOuterAccountingEngine
     {
       public:
         PathwiseVegasOuterAccountingEngine(
@@ -220,7 +223,7 @@ namespace QuantLib {
         ext::shared_ptr<LogNormalFwdRateEuler> evolver_;
         Clone<MarketModelPathwiseMultiProduct> product_;
         ext::shared_ptr<MarketModel> pseudoRootStructure_;
-        std::vector<std::vector<Matrix> > vegaBumps_; 
+        std::vector<std::vector<Matrix> > vegaBumps_;
         std::vector<Size> numeraires_;
 
         Real initialNumeraireValue_;
@@ -234,7 +237,7 @@ namespace QuantLib {
 
         std::vector<RatePseudoRootJacobianAllElements> jacobianComputers_;
 
-        
+
         bool doDeflation_;
 
 
@@ -262,7 +265,7 @@ namespace QuantLib {
 
         std::vector<Real> deflatorAndDerivatives_;
         std::vector<Real> fullDerivatives_;
-        
+
         std::vector<std::vector<Size> > numberCashFlowsThisIndex_;
         std::vector<Matrix> totalCashFlowsThisIndex_; // need product cross times cross which sensitivity
 

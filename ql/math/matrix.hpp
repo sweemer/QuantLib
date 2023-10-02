@@ -28,8 +28,13 @@
 
 #include <ql/math/array.hpp>
 #include <ql/utilities/steppingiterator.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <initializer_list>
 #include <iterator>
+#endif
 
 namespace QuantLib {
 
@@ -284,8 +289,8 @@ namespace QuantLib {
                std::equal(begin(), end(), to.begin());
     }
 
-    inline bool Matrix::operator!=(const Matrix& to) const { 
-        return !this->operator==(to); 
+    inline bool Matrix::operator!=(const Matrix& to) const {
+        return !this->operator==(to);
     }
 
     inline void Matrix::swap(Matrix& from) noexcept {

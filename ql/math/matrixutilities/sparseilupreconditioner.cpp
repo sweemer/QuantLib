@@ -20,7 +20,11 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/math/matrixutilities/sparseilupreconditioner.hpp>
 #include <ql/math/matrix.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <set>
+#endif
 
 namespace QuantLib {
 
@@ -187,4 +191,3 @@ namespace QuantLib {
     }
 
 }
-

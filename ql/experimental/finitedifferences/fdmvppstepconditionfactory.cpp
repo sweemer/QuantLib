@@ -23,7 +23,12 @@
 #include <ql/experimental/finitedifferences/fdmvppstartlimitstepcondition.hpp>
 #include <ql/experimental/finitedifferences/fdmvppstepconditionfactory.hpp>
 #include <ql/methods/finitedifferences/meshers/uniform1dmesher.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 namespace QuantLib {
 
