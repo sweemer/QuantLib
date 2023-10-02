@@ -932,7 +932,7 @@ set(QL_SOURCES
     version.cpp
 )
 
-if(MSVC)
+if(QL_USE_STD_MODULES)
     list(PREPEND QL_SOURCES "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.37.32822/modules/std.ixx")
 endif()
 

@@ -25,7 +25,7 @@ import std;
 #include <stdexcept>
 #endif
 
-namespace {
+namespace detail {
 
     #if defined(_MSC_VER) || defined(__BORLANDC__)
     // allow Visual Studio integration
@@ -77,18 +77,18 @@ namespace boost {
     // must be defined by the user
     void assertion_failed(char const * expr, char const * function,
                           char const * file, long line) {
-        throw std::runtime_error(format(file, line, function,
-                                        "Boost assertion failed: " +
-                                        std::string(expr)));
+        throw std::runtime_error(::detail::format(file, line, function,
+                                                  "Boost assertion failed: " +
+                                                  std::string(expr)));
     }
 
     void assertion_failed_msg(char const * expr, char const * msg,
                               char const * function, char const * file,
                               long line) {
-        throw std::runtime_error(format(file, line, function,
-                                        "Boost assertion failed: " +
-                                        std::string(expr) + ": " +
-                                        std::string(msg)));
+        throw std::runtime_error(::detail::format(file, line, function,
+                                                  "Boost assertion failed: " +
+                                                  std::string(expr) + ": " +
+                                                  std::string(msg)));
     }
 
 }
@@ -99,7 +99,7 @@ namespace QuantLib {
                  const std::string& function,
                  const std::string& message) {
         message_ = ext::make_shared<std::string>(
-                                      format(file, line, function, message));
+                        ::detail::format(file, line, function, message));
     }
 
     const char* Error::what() const noexcept { return message_->c_str(); }
