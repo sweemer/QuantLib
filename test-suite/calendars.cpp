@@ -44,7 +44,12 @@
 #include <ql/time/calendars/unitedkingdom.hpp>
 #include <ql/time/calendars/unitedstates.hpp>
 #include <ql/indexes/ibor/sofr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <fstream>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;

@@ -34,8 +34,13 @@
 #include <ql/time/daycounters/actualactual.hpp>
 #include <ql/quotes/simplequote.hpp>
 #include <ql/currencies/europe.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
 #include <iostream>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -64,7 +69,7 @@ namespace cdo_test {
         //   has enough precission to pass the tests.
         // Below the T models are integrated with a quadrature, even if this
         //   is incorrect the test pass good enough, the quadrature gets to
-        //   be worst as the kernel deviates from a normal, this is low 
+        //   be worst as the kernel deviates from a normal, this is low
         //   orders of the T; here 5 is enough, 3 would not be.
         { 0.3, -1,  5, { 1766, 420, 161,  6 } },
         { 0.3,  5, -1, { 1444, 408, 171, 10 } },
@@ -72,10 +77,10 @@ namespace cdo_test {
     };
 
     void check(int i, int j, const std::string& desc, Real found, Real expected,
-               Real bpTolerance, Real relativeTolerance) 
+               Real bpTolerance, Real relativeTolerance)
     {
         /* Uncomment to display the full show if your debugging:
-        std::cout<< "Case: "<< i << " " << j << " " << found << " :: " 
+        std::cout<< "Case: "<< i << " " << j << " " << found << " :: "
             << expected  <<  " ("<< desc << ") " << std::endl;
         */
         Real absDiff = found - expected;

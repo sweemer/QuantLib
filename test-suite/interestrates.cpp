@@ -24,7 +24,12 @@
 #include <ql/math/comparison.hpp>
 #include <ql/time/daycounters/actual360.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -195,4 +200,3 @@ test_suite* InterestRateTest::suite() {
     suite->add(QUANTLIB_TEST_CASE(&InterestRateTest::testConversions));
     return suite;
 }
-

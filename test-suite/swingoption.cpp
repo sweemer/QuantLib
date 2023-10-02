@@ -42,8 +42,12 @@
 #include <ql/quotes/simplequote.hpp>
 #include <ql/termstructures/yield/zerocurve.hpp>
 #include <ql/time/daycounters/actualactual.hpp>
-#include <utility>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <utility>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -86,14 +90,14 @@ void SwingOptionTest::testExtendedOrnsteinUhlenbeckProcess() {
         ExtendedOrnsteinUhlenbeckProcess::Trapezodial,
         ExtendedOrnsteinUhlenbeckProcess::GaussLobatto};
 
-    ext::function<Real (Real)> f[] 
+    ext::function<Real (Real)> f[]
         = { [=](Real x) -> Real { return level; },
             [ ](Real x) -> Real { return x + 1.0; },
-            [ ](Real x) -> Real { return std::sin(x); }}; 
+            [ ](Real x) -> Real { return std::sin(x); }};
 
     for (Size n=0; n < LENGTH(f); ++n) {
         ExtendedOrnsteinUhlenbeckProcess refProcess(
-            speed, vol, 0.0, f[n], 
+            speed, vol, 0.0, f[n],
             ExtendedOrnsteinUhlenbeckProcess::GaussLobatto, 1e-6);
 
         for (Size i=0; i < LENGTH(discr)-1; ++i) {
@@ -116,7 +120,7 @@ void SwingOptionTest::testExtendedOrnsteinUhlenbeckProcess() {
                 p=refProcess.evolve(t,p,dt,dw);
 
                 if (std::fabs(q-p) > 1e-6) {
-                    BOOST_FAIL("invalid process evaluation " 
+                    BOOST_FAIL("invalid process evaluation "
                                 << n << " " << i << " " << j << " " << q-p);
                 }
                 t+=dt;
@@ -271,15 +275,15 @@ void SwingOptionTest::testFdBSSwingOption() {
             new BlackScholesMertonProcess(s0, dividendTS, riskFreeTS, volTS));
     ext::shared_ptr<PricingEngine> engine(
                                 new FdSimpleBSSwingEngine(process, 50, 200));
-    
+
     VanillaOption bermudanOption(payoff, swingExercise);
     bermudanOption.setPricingEngine(ext::shared_ptr<PricingEngine>(
                           new FdBlackScholesVanillaEngine(process, 50, 200)));
     const Real bermudanOptionPrices = bermudanOption.NPV();
-    
+
     for (Size i=0; i < exerciseDates.size(); ++i) {
         const Size exerciseRights = i+1;
-        
+
         VanillaSwingOption swingOption(forward, swingExercise,
         		                       0, exerciseRights);
         swingOption.setPricingEngine(engine);
@@ -293,7 +297,7 @@ void SwingOptionTest::testFdBSSwingOption() {
                         << "\n    Price:       " << swingOptionPrice
                         << "\n    diff:        " << swingOptionPrice - upperBound);
         }
-        
+
         Real lowerBound = 0.0;
         for (Size j=exerciseDates.size()-i-1; j < exerciseDates.size(); ++j) {
             VanillaOption europeanOption(payoff, ext::shared_ptr<Exercise>(
@@ -613,5 +617,3 @@ test_suite* SwingOptionTest::suite(SpeedLevel speed) {
 
     return suite;
 }
-
-

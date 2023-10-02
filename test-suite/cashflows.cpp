@@ -36,7 +36,12 @@
 #include <ql/indexes/ibor/sofr.hpp>
 #include <ql/optional.hpp>
 #include <ql/settings.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -165,10 +170,10 @@ void CashFlowsTest::testSettings() {
 
     CHECK_NPV(false, 2.0);
     CHECK_NPV(true, 3.0);
-    
+
     // override
     Settings::instance().includeTodaysCashFlows() = false;
-    
+
     CHECK_NPV(false, 2.0);
     CHECK_NPV(true, 2.0);
 

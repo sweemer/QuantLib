@@ -116,6 +116,9 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -123,11 +126,7 @@
 #include <utility>
 #include <chrono>
 #include <thread>
-
-/* PAPI code
-#include <stdio.h
-#include <papi.h>
-*/
+#endif
 
 /* Use BOOST_MSVC instead of _MSC_VER since some other vendors (Metrowerks,
    for example) also #define _MSC_VER

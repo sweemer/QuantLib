@@ -26,7 +26,11 @@
 #include <ql/quotes/simplequote.hpp>
 #include <ql/pricingengines/swap/discountingswapengine.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <string>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -252,7 +256,7 @@ void EquityTotalReturnSwapTest::testErrorWhenNoPaymentCalendar() {
     using namespace equitytotalreturnswap_test;
 
     CommonVars vars;
-    
+
     auto sch = Schedule(Date(5, January, 2023), Date(5, April, 2023), 3 * Months, Calendar(),
                         Unadjusted, Unadjusted, DateGeneration::Rule::Backward, false);
 

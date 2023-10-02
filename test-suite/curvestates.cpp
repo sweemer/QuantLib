@@ -32,7 +32,12 @@
 #include <ql/math/matrix.hpp>
 #include <ql/time/schedule.hpp>
 #include <ql/time/daycounters/simpledaycounter.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <sstream>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;

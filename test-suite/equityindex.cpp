@@ -21,7 +21,12 @@
 #include <ql/indexes/equityindex.hpp>
 #include <ql/time/calendars/target.hpp>
 #include <ql/quotes/simplequote.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <string>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -50,7 +55,7 @@ namespace equityindex_test {
                                                         dividendHandle, spotHandle);
 
             today = calendar.adjust(Date(27, January, 2023));
-            
+
             if (addTodaysFixing)
                 equityIndex->addFixing(today, 8690.0);
 
@@ -58,7 +63,7 @@ namespace equityindex_test {
 
             interestHandle.linkTo(flatRate(0.03, dayCount));
             dividendHandle.linkTo(flatRate(0.01, dayCount));
-            
+
             spot = ext::make_shared<SimpleQuote>(8700.0);
             spotHandle.linkTo(spot);
         }
@@ -116,7 +121,7 @@ void EquityIndexTest::testFixingForecast() {
     const Real tolerance = 1.0e-8;
 
     Date forecastedDate(20, May, 2030);
-    
+
     Real forecast = vars.equityIndex->fixing(forecastedDate);
     Real expectedForecast = vars.spotHandle->value() *
                             vars.dividendHandle->discount(forecastedDate) /

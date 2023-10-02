@@ -42,8 +42,12 @@
 #include <ql/time/calendars/china.hpp>
 #include <ql/time/daycounters/yearfractiontodate.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <iomanip>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -808,7 +812,7 @@ void DayCounterTest::testThirty360_BondBasis() {
         {Date(20, August, 2007),    Date(20, February, 2008), 180},
         {Date(20, February, 2008),  Date(20, August, 2008),   180},
         {Date(20, August, 2008),    Date(20, February, 2009), 180},
-        {Date(20, February, 2009),  Date(20, August, 2009),   180}, 
+        {Date(20, February, 2009),  Date(20, August, 2009),   180},
 
         // Example 2: End dates include some end-February dates
         {Date(31, August, 2006),    Date(28, February, 2007), 178},
@@ -1083,7 +1087,7 @@ void DayCounterTest::testActualActualOutOfScheduleRange() {
     } catch (const std::exception&) {
         raised = true;
     }
-       
+
     if (!raised) {
         BOOST_FAIL("Exception expected but did not happen!");
     }

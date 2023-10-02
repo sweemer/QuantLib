@@ -49,6 +49,9 @@
 #define BOOST_TEST_NO_MAIN 1
 #include <boost/test/included/unit_test.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
 #include <list>
 #include <sstream>
@@ -59,6 +62,7 @@
 #include <cstring>
 #include <thread>
 #include <limits>
+#endif
 
 using boost::unit_test::test_results;
 using namespace boost::interprocess;

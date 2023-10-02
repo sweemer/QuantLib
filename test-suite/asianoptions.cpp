@@ -44,7 +44,12 @@
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -571,7 +576,7 @@ void testDiscreteGeometricAveragePriceHeston(const ext::shared_ptr<PricingEngine
         option.setPricingEngine(engine);
 
         Real calculated = option.NPV();
-    
+
         if (std::fabs(calculated-expected) > tolerance) {
             REPORT_FAILURE("value", averageType, 1.0, 0.0,
                        std::vector<Date>(), payoff, europeanExercise, spot->value(),
@@ -1096,7 +1101,7 @@ void AsianOptionTest::testMCDiscreteArithmeticAveragePriceHeston() {
         }
     }
 
-    // An additional dataset using the Heston parameters coming from "General lower 
+    // An additional dataset using the Heston parameters coming from "General lower
     // bounds for arithmetic Asian option prices", Applied Mathematical Finance 15(2)
     // 123-149 (2008), by Albrecher, H., Mayer, P., and Schoutens, W. The numerical
     // accuracy of prices given in Table 6 is low, but higher accuracy prices for the
@@ -2118,7 +2123,7 @@ void AsianOptionTest::testAnalyticContinuousGeometricAveragePriceHeston() {
         option.setPricingEngine(engine);
 
         Real calculated = option.NPV();
-    
+
         if (std::fabs(calculated-expected) > tolerance) {
             REPORT_FAILURE("value", averageType, 1.0, 0.0,
                        std::vector<Date>(), payoff, europeanExercise, spot->value(),
@@ -2154,7 +2159,7 @@ void AsianOptionTest::testAnalyticContinuousGeometricAveragePriceHeston() {
         option.setPricingEngine(engine_2);
 
         Real calculated = option.NPV();
-    
+
         if (std::fabs(calculated-expected) > tolerance) {
             REPORT_FAILURE("value", averageType, 1.0, 0.0,
                        std::vector<Date>(), payoff, europeanExercise, spot->value(),
@@ -2214,7 +2219,7 @@ void AsianOptionTest::testAnalyticContinuousGeometricAveragePriceHeston() {
         option.setPricingEngine(engine_3);
 
         Real calculated = option.NPV();
-    
+
         if (std::fabs(calculated-expected) > tolerance) {
             REPORT_FAILURE("value", averageType, 1.0, 0.0,
                        std::vector<Date>(), payoff, europeanExercise, spot->value(),

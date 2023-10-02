@@ -35,12 +35,17 @@
 #else
 #include <boost/test/tools/floating_point_comparison.hpp>
 #endif
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <iomanip>
 #include <numeric>
 #include <string>
 #include <utility>
 #include <vector>
+#endif
 
 // This adapts the BOOST_CHECK_SMALL and BOOST_CHECK_CLOSE macros to
 // support a struct as Real for arguments, while fully transparant to regular doubles.

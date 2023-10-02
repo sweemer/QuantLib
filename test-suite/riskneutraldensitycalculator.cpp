@@ -41,7 +41,12 @@
 #include <ql/time/calendars/nullcalendar.hpp>
 #include <ql/timegrid.hpp>
 #include <ql/types.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;

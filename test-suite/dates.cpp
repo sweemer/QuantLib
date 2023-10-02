@@ -32,8 +32,12 @@
 #include <ql/time/asx.hpp>
 #include <ql/utilities/dataparsers.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <sstream>
 #include <unordered_set>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;

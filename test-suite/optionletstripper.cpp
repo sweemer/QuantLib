@@ -34,8 +34,13 @@
 #include <ql/pricingengines/capfloor/bacheliercapfloorengine.hpp>
 #include <ql/instruments/makecapfloor.hpp>
 #include <ql/quotes/simplequote.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <algorithm>
 #include <iterator>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;

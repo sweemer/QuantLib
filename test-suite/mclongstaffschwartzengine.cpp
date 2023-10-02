@@ -30,7 +30,12 @@
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -111,7 +116,7 @@ namespace {
                           new AmericanMaxPathPricer(this->arguments_.payoff));
 
             return ext::make_shared<LongstaffSchwartzPathPricer<MultiPath> > (
-                
+
                     this->timeGrid(),
                     earlyExercisePathPricer,
                     process->riskFreeRate().currentLink());
@@ -318,4 +323,3 @@ test_suite* MCLongstaffSchwartzEngineTest::suite(SpeedLevel speed) {
 
     return suite;
 }
-

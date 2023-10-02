@@ -41,7 +41,12 @@
 #include <ql/methods/finitedifferences/utilities/fdmquantohelper.hpp>
 #include <ql/methods/finitedifferences/meshers/fdmblackscholesmesher.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -1365,4 +1370,3 @@ test_suite* QuantoOptionTest::experimental() {
     suite->add(QUANTLIB_TEST_CASE(&QuantoOptionTest::testDoubleBarrierValues));
     return suite;
 }
-

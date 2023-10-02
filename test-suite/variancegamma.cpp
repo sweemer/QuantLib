@@ -28,7 +28,12 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -177,7 +182,7 @@ void VarianceGammaTest::testVarianceGamma() {
                     processes[i].s, processes[i].q, processes[i].r,
                     today, processes[i].sigma, processes[i].nu,
                     processes[i].theta, expected, calculated,
-                    error, tol);  
+                    error, tol);
             }
             optionList.push_back(option);
         }
@@ -194,7 +199,7 @@ void VarianceGammaTest::testVarianceGamma() {
             Real expected = results[i][j];
             Real error = std::fabs(calculated-expected);
             if (error>tol) {
-                ext::shared_ptr<StrikedTypePayoff> payoff = 
+                ext::shared_ptr<StrikedTypePayoff> payoff =
                     ext::dynamic_pointer_cast<StrikedTypePayoff>(option->payoff());
                 REPORT_FAILURE("fft value", payoff, option->exercise(),
                     processes[i].s, processes[i].q, processes[i].r,

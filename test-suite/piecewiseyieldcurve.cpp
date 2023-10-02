@@ -51,11 +51,16 @@
 #include <ql/time/daycounters/thirty360.hpp>
 #include <ql/time/imm.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -509,7 +514,7 @@ namespace piecewise_yield_curve_test {
             if (euribor3m->fixingDate(immStart) <
                 Settings::instance().evaluationDate())
                 immStart = IMM::nextDate(immStart, false);
-                
+
             ForwardRateAgreement immFut(euribor3m, immStart, Position::Long,
                                         immFutData[i].rate / 100, 100.0, curveHandle);
             Rate expectedRate = immFutData[i].rate / 100,
@@ -1198,7 +1203,7 @@ void PiecewiseYieldCurveTest::testConstructionWithExplicitBootstrap() {
 
     // With an explicit IterativeBootstrap object
     typedef PiecewiseYieldCurve<ForwardRate, Linear, IterativeBootstrap> PwLinearForward;
-    ext::shared_ptr<YieldTermStructure> yts = 
+    ext::shared_ptr<YieldTermStructure> yts =
         ext::make_shared<PwLinearForward>(
             vars.settlement, vars.instruments, Actual360(), Linear(),
             PwLinearForward::bootstrap_type());
@@ -1209,7 +1214,7 @@ void PiecewiseYieldCurveTest::testConstructionWithExplicitBootstrap() {
     // With an explicit LocalBootstrap object
     typedef PiecewiseYieldCurve<ForwardRate, ConvexMonotone, LocalBootstrap> PwCmForward;
     yts = ext::make_shared<PwCmForward>(
-        vars.settlement, vars.instruments, Actual360(), ConvexMonotone(), 
+        vars.settlement, vars.instruments, Actual360(), ConvexMonotone(),
         PwCmForward::bootstrap_type());
 
     BOOST_CHECK_NO_THROW(yts->discount(1.0, true));
@@ -1368,8 +1373,8 @@ void PiecewiseYieldCurveTest::testGlobalBootstrap() {
     }
 }
 
-/* This test attempts to build an ARS collateralised in USD curve as of 25 Sep 2019. Using the default 
-   IterativeBootstrap with no retries, the yield curve building fails. Allowing retries, it expands the min and max 
+/* This test attempts to build an ARS collateralised in USD curve as of 25 Sep 2019. Using the default
+   IterativeBootstrap with no retries, the yield curve building fails. Allowing retries, it expands the min and max
    bounds and passes.
 */
 void PiecewiseYieldCurveTest::testIterativeBootstrapRetries() {
@@ -1457,7 +1462,7 @@ void PiecewiseYieldCurveTest::testIterativeBootstrapRetries() {
     // Create the ARS in USD curve with an IterativeBootstrap allowing for 4 retries.
     IterativeBootstrap<LLDFCurve> ib(Null<Real>(), Null<Real>(), Null<Real>(), 5);
     arsYts = ext::make_shared<LLDFCurve>(asof, instruments, tsDayCounter, ib);
-    
+
     // Check that the ARS in USD curve builds and populate the spot ARS discount factor.
     DiscountFactor spotDfArs = 1.0;
     BOOST_REQUIRE_NO_THROW(spotDfArs = arsYts->discount(spotDate));

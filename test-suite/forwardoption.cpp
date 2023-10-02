@@ -34,7 +34,12 @@
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/processes/hestonprocess.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -515,7 +520,7 @@ void ForwardOptionTest::testMCPrices() {
    ext::shared_ptr<PricingEngine> analyticEngine(
                         new ForwardVanillaEngine<AnalyticEuropeanEngine>(stochProcess));
 
-   ext::shared_ptr<PricingEngine> mcEngine 
+   ext::shared_ptr<PricingEngine> mcEngine
       = MakeMCForwardEuropeanBSEngine<PseudoRandom>(stochProcess)
             .withSteps(timeSteps)
             .withSamples(numberOfSamples)

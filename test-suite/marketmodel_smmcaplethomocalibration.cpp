@@ -64,7 +64,12 @@
 #include <ql/math/statistics/sequencestatistics.hpp>
 #include <ql/models/marketmodels/models/capletcoterminalperiodic.hpp>
 #include <ql/models/marketmodels/models/volatilityinterpolationspecifierabcd.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <sstream>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;

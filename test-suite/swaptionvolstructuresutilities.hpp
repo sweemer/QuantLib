@@ -30,8 +30,13 @@
 #include <ql/time/daycounters/actual365fixed.hpp>
 #include <ql/termstructures/volatility/swaption/swaptionvolmatrix.hpp>
 #include <ql/termstructures/yieldtermstructure.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <vector>
+#endif
 
 namespace QuantLib {
 

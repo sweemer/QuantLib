@@ -26,8 +26,13 @@
 #include <ql/time/calendars/weekendsonly.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
 #include <ql/instruments/creditdefaultswap.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
 #include <vector>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -370,15 +375,15 @@ void ScheduleTest::testCDS2015Convention() {
     BOOST_CHECK_EQUAL(s.startDate(), expStart);
     BOOST_CHECK_EQUAL(s.endDate(), expMaturity);
 
-    // If we just use 12 Dec 2016 + 5Y = 12 Dec 2021 as termination date in the schedule, the schedule constructor can 
-    // use any of the allowable CDS dates i.e. 20 Mar, Jun, Sep and Dec. In the constructor, we just use the next one 
+    // If we just use 12 Dec 2016 + 5Y = 12 Dec 2021 as termination date in the schedule, the schedule constructor can
+    // use any of the allowable CDS dates i.e. 20 Mar, Jun, Sep and Dec. In the constructor, we just use the next one
     // here i.e. 20 Dec 2021. We get the same results as above.
     maturity = tradeDate + tenor;
     s = makeCdsSchedule(tradeDate, maturity, rule);
     BOOST_CHECK_EQUAL(s.startDate(), expStart);
     BOOST_CHECK_EQUAL(s.endDate(), expMaturity);
 
-    // We do the same tests but with a trade date of 1 Mar 2017. Using cdsMaturity to get maturity date from 5Y tenor, 
+    // We do the same tests but with a trade date of 1 Mar 2017. Using cdsMaturity to get maturity date from 5Y tenor,
     // we get the same maturity as above.
     tradeDate = Date(1, Mar, 2017);
     maturity = cdsMaturity(tradeDate, tenor, rule);
@@ -388,7 +393,7 @@ void ScheduleTest::testCDS2015Convention() {
     BOOST_CHECK_EQUAL(s.startDate(), expStart);
     BOOST_CHECK_EQUAL(s.endDate(), expMaturity);
 
-    // Using 1 Mar 2017 + 5Y = 1 Mar 2022 as termination date in the schedule, the constructor just uses the next 
+    // Using 1 Mar 2017 + 5Y = 1 Mar 2022 as termination date in the schedule, the constructor just uses the next
     // allowable CDS date i.e. 20 Mar 2022. We must update the expected maturity.
     maturity = tradeDate + tenor;
     s = makeCdsSchedule(tradeDate, maturity, rule);
@@ -418,7 +423,7 @@ void ScheduleTest::testCDS2015ConventionGrid() {
     // Test inputs and expected outputs
     // The map key is a pair with 1st element equal to trade date and 2nd element equal to CDS tenor.
     // The map value is a pair with 1st and 2nd element equal to expected start and end date respectively.
-    // The trade dates are from the transition dates in the doc i.e. 20th Mar, Jun, Sep and Dec in 2016 and a day 
+    // The trade dates are from the transition dates in the doc i.e. 20th Mar, Jun, Sep and Dec in 2016 and a day
     // either side. The tenors are selected tenors from the doc i.e. short quarterly tenors less than 1Y, 1Y and 5Y.
     InputData inputs = {
         { make_pair(Date(19, Mar, 2016), 3 * Months), make_pair(Date(21, Dec, 2015), Date(20, Mar, 2016)) },
@@ -503,7 +508,7 @@ void ScheduleTest::testCDSConventionGrid() {
     // Test inputs and expected outputs
     // The map key is a pair with 1st element equal to trade date and 2nd element equal to CDS tenor.
     // The map value is a pair with 1st and 2nd element equal to expected start and end date respectively.
-    // The trade dates are from the transition dates in the doc i.e. 20th Mar, Jun, Sep and Dec in 2016 and a day 
+    // The trade dates are from the transition dates in the doc i.e. 20th Mar, Jun, Sep and Dec in 2016 and a day
     // either side. The tenors are selected tenors from the doc i.e. short quarterly tenors less than 1Y, 1Y and 5Y.
     InputData inputs = {
         { make_pair(Date(19, Mar, 2016), 3 * Months), make_pair(Date(21, Dec, 2015), Date(20, Jun, 2016)) },
@@ -594,7 +599,7 @@ void ScheduleTest::testOldCDSConventionGrid() {
     // Test inputs and expected outputs
     // The map key is a pair with 1st element equal to trade date and 2nd element equal to CDS tenor.
     // The map value is a pair with 1st and 2nd element equal to expected start and end date respectively.
-    // The trade dates are from the transition dates in the doc i.e. 20th Mar, Jun, Sep and Dec in 2016 and a day 
+    // The trade dates are from the transition dates in the doc i.e. 20th Mar, Jun, Sep and Dec in 2016 and a day
     // either side. The tenors are selected tenors from the doc i.e. short quarterly tenors less than 1Y, 1Y and 5Y.
     InputData inputs = {
         { make_pair(Date(19, Mar, 2016), 3 * Months), make_pair(Date(19, Mar, 2016), Date(20, Jun, 2016)) },
@@ -825,8 +830,8 @@ void ScheduleTest::testOldCDSConventionSampleDates() {
     check_dates(s, expDates);
 
     // Check the 30 day stub rule by moving closer to the first coupon payment date of Mon 21 Dec 2015.
-    // The test here requires long first stub when trade date plus 1D = 21 Nov 2015. The condition in the schedule 
-    // generation code is if: effective date + 30D > next 20th _unadjusted_. Not sure if we should refer to the actual 
+    // The test here requires long first stub when trade date plus 1D = 21 Nov 2015. The condition in the schedule
+    // generation code is if: effective date + 30D > next 20th _unadjusted_. Not sure if we should refer to the actual
     // coupon payment date here i.e. the next 20th _adjusted_ when making the decision.
 
     // 19 Nov 2015 + 30D = 19 Dec 2015 <= 20 Dec 2015 => short front stub.

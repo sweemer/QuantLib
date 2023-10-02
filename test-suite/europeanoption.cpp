@@ -4,7 +4,7 @@
  Copyright (C) 2003, 2007 Ferdinando Ametrano
  Copyright (C) 2003, 2007 StatPro Italia srl
  Copyright (C) 2009 Klaus Spanderen
- 
+
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
 
@@ -40,7 +40,12 @@
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/termstructures/volatility/equityfx/blackvariancesurface.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -1380,10 +1385,10 @@ void EuropeanOptionTest::testLocalVolatility() {
                                    flatRate(settlementDate, 0.0, dayCounter));
 
     const ext::shared_ptr<Quote> s0(new SimpleQuote(4500.00));
-    
+
     const std::vector<Real> strikes = { 100 ,500 ,2000,3400,3600,3800,4000,4200,4400,4500,
                                         4600,4800,5000,5200,5400,5600,7500,10000,20000,30000 };
-    
+
     Volatility v[] =
       { 1.015873, 1.015873, 1.015873, 0.89729, 0.796493, 0.730914, 0.631335, 0.568895,
         0.711309, 0.711309, 0.711309, 0.641309, 0.635593, 0.583653, 0.508045, 0.463182,
@@ -1405,13 +1410,13 @@ void EuropeanOptionTest::testLocalVolatility() {
         0.423432, 0.406891, 0.373720, 0.314667, 0.281009, 0.263281, 0.246451, 0.242166,
         0.453704, 0.453704, 0.453704, 0.381255, 0.334578, 0.305527, 0.268909, 0.251367,
         0.517748, 0.517748, 0.517748, 0.416577, 0.364770, 0.331595, 0.287423, 0.264285 };
-    
+
     Matrix blackVolMatrix(strikes.size(), dates.size()-1);
     for (Size i=0; i < strikes.size(); ++i)
         for (Size j=1; j < dates.size(); ++j) {
             blackVolMatrix[i][j-1] = v[i*(dates.size()-1)+j-1];
         }
-    
+
     const ext::shared_ptr<BlackVarianceSurface> volTS(
         new BlackVarianceSurface(settlementDate, calendar,
                                  std::vector<Date>(dates.begin()+1, dates.end()),
@@ -1420,7 +1425,7 @@ void EuropeanOptionTest::testLocalVolatility() {
     volTS->setInterpolation<Bicubic>();
     const ext::shared_ptr<GeneralizedBlackScholesProcess> process =
                                               makeProcess(s0, qTS, rTS,volTS);
-    
+
     const std::pair<FdmSchemeDesc, std::string> schemeDescs[]= {
         std::make_pair(FdmSchemeDesc::Douglas(), "Douglas"),
         std::make_pair(FdmSchemeDesc::CrankNicolson(), "Crank-Nicolson"),
@@ -1432,26 +1437,26 @@ void EuropeanOptionTest::testLocalVolatility() {
             const Date& exDate = dates[i];
             const ext::shared_ptr<StrikedTypePayoff> payoff(new
                                  PlainVanillaPayoff(Option::Call, strikes[j]));
-    
+
             const ext::shared_ptr<Exercise> exercise(
                                                  new EuropeanExercise(exDate));
-    
+
             EuropeanOption option(payoff, exercise);
             option.setPricingEngine(ext::shared_ptr<PricingEngine>(
                                          new AnalyticEuropeanEngine(process)));
-             
+
             const Real tol = 0.001;
             const Real expectedNPV   = option.NPV();
             const Real expectedDelta = option.delta();
             const Real expectedGamma = option.gamma();
-            
+
             option.setPricingEngine(ext::shared_ptr<PricingEngine>(
                          new FdBlackScholesVanillaEngine(process, 200, 400)));
-    
+
             Real calculatedNPV = option.NPV();
             const Real calculatedDelta = option.delta();
             const Real calculatedGamma = option.gamma();
-            
+
             // check implied pricing first
             if (std::fabs(expectedNPV - calculatedNPV) > tol*expectedNPV) {
                 BOOST_FAIL("Failed to reproduce option price for "
@@ -1474,7 +1479,7 @@ void EuropeanOptionTest::testLocalVolatility() {
                            << "\n    calculated: " << calculatedGamma
                            << "\n    expected:   " << expectedGamma);
             }
-            
+
             // check local vol pricing
             // delta/gamma are not the same by definition (model implied greeks)
             for (const auto& schemeDesc : schemeDescs) {
@@ -1668,7 +1673,7 @@ void EuropeanOptionTest::testFdEngineWithNonConstantParameters() {
         ext::make_shared<BlackScholesProcess>(Handle<Quote>(spot),
                                               Handle<YieldTermStructure>(rTS),
                                               Handle<BlackVolTermStructure>(volTS));
-    
+
     ext::shared_ptr<Exercise> exercise =
         ext::make_shared<EuropeanExercise>(today + 360);
     ext::shared_ptr<StrikedTypePayoff> payoff =

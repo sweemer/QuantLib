@@ -22,9 +22,14 @@
 #include "utilities.hpp"
 #include <ql/math/fastfouriertransform.hpp>
 #include <ql/math/array.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <complex>
 #include <vector>
 #include <functional>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -109,4 +114,3 @@ test_suite* FastFourierTransformTest::suite() {
     suite->add(QUANTLIB_TEST_CASE(&FastFourierTransformTest::testInverse));
     return suite;
 }
-

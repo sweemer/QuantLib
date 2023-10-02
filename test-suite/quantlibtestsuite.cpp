@@ -206,9 +206,14 @@
 #include "xoshiro256starstar.hpp"
 #include "zabr.hpp"
 #include "zerocouponswap.hpp"
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <chrono>
 #include <iomanip>
 #include <iostream>
+#endif
 
 using namespace boost::unit_test_framework;
 

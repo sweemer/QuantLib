@@ -2,16 +2,16 @@
 
 /*
  Copyright (C) 2011 Chris Kenyon
- 
+
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
- 
+
  QuantLib is free software: you can redistribute it and/or modify it
  under the terms of the QuantLib license.  You should have received a
  copy of the license along with this program; if not, please email
  <quantlib-dev@lists.sf.net>. The license is also available online at
  <http://quantlib.org/license.shtml>.
- 
+
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
@@ -39,10 +39,14 @@
 #include <ql/instruments/cpiswap.hpp>
 #include <ql/instruments/bonds/cpibond.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <iostream>
+#endif
+
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
-
-#include <iostream>
 
 using std::fabs;
 
@@ -78,7 +82,7 @@ namespace inflation_cpi_swap_test {
 
     struct CommonVars {
         // common data
-    
+
         Size length;
         Date startDate;
         Real volatility;
@@ -327,7 +331,7 @@ void CPISwapTest::consistency() {
     // simple structure so simple pricing engine - most work done by index
     ext::shared_ptr<DiscountingSwapEngine> dse(new DiscountingSwapEngine(common.nominalTS));
     zisV.setPricingEngine(dse);
-    
+
     // get float+spread & fixed*inflation leg prices separately
     Real testInfLegNPV = 0.0;
     for(Size i=0;i<zisV.leg(0).size(); i++){
@@ -353,7 +357,7 @@ void CPISwapTest::consistency() {
                testInfLegNPV << " vs " << zisV.legNPV(0));
 
     Real diff = fabs(1-zisV.NPV()/4191660.0);
-    
+
     Real max_diff = usingAtParCoupons ? 1e-5 : 3e-5;
 
     QL_REQUIRE(diff<max_diff,
@@ -523,4 +527,3 @@ test_suite* CPISwapTest::suite() {
 
     return suite;
 }
-

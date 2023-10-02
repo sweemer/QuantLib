@@ -31,7 +31,12 @@
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -749,4 +754,3 @@ test_suite* DigitalOptionTest::suite() {
     suite->add(QUANTLIB_TEST_CASE(&DigitalOptionTest::testMCCashAtHit));
     return suite;
 }
-

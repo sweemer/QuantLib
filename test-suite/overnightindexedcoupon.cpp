@@ -23,7 +23,12 @@
 #include <ql/indexes/ibor/sofr.hpp>
 #include <ql/settings.hpp>
 #include <ql/time/daycounters/actual360.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -83,7 +88,7 @@ namespace overnight_indexed_coupon_tests {
                     << "\n    calculated: " << std::setprecision(12) << calculated \
                     << "\n    error:      " << std::setprecision(12) << std::fabs(calculated-expected)); \
     }
-        
+
 void OvernightIndexedCouponTest::testPastCouponRate() {
     BOOST_TEST_MESSAGE("Testing rate for past overnight-indexed coupon...");
 
@@ -171,7 +176,7 @@ void OvernightIndexedCouponTest::testRateWhenTodayIsHoliday() {
     CHECK_OIS_COUPON_RESULT("coupon rate", coupon->rate(), expectedRate, 1e-12);
     CHECK_OIS_COUPON_RESULT("coupon amount", coupon->amount(), expectedAmount, 1e-8);
 }
-        
+
 void OvernightIndexedCouponTest::testAccruedAmountInThePast() {
     BOOST_TEST_MESSAGE("Testing accrued amount in the past for overnight-indexed coupon...");
 
@@ -266,7 +271,7 @@ void OvernightIndexedCouponTest::testAccruedAmountOnFutureHoliday() {
     Real expectedAmount = vars.notional * 0.000100005012;
     CHECK_OIS_COUPON_RESULT("coupon amount", coupon->accruedAmount(accrualDate), expectedAmount, 1e-8);
 }
-    
+
 test_suite* OvernightIndexedCouponTest::suite() {
     auto* suite = BOOST_TEST_SUITE("Overnight-indexed coupon tests");
     suite->add(QUANTLIB_TEST_CASE(&OvernightIndexedCouponTest::testPastCouponRate));

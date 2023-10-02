@@ -51,7 +51,12 @@
 #include <ql/pricingengines/vanilla/analytichestonhullwhiteengine.hpp>
 #include <ql/pricingengines/vanilla/fdhestonvanillaengine.hpp>
 #include <ql/pricingengines/vanilla/fdhestonhullwhitevanillaengine.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -987,7 +992,7 @@ void HybridHestonHullWhiteProcessTest::testBsmHullWhitePricing() {
     std::vector<Real> strikes = {75,85,90,95,100,105,110,115,120,125,130,140,150};
     Size listOfTimeStepsPerYear[] = { 20 };
 
-    HestonModelData hestonModelData 
+    HestonModelData hestonModelData
         = { "BSM-HW Model", 0.09, 1.0, 0.09, QL_EPSILON, 0.0, 0.04, 0.03 };
     HullWhiteModelData hwModelData = hullWhiteModels[0];
     bool controlVariate[] = { true, false };
@@ -1199,7 +1204,7 @@ void HybridHestonHullWhiteProcessTest::testHestonHullWhiteCalibration() {
 
     std::vector<Real> strikes    = { 50, 75, 90, 100, 110, 125, 150, 200 };
     std::vector<Time> maturities = { 1/12., 3/12., 0.5, 1.0, 2.0, 3.0, 5.0, 7.5, 10};
-    
+
     std::vector<Volatility> vol = {
         0.482627,0.407617,0.366682,0.340110,0.314266,0.280241,0.252471,0.325552,
         0.464811,0.393336,0.354664,0.329758,0.305668,0.273563,0.244024,0.244886,

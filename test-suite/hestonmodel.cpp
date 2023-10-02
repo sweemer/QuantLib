@@ -56,8 +56,13 @@
 #include <ql/time/daycounters/actual365fixed.hpp>
 #include <ql/time/daycounters/actualactual.hpp>
 #include <ql/time/period.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <utility>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -78,13 +83,13 @@ namespace {
         */
 
         Date settlementDate(Settings::instance().evaluationDate());
-        
+
         DayCounter dayCounter = Actual365Fixed();
         Calendar calendar = TARGET();
-        
+
         Integer t[] = { 13, 41, 75, 165, 256, 345, 524, 703 };
         Rate r[] = { 0.0357,0.0349,0.0341,0.0355,0.0359,0.0368,0.0386,0.0401 };
-        
+
         std::vector<Date> dates;
         std::vector<Rate> rates;
         dates.push_back(settlementDate);
@@ -96,10 +101,10 @@ namespace {
         }
         Handle<YieldTermStructure> riskFreeTS(
             ext::make_shared<ZeroCurve>(dates, rates, dayCounter));
-        
+
         Handle<YieldTermStructure> dividendYield(
                                     flatRate(settlementDate, 0.0, dayCounter));
-        
+
         Volatility v[] =
           { 0.6625,0.4875,0.4204,0.3667,0.3431,0.3267,0.3121,0.3121,
             0.6007,0.4543,0.3967,0.3511,0.3279,0.3154,0.2984,0.2921,
@@ -114,17 +119,17 @@ namespace {
             0.3460,0.2845,0.2624,0.2463,0.2425,0.2385,0.2373,0.2422,
             0.3857,0.2860,0.2578,0.2399,0.2357,0.2327,0.2312,0.2351,
             0.3976,0.2860,0.2607,0.2356,0.2297,0.2268,0.2241,0.2320 };
-        
+
         Handle<Quote> s0(ext::make_shared<SimpleQuote>(4468.17));
         Real strike[] = { 3400,3600,3800,4000,4200,4400,
                           4500,4600,4800,5000,5200,5400,5600 };
-        
+
         std::vector<ext::shared_ptr<CalibrationHelper> > options;
-        
+
         for (Size s = 0; s < 13; ++s) {
             for (Size m = 0; m < 8; ++m) {
                 Handle<Quote> vol(ext::make_shared<SimpleQuote>(v[s*8+m]));
-        
+
                 Period maturity((int)((t[m]+3)/7.), Weeks); // round to weeks
                 options.push_back(ext::make_shared<HestonModelHelper>(maturity, calendar,
                                               s0, strike[s], vol,
@@ -132,12 +137,12 @@ namespace {
                                           BlackCalibrationHelper::ImpliedVolError));
             }
         }
-        
+
         CalibrationMarketData marketData = { s0, riskFreeTS, dividendYield, options };
-        
+
         return marketData;
     }
-        
+
 }
 
 
@@ -235,7 +240,7 @@ void HestonModelTest::testDAXCalibration() {
     Settings::instance().evaluationDate() = settlementDate;
 
     CalibrationMarketData marketData = getDAXCalibrationMarketData();
-    
+
     const Handle<YieldTermStructure> riskFreeTS = marketData.riskFreeTS;
     const Handle<YieldTermStructure> dividendTS = marketData.dividendYield;
     const Handle<Quote> s0 = marketData.s0;
@@ -334,7 +339,7 @@ void HestonModelTest::testAnalyticVsBlack() {
                    << "\n    error:      " << std::scientific << error);
     }
 
-    engine = 
+    engine =
         ext::make_shared<FdHestonVanillaEngine>(
             ext::make_shared<HestonModel>(process),
               200,200,100);
@@ -1112,7 +1117,7 @@ void HestonModelTest::testAnalyticPiecewiseTimeDependent() {
     std::vector<Rate> qrates = {0.0, 0.3};
     Handle<YieldTermStructure> dividendTS(
 		ext::make_shared<ZeroCurve>(dates, qrates, dayCounter));
-    
+
     const Real v0 = 0.1;
     Handle<Quote> s0(ext::make_shared<SimpleQuote>(1.0));
 
@@ -1124,9 +1129,9 @@ void HestonModelTest::testAnalyticPiecewiseTimeDependent() {
     ext::shared_ptr<PiecewiseTimeDependentHestonModel> model =
         ext::make_shared<PiecewiseTimeDependentHestonModel>(
                                               riskFreeTS, dividendTS,
-                                              s0, v0, theta, kappa, 
+                                              s0, v0, theta, kappa,
                                               sigma, rho, TimeGrid(20.0, 2));
-    
+
     VanillaOption option(payoff, exercise);
 
     ext::shared_ptr<HestonProcess> hestonProcess(
@@ -1137,7 +1142,7 @@ void HestonModelTest::testAnalyticPiecewiseTimeDependent() {
         ext::make_shared<HestonModel>(hestonProcess);
     option.setPricingEngine(
         ext::make_shared<AnalyticHestonEngine>(hestonModel));
-    
+
     const Real expected = option.NPV();
 
     option.setPricingEngine(ext::shared_ptr<PricingEngine>(
@@ -1172,7 +1177,7 @@ void HestonModelTest::testDAXCalibrationOfTimeDependentModel() {
     Settings::instance().evaluationDate() = settlementDate;
 
     CalibrationMarketData marketData = getDAXCalibrationMarketData();
-    
+
     const Handle<YieldTermStructure> riskFreeTS = marketData.riskFreeTS;
     const Handle<YieldTermStructure> dividendTS = marketData.dividendYield;
     const Handle<Quote> s0 = marketData.s0;
@@ -1186,10 +1191,10 @@ void HestonModelTest::testDAXCalibrationOfTimeDependentModel() {
     ConstantParameter sigma( 0.5, PositiveConstraint());
     ConstantParameter theta( 0.1, PositiveConstraint());
     ConstantParameter rho( -0.5, BoundaryConstraint(-1.0, 1.0));
-   
+
     std::vector<Time> pTimes(1, 0.25);
     PiecewiseConstantParameter kappa(pTimes, PositiveConstraint());
-    
+
     for (Size i=0; i < pTimes.size()+1; ++i) {
         kappa.setParam(i, 10.0);
     }
@@ -1197,7 +1202,7 @@ void HestonModelTest::testDAXCalibrationOfTimeDependentModel() {
     ext::shared_ptr<PiecewiseTimeDependentHestonModel> model =
         ext::make_shared<PiecewiseTimeDependentHestonModel>(
                                               riskFreeTS, dividendTS,
-                                              s0, v0, theta, kappa, 
+                                              s0, v0, theta, kappa,
                                               sigma, rho, modelGrid);
 
     const ext::shared_ptr<PricingEngine> engines[] = {
@@ -1219,7 +1224,7 @@ void HestonModelTest::testDAXCalibrationOfTimeDependentModel() {
         LevenbergMarquardt om(1e-8, 1e-8, 1e-8);
         model->calibrate(options, om,
             EndCriteria(400, 40, 1.0e-8, 1.0e-8, 1.0e-8));
-    
+
         Real sse = 0;
         for (Size i = 0; i < 13*8; ++i) {
             const Real diff = options[i]->calibrationError()*100.0;
@@ -2018,7 +2023,7 @@ void HestonModelTest::testCosHestonEngine() {
 
 void HestonModelTest::testCosHestonEngineTruncation() {
     BOOST_TEST_MESSAGE("Testing Heston pricing via COS method outside truncation bounds...");
-    
+
     const Date todaysDate(22, August, 2022);
     const Date maturity(23, August, 2022);
     Settings::instance().evaluationDate() = todaysDate;
@@ -2046,10 +2051,10 @@ void HestonModelTest::testCosHestonEngineTruncation() {
             new HestonProcess(riskFreeTS, dividendTS, underlyingH, .007, .8, .007, .1, -.2));
     ext::shared_ptr<HestonModel> hestonModel(
             new HestonModel(hestonProcess));
-    
+
     europeanOption.setPricingEngine(ext::shared_ptr<PricingEngine>(
                 new COSHestonEngine(hestonModel)));
-                
+
     const Real tol = 1e-7;
     const Real error = std::fabs(europeanOption.NPV() - 0.0);
 
@@ -2059,7 +2064,7 @@ void HestonModelTest::testCosHestonEngineTruncation() {
                 << "\n    calculated: " << europeanOption.NPV()
                 << "\n    difference: " << error);
     }
-    
+
 }
 
 void HestonModelTest::testCharacteristicFct() {

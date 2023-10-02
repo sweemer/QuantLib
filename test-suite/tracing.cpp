@@ -20,8 +20,13 @@
 #include "tracing.hpp"
 #include "utilities.hpp"
 #include <ql/utilities/tracing.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <sstream>
 #include <iostream>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;

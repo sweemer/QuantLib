@@ -47,11 +47,14 @@
 #include <ql/pricingengines/barrier/fdhestondoublebarrierengine.hpp>
 #include <ql/pricingengines/barrier/analyticdoublebarrierbinaryengine.hpp>
 #include <ql/experimental/volatility/sabrvoltermstructure.hpp>
-
 #include <boost/math/distributions/non_central_chi_squared.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <set>
 #include <utility>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -126,7 +129,7 @@ void SquareRootCLVModelTest::testSquareRootCLVVanillaPricing() {
             / (sigma*sigma*(1-std::exp(-kappa*maturity)))*sqrtProcess->x0();
 
     const chi_squared_type dist(df, ncp);
-        
+
     const Real strikes[] = { 50, 75, 100, 125, 150, 200 };
     for (Real strike : strikes) {
         const Option::Type optionType = (strike > fwd) ? Option::Call : Option::Put;
@@ -804,7 +807,7 @@ void SquareRootCLVModelTest::testForwardSkew() {
     }
 }
 
- 
+
 test_suite* SquareRootCLVModelTest::experimental() {
     auto* suite = BOOST_TEST_SUITE("SquareRootCLVModel tests");
 

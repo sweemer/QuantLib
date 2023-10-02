@@ -20,9 +20,14 @@
 #ifndef quantlib_test_basket_option_hpp
 #define quantlib_test_basket_option_hpp
 
-#include <boost/test/unit_test.hpp>
-#include <cstddef>
 #include "speedlevel.hpp"
+#include <boost/test/unit_test.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <cstddef>
+#endif
 
 /* remember to document new and/or updated tests in the Doxygen
    comment block of the corresponding class */

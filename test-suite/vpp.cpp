@@ -51,8 +51,13 @@
 #include <ql/quotes/simplequote.hpp>
 #include <ql/termstructures/yield/zerocurve.hpp>
 #include <ql/time/daycounters/actualactual.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <deque>
 #include <utility>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -975,5 +980,3 @@ test_suite* VPPTest::suite(SpeedLevel speed) {
 
     return suite;
 }
-
-

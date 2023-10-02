@@ -32,8 +32,13 @@
 #include <ql/time/daycounters/actual360.hpp>
 #include <ql/quotes/simplequote.hpp>
 #include <ql/currencies/europe.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <string>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -155,14 +160,14 @@ void NthToDefaultTest::testGauss() {
     ext::shared_ptr<SimpleQuote> simpleQuote (new SimpleQuote(0.0));
     Handle<Quote> correlationHandle (simpleQuote);
 
-    ext::shared_ptr<DefaultLossModel> copula( new 
-        ConstantLossModel<GaussianCopulaPolicy>( correlationHandle, 
-        std::vector<Real>(names, recovery), 
-        LatentModelIntegrationType::GaussianQuadrature, names, 
+    ext::shared_ptr<DefaultLossModel> copula( new
+        ConstantLossModel<GaussianCopulaPolicy>( correlationHandle,
+        std::vector<Real>(names, recovery),
+        LatentModelIntegrationType::GaussianQuadrature, names,
         GaussianCopulaPolicy::initTraits()));
 
     /* If you like the action you can price with the simulation engine below
-    instead below. But you need at least 1e6 simulations to pass the pricing 
+    instead below. But you need at least 1e6 simulations to pass the pricing
     error tests
     */
     //ext::shared_ptr<GaussianDefProbLM> gLM(
@@ -173,9 +178,9 @@ void NthToDefaultTest::testGauss() {
     //Size numSimulations = 1000000;
     //// Size numCoresUsed = 4; use your are in the multithread branch
     //// Sobol, many cores
-    //ext::shared_ptr<RandomDefaultLM<GaussianCopulaPolicy> > copula( 
-    //    new RandomDefaultLM<GaussianCopulaPolicy>(gLM, 
-    //        std::vector<Real>(names, recovery), numSimulations, 1.e-6, 
+    //ext::shared_ptr<RandomDefaultLM<GaussianCopulaPolicy> > copula(
+    //    new RandomDefaultLM<GaussianCopulaPolicy>(gLM,
+    //        std::vector<Real>(names, recovery), numSimulations, 1.e-6,
     //        2863311530));
 
     // Set up pool and basket
@@ -185,7 +190,7 @@ void NthToDefaultTest::testGauss() {
 
     std::vector<Issuer> issuers;
     for(Size i=0; i<names; i++) {
-        std::vector<QuantLib::Issuer::key_curve_pair> curves(1, 
+        std::vector<QuantLib::Issuer::key_curve_pair> curves(1,
             std::make_pair(NorthAmericaCorpDefaultKey(
                 EURCurrency(), QuantLib::SeniorSec,
                 Period(), 1. // amount threshold
@@ -198,10 +203,10 @@ void NthToDefaultTest::testGauss() {
         thePool->add(namesIds[i], issuers[i], NorthAmericaCorpDefaultKey(
                 EURCurrency(), QuantLib::SeniorSec, Period(), 1.));
 
-    std::vector<DefaultProbKey> defaultKeys(probabilities.size(), 
+    std::vector<DefaultProbKey> defaultKeys(probabilities.size(),
         NorthAmericaCorpDefaultKey(EURCurrency(), SeniorSec, Period(), 1.));
 
-    ext::shared_ptr<Basket> basket(new Basket(asofDate, namesIds, 
+    ext::shared_ptr<Basket> basket(new Basket(asofDate, namesIds,
         std::vector<Real>(names, namesNotional/names), thePool, 0., 1.));
 
     ext::shared_ptr<PricingEngine> engine(
@@ -220,7 +225,7 @@ void NthToDefaultTest::testGauss() {
     Real diff, maxDiff = 0;
 
     basket->setLossModel(copula);
-    
+
     for (Size j = 0; j < LENGTH(hwCorrelation); j++) {
         simpleQuote->setValue (hwCorrelation[j]);
         for (Size i = 0; i < ntd.size(); i++) {
@@ -301,9 +306,9 @@ void NthToDefaultTest::testStudent() {
 
     TCopulaPolicy::initTraits iniT;
     iniT.tOrders = std::vector<QuantLib::Integer>(2,5);
-    ext::shared_ptr<DefaultLossModel> copula( new 
-        ConstantLossModel<TCopulaPolicy>( correlationHandle, 
-        std::vector<Real>(names, recovery), 
+    ext::shared_ptr<DefaultLossModel> copula( new
+        ConstantLossModel<TCopulaPolicy>( correlationHandle,
+        std::vector<Real>(names, recovery),
         LatentModelIntegrationType::GaussianQuadrature, names, iniT));
 
     // Set up pool and basket
@@ -313,7 +318,7 @@ void NthToDefaultTest::testStudent() {
 
     std::vector<Issuer> issuers;
     for(Size i=0; i<names; i++) {
-        std::vector<QuantLib::Issuer::key_curve_pair> curves(1, 
+        std::vector<QuantLib::Issuer::key_curve_pair> curves(1,
             std::make_pair(NorthAmericaCorpDefaultKey(
                 EURCurrency(), QuantLib::SeniorSec,
                 Period(), 1. // amount threshold
@@ -326,10 +331,10 @@ void NthToDefaultTest::testStudent() {
         thePool->add(namesIds[i], issuers[i], NorthAmericaCorpDefaultKey(
                 EURCurrency(), QuantLib::SeniorSec, Period(), 1.));
 
-    std::vector<DefaultProbKey> defaultKeys(probabilities.size(), 
+    std::vector<DefaultProbKey> defaultKeys(probabilities.size(),
         NorthAmericaCorpDefaultKey(EURCurrency(), SeniorSec, Period(), 1.));
 
-    ext::shared_ptr<Basket> basket(new Basket(asofDate, namesIds, 
+    ext::shared_ptr<Basket> basket(new Basket(asofDate, namesIds,
         std::vector<Real>(names, namesNotional/names), thePool, 0., 1.));
 
     ext::shared_ptr<PricingEngine> engine(
@@ -368,7 +373,7 @@ void NthToDefaultTest::testStudent() {
 
     //instead of this BEGIN
     simpleQuote->setValue (0.3);
-    
+
     for (Size i = 0; i < ntd.size(); i++) {
         QL_REQUIRE (ntd[i].rank() == hwDataDist[i].rank, "rank does not match");
 

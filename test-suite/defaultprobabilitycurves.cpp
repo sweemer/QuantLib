@@ -36,11 +36,16 @@
 #include <ql/time/daycounters/actual360.hpp>
 #include <ql/time/daycounters/thirty360.hpp>
 #include <ql/utilities/dataformatters.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -260,7 +265,7 @@ namespace {
                                          frequency, convention, rule,
                                          dayCounter, recoveryRate,
                                          discountCurve,
-                                         upfrontSettlementDays, 
+                                         upfrontSettlementDays,
                                          true, true, Date(), Actual360(true))));
 
         RelinkableHandle<DefaultProbabilityTermStructure> piecewiseCurve;
@@ -395,9 +400,9 @@ void DefaultProbabilityCurveTest::testUpfrontBootstrap() {
         BOOST_ERROR("Cash-flow settings improperly modified");
 }
 
-/* This test attempts to build a default curve from CDS spreads as of 1 Apr 2020. The spreads are real and from a 
-   distressed reference entity with an inverted CDS spread curve. Using the default IterativeBootstrap with no 
-   retries, the default curve building fails. Allowing retries, it expands the min survival probability bounds but 
+/* This test attempts to build a default curve from CDS spreads as of 1 Apr 2020. The spreads are real and from a
+   distressed reference entity with an inverted CDS spread curve. Using the default IterativeBootstrap with no
+   retries, the default curve building fails. Allowing retries, it expands the min survival probability bounds but
    still fails. We set dontThrow to true in IterativeBootstrap to use a fall back curve.
 */
 void DefaultProbabilityCurveTest::testIterativeBootstrapRetries() {
@@ -510,12 +515,12 @@ void DefaultProbabilityCurveTest::testIterativeBootstrapRetries() {
 
     // Create the default curve with an IterativeBootstrap allowing for 4 retries.
     // Use a maxFactor value of 1.0 so that we still use the previous survival probability at each pillar. In other
-    // words, the survival probability cannot increase with time so best max at current pillar is the previous 
+    // words, the survival probability cannot increase with time so best max at current pillar is the previous
     // pillar's value - there is no point increasing it on a retry.
     IterativeBootstrap<SPCurve> ib(Null<Real>(), Null<Real>(), Null<Real>(), 5, 1.0, 10.0);
     dpts = ext::make_shared<SPCurve>(asof, instruments, tsDayCounter, ib);
 
-    // Check that the default curve still throws. It throws at the third pillar because the survival probability is 
+    // Check that the default curve still throws. It throws at the third pillar because the survival probability is
     // too low at the second pillar.
     BOOST_CHECK_EXCEPTION(dpts->survivalProbability(testDate), Error,
         ExpectedErrorMessage("1st iteration: failed at 3rd alive instrument"));

@@ -22,8 +22,12 @@
 #include "utilities.hpp"
 #include <ql/math/matrixutilities/expm.hpp>
 #include <ql/math/ode/adaptiverungekutta.hpp>
-#include <complex>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <complex>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;

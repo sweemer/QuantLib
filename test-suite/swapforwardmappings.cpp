@@ -36,12 +36,14 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 #include <ql/time/daycounters/simpledaycounter.hpp>
 #include <ql/math/statistics/sequencestatistics.hpp>
 #include <ql/pricingengines/blackcalculator.hpp>
-
 #include <ql/models/marketmodels/products/multistep/multistepswaption.hpp>
 
 #if defined(BOOST_MSVC)
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <float.h>
-//namespace { unsigned int u = _controlfp(_EM_INEXACT, _MCW_EM); }
+#endif
 #endif
 
 using namespace QuantLib;
@@ -366,7 +368,7 @@ void SwapForwardMappingsTest::testForwardCoterminalMappings() {
     }
 }
 
-void SwapForwardMappingsTest::testSwaptionImpliedVolatility() 
+void SwapForwardMappingsTest::testSwaptionImpliedVolatility()
 {
 
     BOOST_TEST_MESSAGE("Testing implied swaption vol in LMM using HW approximation...");
@@ -383,10 +385,10 @@ void SwapForwardMappingsTest::testSwaptionImpliedVolatility()
 
     for (Size startIndex = 1; startIndex+2 < nbRates; startIndex = startIndex+5)
     {
-        
+
         Size endIndex = nbRates-2;
 
-        ext::shared_ptr<StrikedTypePayoff> payoff(new   
+        ext::shared_ptr<StrikedTypePayoff> payoff(new
             PlainVanillaPayoff(Option::Call, strike));
         MultiStepSwaption product(rateTimes, startIndex, endIndex,payoff );
 
@@ -461,4 +463,3 @@ test_suite* SwapForwardMappingsTest::suite() {
     //     &SwapForwardMappingsTest::testForwardCoterminalMappings));
     return suite;
 }
-

@@ -21,7 +21,12 @@
 #include <ql/time/calendars/southafrica.hpp>
 #include <ql/time/daycounter.hpp>
 #include <ql/time/period.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <utility>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -127,6 +132,3 @@ test_suite* BusinessDayConventionTest::suite() {
     suite->add(QUANTLIB_TEST_CASE(&BusinessDayConventionTest::testConventions));
     return suite;
 }
-
-
-

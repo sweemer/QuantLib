@@ -28,8 +28,13 @@
 #include <ql/termstructures/volatility/optionlet/strippedoptionletadapter.hpp>
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <chrono>
 #include <thread>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -217,7 +222,7 @@ void ObservableTest::testAsyncGarbagCollector() {
 void ObservableTest::testMultiThreadingGlobalSettings() {
 	BOOST_TEST_MESSAGE("Testing observer global settings in a "
 		               "multithreading environment...");
-	
+
 	const ext::shared_ptr<SimpleQuote> quote(new SimpleQuote(-1.0));
 
     ObservableSettings::instance().disableUpdates(true);
@@ -377,7 +382,7 @@ void ObservableTest::testAddAndDeleteObserverDuringNotifyObservers() {
         const ext::shared_ptr<TestSetup> setup = ext::make_shared<TestSetup>(rng);
 
         for (Size i=0; i < nrInitialObserver; ++i) {
-            const ext::shared_ptr<Observer> obs = 
+            const ext::shared_ptr<Observer> obs =
                 (i == nrInitialObserver/3 || i == nrInitialObserver/2)
                 ? ext::make_shared<TestObserver>(setup.get())
                 : ext::make_shared<TestObserver>();
@@ -413,4 +418,3 @@ test_suite* ObservableTest::suite() {
         &ObservableTest::testAddAndDeleteObserverDuringNotifyObservers));
     return suite;
 }
-

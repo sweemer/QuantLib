@@ -20,7 +20,12 @@
 #include "xoshiro256starstar.hpp"
 #include "utilities.hpp"
 #include <ql/math/randomnumbers/xoshiro256starstaruniformrng.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <numeric>
+#endif
 
 // we do not want to change the original xoshiro256starstar.c implementation. Therefore, we suppress
 // any warnings from this file and also prevent linting and formatting.
@@ -188,7 +193,7 @@ void Xoshiro256StarStarTest::testMeanAndStdDevOfNextReal() {
 void Xoshiro256StarStarTest::testAgainstReferenceImplementationInC() {
     BOOST_TEST_MESSAGE(
         "Testing Xoshiro256StarStarUniformRng::nextInt64() against reference implementation in C...");
-    
+
     // some random initial seed
     static const auto seed = 10108360646465513120ULL;
 

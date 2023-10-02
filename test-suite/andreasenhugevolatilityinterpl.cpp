@@ -39,7 +39,12 @@
 #include <ql/termstructures/volatility/equityfx/andreasenhugelocalvoladapter.hpp>
 #include <ql/termstructures/volatility/equityfx/andreasenhugevolatilityinterpl.hpp>
 #include <ql/termstructures/volatility/equityfx/andreasenhugevolatilityadapter.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -1062,4 +1067,3 @@ test_suite* AndreasenHugeVolatilityInterplTest::suite(SpeedLevel speed) {
 
     return suite;
 }
-

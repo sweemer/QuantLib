@@ -87,7 +87,12 @@
 #include <ql/pricingengines/barrier/analyticdoublebarrierbinaryengine.hpp>
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/multi_array.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
+#endif
 
 using namespace QuantLib;
 using boost::unit_test_framework::test_suite;
@@ -2550,7 +2555,7 @@ void HestonSLVModelTest::testBarrierPricingMixedModelsMonteCarloVsFdmPricing() {
     const std::vector<Date>& requiredDates = std::vector<Date>();
 
     // Create two slightly different Heston models. The first will be our stochastic
-    // vol model, the second is used to create a similar implied vol surface which 
+    // vol model, the second is used to create a similar implied vol surface which
     // we fit a local vol model to
     const Real kappa1 =  2.0;
     const Real theta1 =  0.12;

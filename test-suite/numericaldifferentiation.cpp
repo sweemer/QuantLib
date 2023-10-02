@@ -23,8 +23,13 @@
 #include <ql/math/matrix.hpp>
 #include <ql/math/factorial.hpp>
 #include <ql/methods/finitedifferences/operators/numericaldifferentiation.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <algorithm>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -321,5 +326,3 @@ test_suite* NumericalDifferentiationTest::suite() {
 
     return suite;
 }
-
-

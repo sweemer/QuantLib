@@ -44,8 +44,11 @@
 #include <ql/experimental/inflation/cpicapfloortermpricesurface.hpp>
 #include <ql/experimental/inflation/cpicapfloorengines.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
-
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -82,7 +85,7 @@ namespace inflation_cpi_capfloor_test {
 
 
     struct CommonVars {
-    
+
         // common data
 
         Size length;
@@ -313,9 +316,9 @@ namespace inflation_cpi_capfloor_test {
 
 void InflationCPICapFloorTest::cpicapfloorpricesurface() {
     BOOST_TEST_MESSAGE("Checking CPI cap/floor against price surface...");
-    
+
     using namespace inflation_cpi_capfloor_test;
-    
+
     CommonVars common;
 
     Real nominal = 1.0;
@@ -382,7 +385,7 @@ void InflationCPICapFloorTest::cpicapfloorpricesurface() {
 
 void InflationCPICapFloorTest::cpicapfloorpricer() {
     BOOST_TEST_MESSAGE("Checking CPI cap/floor pricer...");
-    
+
     using namespace inflation_cpi_capfloor_test;
 
     CommonVars common;
@@ -455,4 +458,3 @@ test_suite* InflationCPICapFloorTest::suite() {
 
     return suite;
 }
-

@@ -34,10 +34,15 @@
 #include <ql/math/matrixutilities/symmetricschurdecomposition.hpp>
 #include <ql/math/matrixutilities/sparsematrix.hpp>
 #include <ql/math/randomnumbers/mt19937uniformrng.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <cmath>
 #include <iterator>
 #include <utility>
 #include <numeric>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -886,4 +891,3 @@ test_suite* MatricesTest::suite() {
     suite->add(QUANTLIB_TEST_CASE(&MatricesTest::testOperators));
     return suite;
 }
-

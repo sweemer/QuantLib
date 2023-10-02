@@ -43,7 +43,11 @@
 #include <ql/termstructures/volatility/equityfx/blackconstantvol.hpp>
 #include <ql/utilities/dataformatters.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -1475,7 +1479,7 @@ void AmericanOptionTest::testAndersenLakeHighPrecisionExample() {
         Real expected[2];
         Real tol;
     };
-    
+
     const SchemeSpec testCases[] = {
         { 24, 3, 9,  0.05, {0.1069528125898476, 0.1069524359360852}, 1e-6},
         {  5, 1, 4,  0.05, {0.1070237787625299, 0.1070042740171235}, 1e-3},
@@ -2283,4 +2287,3 @@ test_suite* AmericanOptionTest::suite(SpeedLevel speed) {
 
     return suite;
 }
-

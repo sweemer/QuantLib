@@ -41,9 +41,14 @@
 #include <ql/time/daycounters/actual360.hpp>
 #include <ql/time/daycounters/thirty360.hpp>
 #include <ql/optional.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <map>
 #include <iomanip>
 #include <iostream>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -189,7 +194,7 @@ void CreditDefaultSwapTest::testCachedMarketValue() {
         calendar.advance(evalDate,10, Years, ModifiedFollowing),
         calendar.advance(evalDate,15, Years, ModifiedFollowing)
     };
-    
+
     std::vector<DiscountFactor> dfs = {
         1.0,
         0.9990151375768731,

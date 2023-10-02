@@ -3,16 +3,16 @@
 /*
  Copyright (C) 2011 Chris Kenyon
  Copyright (C) 2012 StatPro Italia srl
- 
+
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
- 
+
  QuantLib is free software: you can redistribute it and/or modify it
  under the terms of the QuantLib license.  You should have received a
  copy of the license along with this program; if not, please email
  <quantlib-dev@lists.sf.net>. The license is also available online at
  <http://quantlib.org/license.shtml>.
- 
+
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
@@ -38,10 +38,14 @@
 #include <ql/instruments/bonds/cpibond.hpp>
 #include <ql/cashflows/cashflows.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
+#include <iostream>
+#endif
+
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
-
-#include <iostream>
 
 namespace inflation_cpi_bond_test {
 
@@ -75,7 +79,7 @@ namespace inflation_cpi_bond_test {
 
 
     struct CommonVars { // NOLINT(cppcoreguidelines-special-member-functions)
-    
+
         Calendar calendar;
         BusinessDayConvention convention;
         Date evaluationDate;
@@ -169,7 +173,7 @@ void InflationCPIBondTest::testCleanPrice() {
     BOOST_TEST_MESSAGE("Checking cached pricers for CPI bond...");
 
     using namespace inflation_cpi_bond_test;
-  
+
     CommonVars common;
 
     Real notional = 1000000.0;
@@ -310,4 +314,3 @@ test_suite* InflationCPIBondTest::suite() {
     suite->add(QUANTLIB_TEST_CASE(&InflationCPIBondTest::testCPILegWithoutBaseCPI));
     return suite;
 }
-

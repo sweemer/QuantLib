@@ -57,7 +57,12 @@
 #include <ql/math/statistics/convergencestatistics.hpp>
 #include <ql/math/optimization/simplex.hpp>
 #include <ql/math/statistics/sequencestatistics.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <sstream>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;

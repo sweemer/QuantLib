@@ -35,7 +35,12 @@
 #include <ql/termstructures/yield/flatforward.hpp>
 #include <ql/models/shortrate/onefactormodels/hullwhite.hpp>
 #include <ql/shared_ptr.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iomanip>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -834,8 +839,8 @@ void CallableBondTest::testCallableFixedRateBondWithArbitrarySchedule() {
 
     CallabilitySchedule callabilities = {
         ext::make_shared<Callability>(
-                         Bond::Price(100.0, Bond::Price::Clean), 
-                         Callability::Call, 
+                         Bond::Price(100.0, Bond::Price::Clean),
+                         Callability::Call,
                          dates[2])
     };
 

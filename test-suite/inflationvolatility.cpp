@@ -24,23 +24,22 @@
 #include <ql/math/interpolations/bicubicsplineinterpolation.hpp>
 #include <ql/termstructures/yield/zerocurve.hpp>
 #include <ql/termstructures/inflation/interpolatedyoyinflationcurve.hpp>
-
 #include <ql/cashflows/inflationcoupon.hpp>
 #include <ql/cashflows/inflationcouponpricer.hpp>
-
 #include <ql/experimental/inflation/yoycapfloortermpricesurface.hpp>
 #include <ql/pricingengines/inflation/inflationcapfloorengines.hpp>
 #include <ql/experimental/inflation/yoyoptionletstripper.hpp>
-
 #include <ql/experimental/inflation/kinterpolatedyoyoptionletvolatilitysurface.hpp>
 #include <ql/experimental/inflation/interpolatedyoyoptionletstripper.hpp>
-
 #include <ql/cashflows/capflooredinflationcoupon.hpp>
 #include <ql/indexes/inflation/euhicp.hpp>
 #include <ql/indexes/inflation/ukrpi.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
-
+#endif
 
 // local namespace for data
 //*************************************************************************
@@ -86,9 +85,9 @@ namespace inflation_volatility_test {
         fPriceUK.reset();
         yoyIndexUK.reset();
 
-        cStrikesEU.clear();        
+        cStrikesEU.clear();
         fStrikesEU.clear();
-        cStrikesUK.clear();        
+        cStrikesUK.clear();
         fStrikesUK.clear();
         cfMaturitiesEU.clear();
         cfMaturitiesUK.clear();
@@ -416,5 +415,3 @@ boost::unit_test_framework::test_suite* InflationVolTest::suite() {
 
     return suite;
 }
-
-

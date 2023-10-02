@@ -75,8 +75,12 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/operation.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <numeric>
 #include <utility>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -1167,7 +1171,7 @@ void FdmLinearOpTest::testFdmHestonHullWhiteOp() {
 namespace {
     Array axpy(const boost::numeric::ublas::compressed_matrix<Real>& A,
                const Array& x) {
-        
+
         boost::numeric::ublas::vector<Real> tmpX(x.size()), y(x.size());
         std::copy(x.begin(), x.end(), tmpX.begin());
         boost::numeric::ublas::axpy_prod(A, tmpX, y);
@@ -1251,11 +1255,11 @@ void FdmLinearOpTest::testGMRES() {
 
     const ext::function<Array(const Array&)> matmult
         = [&](const Array& _x) { return axpy(a, _x); };
-    
+
     SparseILUPreconditioner ilu(a, 4);
     ext::function<Array(const Array&)> precond
         = [&](const Array& _x) { return ilu.apply(_x); };
-    
+
     Array b(n*m);
     MersenneTwisterUniformRng rng(1234);
     for (Real& i : b) {
@@ -1269,7 +1273,7 @@ void FdmLinearOpTest::testGMRES() {
     const Array x = result.x;
     const Real errorCalculated = result.errors.back();
 
-    const Real error = std::sqrt(DotProduct(b-axpy(a, x), 
+    const Real error = std::sqrt(DotProduct(b-axpy(a, x),
                                  b-axpy(a, x))/DotProduct(b,b));
 
     if (error > tol) {
@@ -1357,7 +1361,7 @@ void FdmLinearOpTest::testCrankNicolsonWithDamping() {
         x[iter.index()] = mesher->location(iter, 0);
     }
 
-    FdmBackwardSolver solver(map, FdmBoundaryConditionSet(), 
+    FdmBackwardSolver solver(map, FdmBoundaryConditionSet(),
                              ext::shared_ptr<FdmStepConditionComposite>(),
                              FdmSchemeDesc::Douglas());
     solver.rollback(rhs, maturity, 0.0, csSteps, dampingSteps);

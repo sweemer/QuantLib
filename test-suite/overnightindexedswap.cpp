@@ -43,8 +43,12 @@
 #include <ql/currencies/europe.hpp>
 #include <ql/utilities/dataformatters.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
 #include <iomanip>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;
@@ -335,14 +339,14 @@ namespace overnight_indexed_swap_test {
                                    eonia,
                                    Handle<YieldTermStructure>(),
                                    telescopicValueDates,
-                                   paymentLag, 
-                                   Following, 
-                                   Annual, 
-                                   Calendar(), 
-                                   0 * Days, 
-                                   0.0, 
-                                   Pillar::LastRelevantDate, 
-                                   Date(), 
+                                   paymentLag,
+                                   Following,
+                                   Annual,
+                                   Calendar(),
+                                   0 * Days,
+                                   0.0,
+                                   Pillar::LastRelevantDate,
+                                   Date(),
                                    averagingMethod));
         eoniaHelpers.push_back(helper);
     }

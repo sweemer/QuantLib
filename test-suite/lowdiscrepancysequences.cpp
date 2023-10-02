@@ -36,7 +36,11 @@
 
 //#define PRINT_ONLY
 #ifdef PRINT_ONLY
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <fstream>
+#endif
 #endif
 
 using namespace QuantLib;

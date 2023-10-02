@@ -26,7 +26,12 @@
 #include <ql/time/calendars/unitedstates.hpp>
 #include <ql/time/daycounters/actual360.hpp>
 #include <ql/time/daycounters/business252.hpp>
+
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <iostream>
+#endif
 
 using namespace QuantLib;
 using namespace boost::unit_test_framework;

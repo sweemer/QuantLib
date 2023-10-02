@@ -41,8 +41,11 @@
 #include <ql/cashflows/fixedratecoupon.hpp>
 #include <ql/instruments/yearonyearinflationswap.hpp>
 
+#ifdef QL_USE_STD_MODULES
+import std;
+#else
 #include <functional>
-
+#endif
 
 using boost::unit_test_framework::test_suite;
 
@@ -130,7 +133,7 @@ void InflationTest::testZeroIndex() {
     UKHICP ukhicp;
     if (ukhicp.name() != "UK HICP"
         || ukhicp.frequency() != Monthly
-        || ukhicp.revised() 
+        || ukhicp.revised()
         || ukhicp.availabilityLag() != 1 * Months) {
         BOOST_ERROR("wrong UK HICP data ("
                     << ukhicp.name() << ", "
@@ -268,7 +271,7 @@ void InflationTest::testZeroTermStructure() {
 
     const Real eps = 1.0e-6;
     auto engine = ext::make_shared<DiscountingSwapEngine>(nominalTS);
-    
+
     for (const auto& datum: zcData) {
         ZeroCouponInflationSwap nzcis(Swap::Payer,
                                       1000000.0,
@@ -339,7 +342,7 @@ void InflationTest::testZeroTermStructure() {
         ext::make_shared<MultiplicativePriceSeasonality>(seasonalityBaseDate, Monthly, seasonalityFactors);
 
     pZITS->setSeasonality(nonUnitSeasonality);
-    
+
     for (const auto& datum: zcData) {
         ZeroCouponInflationSwap nzcis(Swap::Payer,
                                       1000000.0,
@@ -386,7 +389,7 @@ void InflationTest::testZeroTermStructure() {
 
     //===========================================================================================
     // Test zero coupon swaps
-    
+
     for (const auto& datum: zcData) {
         ZeroCouponInflationSwap nzcis(Swap::Payer,
                                       1000000.0,
