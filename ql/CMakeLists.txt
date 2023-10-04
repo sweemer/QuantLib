@@ -375,7 +375,7 @@ set(QL_SOURCES
     math/integrals/integral.cpp
     math/integrals/kronrodintegral.cpp
     math/integrals/segmentintegral.cpp
-    math/interpolations/chebyshevinterpolation.cpp    
+    math/interpolations/chebyshevinterpolation.cpp
     math/matrix.cpp
     math/matrixutilities/basisincompleteordered.cpp
     math/matrixutilities/bicgstab.cpp
@@ -1454,7 +1454,7 @@ set(QL_HEADERS
     math/interpolations/backwardflatlinearinterpolation.hpp
     math/interpolations/bicubicsplineinterpolation.hpp
     math/interpolations/bilinearinterpolation.hpp
-    math/interpolations/chebyshevinterpolation.hpp    
+    math/interpolations/chebyshevinterpolation.hpp
     math/interpolations/convexmonotoneinterpolation.hpp
     math/interpolations/cubicinterpolation.hpp
     math/interpolations/extrapolation.hpp
@@ -2354,11 +2354,17 @@ add_custom_command(OUTPUT ${QL_GENERATED_HEADERS}
     COMMENT "Generating headers..."
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 
-add_library(ql_library
-    ${QL_SOURCES}
-    ${QL_HEADERS}
-    ${QL_CONFIGURED_HEADERS}
-    ${QL_GENERATED_HEADERS})
+add_library(ql_library)
+
+if(QL_USE_STD_MODULES)
+    file(COPY "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.37.32822/modules/std.ixx"
+         DESTINATION ${PROJECT_SOURCE_DIR}/ql)
+    target_sources(ql_library
+        PRIVATE FILE_SET CXX_MODULES FILES ${PROJECT_SOURCE_DIR}/ql/std.ixx
+        PRIVATE ${QL_SOURCES} ${QL_HEADERS} ${QL_CONFIGURED_HEADERS} ${QL_GENERATED_HEADERS})
+else()
+    target_sources(ql_library PRIVATE ${QL_SOURCES} ${QL_HEADERS} ${QL_CONFIGURED_HEADERS} ${QL_GENERATED_HEADERS})
+endif()
 
 set_target_properties(ql_library PROPERTIES
     EXPORT_NAME ${PACKAGE_NAME}
