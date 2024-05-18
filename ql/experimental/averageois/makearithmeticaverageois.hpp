@@ -62,7 +62,7 @@ namespace QuantLib {
         MakeArithmeticAverageOIS& withOvernightLegSpread(Spread sp);
 
         MakeArithmeticAverageOIS& withDiscountingTermStructure(
-                  const Handle<YieldTermStructure>& discountingTermStructure);
+                  Handle<YieldTermStructure> discountingTermStructure);
         MakeArithmeticAverageOIS& withPricingEngine(
                               const ext::shared_ptr<PricingEngine>& engine);
         MakeArithmeticAverageOIS& withArithmeticAverage(

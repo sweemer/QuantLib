@@ -55,7 +55,7 @@ namespace QuantLib {
                public AffineModel,
                public TermStructureConsistentModel {
       public:
-        G2(const Handle<YieldTermStructure>& termStructure,
+        G2(Handle<YieldTermStructure> termStructure,
            Real a = 0.1,
            Real sigma = 0.01,
            Real b = 0.1,
@@ -168,14 +168,14 @@ namespace QuantLib {
             Real a_, sigma_, b_, eta_, rho_;
         };
       public:
-        FittingParameter(const Handle<YieldTermStructure>& termStructure,
+        FittingParameter(Handle<YieldTermStructure> termStructure,
                          Real a,
                          Real sigma,
                          Real b,
                          Real eta,
                          Real rho)
         : TermStructureFittingParameter(ext::shared_ptr<Parameter::Impl>(
-                          new FittingParameter::Impl(termStructure, a, sigma,
+                          new FittingParameter::Impl(std::move(termStructure), a, sigma,
                                                      b, eta, rho))) {}
     };
 
@@ -183,4 +183,3 @@ namespace QuantLib {
 
 
 #endif
-

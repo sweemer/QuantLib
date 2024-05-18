@@ -40,11 +40,11 @@ namespace QuantLib {
         Rate switchStrike,
         Real accuracy,
         Natural maxIter,
-        const Handle<YieldTermStructure>& discount,
+        Handle<YieldTermStructure> discount,
         const VolatilityType type,
         const Real displacement,
         bool dontThrow)
-    : OptionletStripper(termVolSurface, index, discount, type, displacement),
+    : OptionletStripper(termVolSurface, index, std::move(discount), type, displacement),
       floatingSwitchStrike_(switchStrike == Null<Rate>()), switchStrike_(switchStrike),
       accuracy_(accuracy), maxIter_(maxIter), dontThrow_(dontThrow) {
 
@@ -103,12 +103,12 @@ namespace QuantLib {
 
         if (volatilityType_ == ShiftedLognormal) {
             capFloorEngine = ext::make_shared<BlackCapFloorEngine>(
-                        
+
                             discountCurve, Handle<Quote>(volQuote),
                             dc, displacement_);
         } else if (volatilityType_ == Normal) {
             capFloorEngine = ext::make_shared<BachelierCapFloorEngine>(
-                        
+
                             discountCurve, Handle<Quote>(volQuote),
                             dc);
         } else {

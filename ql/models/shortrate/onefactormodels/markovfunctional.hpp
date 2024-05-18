@@ -302,22 +302,22 @@ namespace QuantLib {
         };
 
         // Constructor for a swaption smile calibrated model
-        MarkovFunctional(const Handle<YieldTermStructure>& termStructure,
+        MarkovFunctional(Handle<YieldTermStructure> termStructure,
                          Real reversion,
                          std::vector<Date> volstepdates,
                          std::vector<Real> volatilities,
-                         const Handle<SwaptionVolatilityStructure>& swaptionVol,
+                         Handle<SwaptionVolatilityStructure> swaptionVol,
                          const std::vector<Date>& swaptionExpiries,
                          const std::vector<Period>& swaptionTenors,
                          const ext::shared_ptr<SwapIndex>& swapIndexBase,
                          MarkovFunctional::ModelSettings modelSettings = ModelSettings());
 
         // Constructor for a caplet smile calibrated model
-        MarkovFunctional(const Handle<YieldTermStructure>& termStructure,
+        MarkovFunctional(Handle<YieldTermStructure> termStructure,
                          Real reversion,
                          std::vector<Date> volstepdates,
                          std::vector<Real> volatilities,
-                         const Handle<OptionletVolatilityStructure>& capletVol,
+                         Handle<OptionletVolatilityStructure> capletVol,
                          const std::vector<Date>& capletExpiries,
                          ext::shared_ptr<IborIndex> iborIndex,
                          MarkovFunctional::ModelSettings modelSettings = ModelSettings());

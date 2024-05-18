@@ -49,10 +49,9 @@ namespace QuantLib {
     }
 
 
-    void YoYInflationCouponPricer::setCapletVolatility(
-       const Handle<YoYOptionletVolatilitySurface>& capletVol) {
+    void YoYInflationCouponPricer::setCapletVolatility(Handle<YoYOptionletVolatilitySurface> capletVol) {
         QL_REQUIRE(!capletVol.empty(),"empty capletVol handle");
-        capletVol_ = capletVol;
+        capletVol_ = std::move(capletVol);
         registerWith(capletVol_);
     }
 

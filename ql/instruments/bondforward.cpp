@@ -34,13 +34,12 @@ namespace QuantLib {
                     const Calendar& calendar,
                     BusinessDayConvention businessDayConvention,
                     const ext::shared_ptr<Bond>& bond,
-                    const Handle<YieldTermStructure>& discountCurve,
-                    const Handle<YieldTermStructure>& incomeDiscountCurve)
+                    Handle<YieldTermStructure> discountCurve,
+                    Handle<YieldTermStructure> incomeDiscountCurve)
     : Forward(dayCounter, calendar, businessDayConvention, settlementDays,
               ext::shared_ptr<Payoff>(new ForwardTypePayoff(type,strike)),
-              valueDate, maturityDate, discountCurve), bond_(bond) {
-
-        incomeDiscountCurve_ = incomeDiscountCurve;
+              valueDate, maturityDate, std::move(discountCurve)), bond_(bond) {
+        incomeDiscountCurve_ = std::move(incomeDiscountCurve);
         registerWith(incomeDiscountCurve_);
         registerWith(bond);
     }
@@ -83,7 +82,7 @@ namespace QuantLib {
     }
 
 
-    Real BondForward::spotValue() const { 
+    Real BondForward::spotValue() const {
         return bond_->dirtyPrice();
     }
 
@@ -97,4 +96,3 @@ namespace QuantLib {
     }
 
 }
-

@@ -44,8 +44,8 @@ namespace QuantLib {
             const Calendar& calendar,
             BusinessDayConvention businessDayConvention,
             const ext::shared_ptr<FixedRateBond>& fixedRateBond,
-            const Handle<YieldTermStructure>& discountCurve = Handle<YieldTermStructure>(),
-            const Handle<YieldTermStructure>& incomeDiscountCurve = Handle<YieldTermStructure>())
+            Handle<YieldTermStructure> discountCurve = {},
+            Handle<YieldTermStructure> incomeDiscountCurve = {})
         : BondForward(valueDate,
                       maturityDate,
                       type,
@@ -55,8 +55,8 @@ namespace QuantLib {
                       calendar,
                       businessDayConvention,
                       fixedRateBond,
-                      discountCurve,
-                      incomeDiscountCurve) {}
+                      std::move(discountCurve),
+                      std::move(incomeDiscountCurve)) {}
     };
 }
 

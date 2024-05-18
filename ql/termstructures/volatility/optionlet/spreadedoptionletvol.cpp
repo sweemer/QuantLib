@@ -26,9 +26,9 @@
 namespace QuantLib {
 
     SpreadedOptionletVolatility::SpreadedOptionletVolatility(
-        const Handle<OptionletVolatilityStructure>& baseVol, Handle<Quote> spread)
-    : baseVol_(baseVol), spread_(std::move(spread)) {
-        enableExtrapolation(baseVol->allowsExtrapolation());
+        Handle<OptionletVolatilityStructure> baseVol, Handle<Quote> spread)
+    : baseVol_(std::move(baseVol)), spread_(std::move(spread)) {
+        enableExtrapolation(baseVol_->allowsExtrapolation());
         registerWith(baseVol_);
         registerWith(spread_);
     }

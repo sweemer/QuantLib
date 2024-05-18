@@ -28,9 +28,9 @@
 
 namespace QuantLib {
 
-    G2::G2(const Handle<YieldTermStructure>& termStructure,
+    G2::G2(Handle<YieldTermStructure> termStructure,
            Real a, Real sigma, Real b, Real eta, Real rho)
-    : TwoFactorModel(5), TermStructureConsistentModel(termStructure),
+    : TwoFactorModel(5), TermStructureConsistentModel(std::move(termStructure)),
       a_(arguments_[0]), sigma_(arguments_[1]), b_(arguments_[2]),
       eta_(arguments_[3]), rho_(arguments_[4]) {
 
@@ -42,7 +42,7 @@ namespace QuantLib {
 
         G2::generateArguments();
 
-        registerWith(termStructure);
+        registerWith(this->termStructure());
     }
 
     ext::shared_ptr<TwoFactorModel::ShortRateDynamics> G2::dynamics() const {

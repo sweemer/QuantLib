@@ -232,17 +232,15 @@ namespace QuantLib {
         return *this;
     }
 
-    MakeVanillaSwap& MakeVanillaSwap::withDiscountingTermStructure(
-                                        const Handle<YieldTermStructure>& d) {
+    MakeVanillaSwap& MakeVanillaSwap::withDiscountingTermStructure(Handle<YieldTermStructure> d) {
         bool includeSettlementDateFlows = false;
         engine_ = ext::shared_ptr<PricingEngine>(new
-            DiscountingSwapEngine(d, includeSettlementDateFlows));
+            DiscountingSwapEngine(std::move(d), includeSettlementDateFlows));
         return *this;
     }
 
-    MakeVanillaSwap& MakeVanillaSwap::withPricingEngine(
-                             const ext::shared_ptr<PricingEngine>& engine) {
-        engine_ = engine;
+    MakeVanillaSwap& MakeVanillaSwap::withPricingEngine(ext::shared_ptr<PricingEngine> engine) {
+        engine_ = std::move(engine);
         return *this;
     }
 

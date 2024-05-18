@@ -146,10 +146,9 @@ namespace QuantLib {
             return correlation_;
         }
 
-        void setCorrelation(
-                         const Handle<Quote> &correlation = Handle<Quote>()) {
+        void setCorrelation(Handle<Quote> correlation = {}) {
             unregisterWith(correlation_);
-            correlation_ = correlation;
+            correlation_ = std::move(correlation);
             registerWith(correlation_);
             update();
         }

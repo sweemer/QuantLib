@@ -147,7 +147,7 @@ namespace QuantLib {
                                  overnightSchedule,
                                  overnightIndex_, overnightSpread_,
                                  paymentLag_, paymentAdjustment_,
-                                 paymentCalendar_, telescopicValueDates_, 
+                                 paymentCalendar_, telescopicValueDates_,
                                  averagingMethod_));
 
         if (engine_ == nullptr) {
@@ -252,11 +252,10 @@ namespace QuantLib {
         return *this;
     }
 
-    MakeOIS& MakeOIS::withDiscountingTermStructure(
-                                        const Handle<YieldTermStructure>& d) {
+    MakeOIS& MakeOIS::withDiscountingTermStructure(Handle<YieldTermStructure> d) {
         bool includeSettlementDateFlows = false;
         engine_ = ext::shared_ptr<PricingEngine>(new
-            DiscountingSwapEngine(d, includeSettlementDateFlows));
+            DiscountingSwapEngine(std::move(d), includeSettlementDateFlows));
         return *this;
     }
 

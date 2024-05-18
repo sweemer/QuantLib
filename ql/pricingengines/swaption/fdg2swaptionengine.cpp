@@ -49,7 +49,7 @@ namespace QuantLib {
         QL_REQUIRE(!model_.empty(), "no model specified");
 
         // 1. Term structure
-        const Handle<YieldTermStructure> ts = model_->termStructure();
+        const auto& ts = model_->termStructure();
 
         // 2. Mesher
         const DayCounter dc = ts->dayCounter();
@@ -83,8 +83,8 @@ namespace QuantLib {
             t2d[t] = exerciseDate;
         }
 
-        const Handle<YieldTermStructure> disTs = model_->termStructure();
-        const Handle<YieldTermStructure> fwdTs
+        const auto& disTs = model_->termStructure();
+        const auto& fwdTs
             = arguments_.swap->iborIndex()->forwardingTermStructure();
 
         QL_REQUIRE(fwdTs->dayCounter() == disTs->dayCounter(),

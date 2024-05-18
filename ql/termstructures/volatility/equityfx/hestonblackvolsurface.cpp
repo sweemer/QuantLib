@@ -44,14 +44,14 @@ namespace QuantLib {
     }
 
     HestonBlackVolSurface::HestonBlackVolSurface(
-        const Handle<HestonModel>& hestonModel,
+        Handle<HestonModel> hestonModel,
         const AnalyticHestonEngine::ComplexLogFormula cpxLogFormula,
         AnalyticHestonEngine::Integration integration)
     : BlackVolTermStructure(hestonModel->process()->riskFreeRate()->referenceDate(),
                             NullCalendar(),
                             Following,
                             hestonModel->process()->riskFreeRate()->dayCounter()),
-      hestonModel_(hestonModel), cpxLogFormula_(cpxLogFormula),
+      hestonModel_(std::move(hestonModel)), cpxLogFormula_(cpxLogFormula),
       integration_(std::move(integration)) {
         registerWith(hestonModel_);
     }

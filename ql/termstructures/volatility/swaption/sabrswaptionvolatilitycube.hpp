@@ -48,7 +48,7 @@
     #define SWAPTIONVOLCUBE_TOL 100.0e-4
 #endif
 
-namespace QuantLib {    
+namespace QuantLib {
 
     class Interpolation2D;
     class EndCriteria;
@@ -56,7 +56,7 @@ namespace QuantLib {
 
     //! XABR Swaption Volatility Cube
     /*! This class implements the XABR Swaption Volatility Cube
-        which is a generic for different SABR, ZABR and 
+        which is a generic for different SABR, ZABR and
         different smile models that can be used to instantiate concrete cubes.
     */
     template<class Model>
@@ -115,7 +115,7 @@ namespace QuantLib {
          };
       public:
         XabrSwaptionVolatilityCube(
-            const Handle<SwaptionVolatilityStructure>& atmVolStructure,
+            Handle<SwaptionVolatilityStructure> atmVolStructure,
             const std::vector<Period>& optionTenors,
             const std::vector<Period>& swapTenors,
             const std::vector<Spread>& strikeSpreads,
@@ -221,7 +221,7 @@ namespace QuantLib {
 
     template <class Model>
     XabrSwaptionVolatilityCube<Model>::XabrSwaptionVolatilityCube(
-        const Handle<SwaptionVolatilityStructure>& atmVolStructure,
+        Handle<SwaptionVolatilityStructure> atmVolStructure,
         const std::vector<Period>& optionTenors,
         const std::vector<Period>& swapTenors,
         const std::vector<Spread>& strikeSpreads,
@@ -240,7 +240,7 @@ namespace QuantLib {
         const Size maxGuesses,
         const bool backwardFlat,
         const Real cutoffStrike)
-    : SwaptionVolatilityCube(atmVolStructure,
+    : SwaptionVolatilityCube(std::move(atmVolStructure),
                              optionTenors,
                              swapTenors,
                              strikeSpreads,
@@ -252,7 +252,7 @@ namespace QuantLib {
       isParameterFixed_(std::move(isParameterFixed)), isAtmCalibrated_(isAtmCalibrated),
       endCriteria_(std::move(endCriteria)), optMethod_(std::move(optMethod)),
       useMaxError_(useMaxError), maxGuesses_(maxGuesses), backwardFlat_(backwardFlat),
-      cutoffStrike_(cutoffStrike), volatilityType_(atmVolStructure->volatilityType()) {
+      cutoffStrike_(cutoffStrike), volatilityType_(atmVol_->volatilityType()) {
 
         if (maxErrorTolerance != Null<Rate>()) {
             maxErrorTolerance_ = maxErrorTolerance;
@@ -1161,7 +1161,7 @@ namespace QuantLib {
     //                      SabrSwaptionVolatilityCube                      //
     //======================================================================//
 
-    //! Swaption Volatility Cube SABR 
+    //! Swaption Volatility Cube SABR
     /*! This struct defines the types used by SABR Volatility cubes
         for interpolation (SABRInterpolation) and for modeling the
         smile (SabrSmileSection).

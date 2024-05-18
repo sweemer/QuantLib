@@ -61,7 +61,7 @@ namespace QuantLib {
         }
 
         // OIS end of month default
-        bool usedEndOfMonth = 
+        bool usedEndOfMonth =
             isDefaultEOM_ ? calendar_.isEndOfMonth(startDate) : endOfMonth_;
 
         Date endDate = terminationDate_;
@@ -194,11 +194,10 @@ namespace QuantLib {
         return *this;
     }
 
-    MakeArithmeticAverageOIS& MakeArithmeticAverageOIS::withDiscountingTermStructure(
-                                        const Handle<YieldTermStructure>& d) {
+    MakeArithmeticAverageOIS& MakeArithmeticAverageOIS::withDiscountingTermStructure(Handle<YieldTermStructure> d) {
         bool includeSettlementDateFlows = false;
         engine_ = ext::shared_ptr<PricingEngine>(new
-            DiscountingSwapEngine(d, includeSettlementDateFlows));
+            DiscountingSwapEngine(std::move(d), includeSettlementDateFlows));
         return *this;
     }
 

@@ -31,20 +31,20 @@ namespace QuantLib {
 
     class NoExceptLocalVolSurface : public LocalVolSurface {
       public:
-        NoExceptLocalVolSurface(const Handle<BlackVolTermStructure>& blackTS,
-                                const Handle<YieldTermStructure>& riskFreeTS,
-                                const Handle<YieldTermStructure>& dividendTS,
-                                const Handle<Quote>& underlying,
+        NoExceptLocalVolSurface(Handle<BlackVolTermStructure> blackTS,
+                                Handle<YieldTermStructure> riskFreeTS,
+                                Handle<YieldTermStructure> dividendTS,
+                                Handle<Quote> underlying,
                                 Real illegalLocalVolOverwrite)
-        : LocalVolSurface(blackTS, riskFreeTS, dividendTS, underlying),
+        : LocalVolSurface(std::move(blackTS), std::move(riskFreeTS), std::move(dividendTS), std::move(underlying)),
           illegalLocalVolOverwrite_(illegalLocalVolOverwrite) { }
 
-        NoExceptLocalVolSurface(const Handle<BlackVolTermStructure>& blackTS,
-                                const Handle<YieldTermStructure>& riskFreeTS,
-                                const Handle<YieldTermStructure>& dividendTS,
+        NoExceptLocalVolSurface(Handle<BlackVolTermStructure> blackTS,
+                                Handle<YieldTermStructure> riskFreeTS,
+                                Handle<YieldTermStructure> dividendTS,
                                 Real underlying,
                                 Real illegalLocalVolOverwrite)
-        : LocalVolSurface(blackTS, riskFreeTS, dividendTS, underlying),
+        : LocalVolSurface(std::move(blackTS), std::move(riskFreeTS), std::move(dividendTS), underlying),
           illegalLocalVolOverwrite_(illegalLocalVolOverwrite) { }
 
       protected:

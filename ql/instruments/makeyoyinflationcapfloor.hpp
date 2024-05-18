@@ -54,7 +54,7 @@ namespace QuantLib {
         MakeYoYInflationCapFloor& asOptionlet(bool b = true);
         MakeYoYInflationCapFloor& withStrike(Rate strike);
         MakeYoYInflationCapFloor& withAtmStrike(
-                      const Handle<YieldTermStructure>& nominalTermStructure);
+                      Handle<YieldTermStructure> nominalTermStructure);
         MakeYoYInflationCapFloor& withForwardStart(Period forwardStart);
 
         operator YoYInflationCapFloor() const;

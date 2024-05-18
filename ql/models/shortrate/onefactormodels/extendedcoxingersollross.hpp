@@ -48,7 +48,7 @@ namespace QuantLib {
                                      public TermStructureConsistentModel {
       public:
         ExtendedCoxIngersollRoss(
-                              const Handle<YieldTermStructure>& termStructure,
+                              Handle<YieldTermStructure> termStructure,
                               Real theta = 0.1,
                               Real k = 0.1,
                               Real sigma = 0.1,
@@ -136,11 +136,11 @@ namespace QuantLib {
             Real theta_, k_, sigma_, x0_;
         };
       public:
-        FittingParameter(const Handle<YieldTermStructure>& termStructure,
+        FittingParameter(Handle<YieldTermStructure> termStructure,
                          Real theta, Real k, Real sigma, Real x0)
         : TermStructureFittingParameter(ext::shared_ptr<Parameter::Impl>(
                  new FittingParameter::Impl(
-                                     termStructure, theta, k, sigma, x0))) {}
+                                     std::move(termStructure), theta, k, sigma, x0))) {}
     };
 
     // inline definitions

@@ -52,7 +52,7 @@ namespace QuantLib {
         void update() override { LazyObject::update(); }
         //@}
         // called during calibration procedure
-        void reprice(const Handle<SwaptionVolatilityStructure>& volStructure,
+        void reprice(Handle<SwaptionVolatilityStructure> volStructure,
                      Real meanReversion);
         // inspectors ...
         const std::vector<Period>& swapTenors() const { return swapTenors_;}

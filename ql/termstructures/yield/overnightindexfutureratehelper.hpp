@@ -33,13 +33,13 @@ namespace QuantLib {
     //! RateHelper for bootstrapping over overnight compounding futures
     class OvernightIndexFutureRateHelper : public RateHelper {
       public:
-        OvernightIndexFutureRateHelper(const Handle<Quote>& price,
+        OvernightIndexFutureRateHelper(Handle<Quote> price,
                                        // first day of reference period
                                        const Date& valueDate,
                                        // delivery date
                                        const Date& maturityDate,
                                        const ext::shared_ptr<OvernightIndex>& overnightIndex,
-                                       const Handle<Quote>& convexityAdjustment = {},
+                                       Handle<Quote> convexityAdjustment = {},
                                        RateAveraging::Type averagingMethod = RateAveraging::Compound);
 
         //! \name RateHelper interface
@@ -67,11 +67,11 @@ namespace QuantLib {
     */
     class SofrFutureRateHelper : public OvernightIndexFutureRateHelper {
       public:
-        SofrFutureRateHelper(const Handle<Quote>& price,
+        SofrFutureRateHelper(Handle<Quote> price,
                              Month referenceMonth,
                              Year referenceYear,
                              Frequency referenceFreq,
-                             const Handle<Quote>& convexityAdjustment = {});
+                             Handle<Quote> convexityAdjustment = {});
 
         SofrFutureRateHelper(Real price,
                              Month referenceMonth,

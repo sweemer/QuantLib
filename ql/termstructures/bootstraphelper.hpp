@@ -128,7 +128,7 @@ namespace QuantLib {
     template <class TS>
     class RelativeDateBootstrapHelper : public BootstrapHelper<TS> {
       public:
-        explicit RelativeDateBootstrapHelper(const Handle<Quote>& quote);
+        explicit RelativeDateBootstrapHelper(Handle<Quote> quote);
         explicit RelativeDateBootstrapHelper(Real quote);
         //! \name Observer interface
         //@{
@@ -211,9 +211,8 @@ namespace QuantLib {
     }
 
     template <class TS>
-    RelativeDateBootstrapHelper<TS>::RelativeDateBootstrapHelper(
-                                                    const Handle<Quote>& quote)
-    : BootstrapHelper<TS>(quote) {
+    RelativeDateBootstrapHelper<TS>::RelativeDateBootstrapHelper(Handle<Quote> quote)
+    : BootstrapHelper<TS>(std::move(quote)) {
         this->registerWith(Settings::instance().evaluationDate());
         evaluationDate_ = Settings::instance().evaluationDate();
     }

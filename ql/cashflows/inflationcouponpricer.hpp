@@ -102,8 +102,7 @@ namespace QuantLib {
             return nominalTermStructure_;
         }
 
-        virtual void setCapletVolatility(
-            const Handle<YoYOptionletVolatilitySurface>& capletVol);
+        virtual void setCapletVolatility(Handle<YoYOptionletVolatilitySurface> capletVol);
 
         //! \name InflationCouponPricer interface
         //@{
@@ -150,13 +149,13 @@ namespace QuantLib {
                                    Handle<YieldTermStructure>()) {}
 
         explicit BlackYoYInflationCouponPricer(
-            const Handle<YieldTermStructure>& nominalTermStructure)
-        : YoYInflationCouponPricer(nominalTermStructure) {}
+            Handle<YieldTermStructure> nominalTermStructure)
+        : YoYInflationCouponPricer(std::move(nominalTermStructure)) {}
 
         BlackYoYInflationCouponPricer(
-            const Handle<YoYOptionletVolatilitySurface>& capletVol,
-            const Handle<YieldTermStructure>& nominalTermStructure)
-        : YoYInflationCouponPricer(capletVol, nominalTermStructure) {}
+            Handle<YoYOptionletVolatilitySurface> capletVol,
+            Handle<YieldTermStructure> nominalTermStructure)
+        : YoYInflationCouponPricer(std::move(capletVol), std::move(nominalTermStructure)) {}
       protected:
         Real optionletPriceImp(Option::Type, Real strike, Real forward, Real stdDev) const override;
     };
@@ -170,13 +169,13 @@ namespace QuantLib {
                                    Handle<YieldTermStructure>()) {}
 
         explicit UnitDisplacedBlackYoYInflationCouponPricer(
-            const Handle<YieldTermStructure>& nominalTermStructure)
-        : YoYInflationCouponPricer(nominalTermStructure) {}
+            Handle<YieldTermStructure> nominalTermStructure)
+        : YoYInflationCouponPricer(std::move(nominalTermStructure)) {}
 
         UnitDisplacedBlackYoYInflationCouponPricer(
-            const Handle<YoYOptionletVolatilitySurface>& capletVol,
-            const Handle<YieldTermStructure>& nominalTermStructure)
-        : YoYInflationCouponPricer(capletVol, nominalTermStructure) {}
+            Handle<YoYOptionletVolatilitySurface> capletVol,
+            Handle<YieldTermStructure> nominalTermStructure)
+        : YoYInflationCouponPricer(std::move(capletVol), std::move(nominalTermStructure)) {}
       protected:
         Real optionletPriceImp(Option::Type, Real strike, Real forward, Real stdDev) const override;
     };
@@ -190,13 +189,13 @@ namespace QuantLib {
                                    Handle<YieldTermStructure>()) {}
 
         explicit BachelierYoYInflationCouponPricer(
-            const Handle<YieldTermStructure>& nominalTermStructure)
-        : YoYInflationCouponPricer(nominalTermStructure) {}
+            Handle<YieldTermStructure> nominalTermStructure)
+        : YoYInflationCouponPricer(std::move(nominalTermStructure)) {}
 
         BachelierYoYInflationCouponPricer(
-            const Handle<YoYOptionletVolatilitySurface>& capletVol,
-            const Handle<YieldTermStructure>& nominalTermStructure)
-        : YoYInflationCouponPricer(capletVol, nominalTermStructure) {}
+            Handle<YoYOptionletVolatilitySurface> capletVol,
+            Handle<YieldTermStructure> nominalTermStructure)
+        : YoYInflationCouponPricer(std::move(capletVol), std::move(nominalTermStructure)) {}
       protected:
         Real optionletPriceImp(Option::Type, Real strike, Real forward, Real stdDev) const override;
     };
@@ -205,5 +204,3 @@ namespace QuantLib {
 
 
 #endif
-
-

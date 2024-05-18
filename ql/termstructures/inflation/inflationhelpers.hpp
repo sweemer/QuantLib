@@ -36,7 +36,7 @@ namespace QuantLib {
     class ZeroCouponInflationSwapHelper : public BootstrapHelper<ZeroInflationTermStructure> {
       public:
         ZeroCouponInflationSwapHelper(
-            const Handle<Quote>& quote,
+            Handle<Quote> quote,
             const Period& swapObsLag, // lag on swap observation of index
             const Date& maturity,
             Calendar calendar, // index may have null calendar as valid on every day
@@ -65,7 +65,7 @@ namespace QuantLib {
     //! Year-on-year inflation-swap bootstrap helper
     class YearOnYearInflationSwapHelper : public BootstrapHelper<YoYInflationTermStructure> {
       public:
-        YearOnYearInflationSwapHelper(const Handle<Quote>& quote,
+        YearOnYearInflationSwapHelper(Handle<Quote> quote,
                                       const Period& swapObsLag_,
                                       const Date& maturity,
                                       Calendar calendar,

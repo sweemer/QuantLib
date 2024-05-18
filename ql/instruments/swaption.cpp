@@ -180,7 +180,7 @@ namespace QuantLib {
     }
 
     Volatility Swaption::impliedVolatility(Real targetValue,
-                                           const Handle<YieldTermStructure>& d,
+                                           Handle<YieldTermStructure> d,
                                            Volatility guess,
                                            Real accuracy,
                                            Natural maxEvaluations,
@@ -191,7 +191,7 @@ namespace QuantLib {
         //calculate();
         QL_REQUIRE(!isExpired(), "instrument expired");
 
-        ImpliedSwaptionVolHelper f(*this, d, targetValue, displacement, type);
+        ImpliedSwaptionVolHelper f(*this, std::move(d), targetValue, displacement, type);
         //Brent solver;
         NewtonSafe solver;
         solver.setMaxEvaluations(maxEvaluations);

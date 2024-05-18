@@ -227,49 +227,51 @@ namespace QuantLib {
     // specific models
 
     BlackScholesProcess::BlackScholesProcess(
-                              const Handle<Quote>& x0,
-                              const Handle<YieldTermStructure>& riskFreeTS,
-                              const Handle<BlackVolTermStructure>& blackVolTS,
+                              Handle<Quote> x0,
+                              Handle<YieldTermStructure> riskFreeTS,
+                              Handle<BlackVolTermStructure> blackVolTS,
                               const ext::shared_ptr<discretization>& d,
                               bool forceDiscretization)
     : GeneralizedBlackScholesProcess(
-             x0,
+             std::move(x0),
              // no dividend yield
              Handle<YieldTermStructure>(ext::shared_ptr<YieldTermStructure>(
                   new FlatForward(0, NullCalendar(), 0.0, Actual365Fixed()))),
-             riskFreeTS,
-             blackVolTS,
+             std::move(riskFreeTS),
+             std::move(blackVolTS),
              d,forceDiscretization) {}
 
 
     BlackScholesMertonProcess::BlackScholesMertonProcess(
-                              const Handle<Quote>& x0,
-                              const Handle<YieldTermStructure>& dividendTS,
-                              const Handle<YieldTermStructure>& riskFreeTS,
-                              const Handle<BlackVolTermStructure>& blackVolTS,
+                              Handle<Quote> x0,
+                              Handle<YieldTermStructure> dividendTS,
+                              Handle<YieldTermStructure> riskFreeTS,
+                              Handle<BlackVolTermStructure> blackVolTS,
                               const ext::shared_ptr<discretization>& d,
                               bool forceDiscretization)
-    : GeneralizedBlackScholesProcess(x0,dividendTS,riskFreeTS,blackVolTS,d,
-                                     forceDiscretization) {}
+    : GeneralizedBlackScholesProcess(std::move(x0), std::move(dividendTS), std::move(riskFreeTS),
+                                     std::move(blackVolTS), d, forceDiscretization) {}
 
 
-    BlackProcess::BlackProcess(const Handle<Quote>& x0,
+    BlackProcess::BlackProcess(Handle<Quote> x0,
                                const Handle<YieldTermStructure>& riskFreeTS,
-                               const Handle<BlackVolTermStructure>& blackVolTS,
+                               Handle<BlackVolTermStructure> blackVolTS,
                                const ext::shared_ptr<discretization>& d,
                                bool forceDiscretization)
-    : GeneralizedBlackScholesProcess(x0,riskFreeTS,riskFreeTS,blackVolTS,d,
+    : GeneralizedBlackScholesProcess(std::move(x0), riskFreeTS, riskFreeTS,
+                                     std::move(blackVolTS), d,
                                      forceDiscretization) {}
 
 
     GarmanKohlagenProcess::GarmanKohlagenProcess(
-                          const Handle<Quote>& x0,
-                          const Handle<YieldTermStructure>& foreignRiskFreeTS,
-                          const Handle<YieldTermStructure>& domesticRiskFreeTS,
-                          const Handle<BlackVolTermStructure>& blackVolTS,
+                          Handle<Quote> x0,
+                          Handle<YieldTermStructure> foreignRiskFreeTS,
+                          Handle<YieldTermStructure> domesticRiskFreeTS,
+                          Handle<BlackVolTermStructure> blackVolTS,
                           const ext::shared_ptr<discretization>& d,
                           bool forceDiscretization)
-    : GeneralizedBlackScholesProcess(x0,foreignRiskFreeTS,domesticRiskFreeTS,
-                                     blackVolTS,d,forceDiscretization) {}
+    : GeneralizedBlackScholesProcess(std::move(x0), std::move(foreignRiskFreeTS),
+                                     std::move(domesticRiskFreeTS), std::move(blackVolTS),
+                                     d, forceDiscretization) {}
 
 }

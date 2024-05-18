@@ -28,7 +28,7 @@ namespace QuantLib {
     ArithmeticOISRateHelper::ArithmeticOISRateHelper(Natural settlementDays,
                                                      const Period& tenor, // swap maturity
                                                      Frequency fixedLegPaymentFrequency,
-                                                     const Handle<Quote>& fixedRate,
+                                                     Handle<Quote> fixedRate,
                                                      ext::shared_ptr<OvernightIndex> overnightIndex,
                                                      Frequency overnightLegPaymentFrequency,
                                                      Handle<Quote> spread,
@@ -36,7 +36,7 @@ namespace QuantLib {
                                                      Real volatility,
                                                      bool byApprox,
                                                      Handle<YieldTermStructure> discount)
-    : RelativeDateRateHelper(fixedRate), settlementDays_(settlementDays), tenor_(tenor),
+    : RelativeDateRateHelper(std::move(fixedRate)), settlementDays_(settlementDays), tenor_(tenor),
       overnightIndex_(std::move(overnightIndex)), discountHandle_(std::move(discount)),
       fixedLegPaymentFrequency_(fixedLegPaymentFrequency),
       overnightLegPaymentFrequency_(overnightLegPaymentFrequency), spread_(std::move(spread)),
@@ -62,7 +62,7 @@ namespace QuantLib {
                 .withFixedLegPaymentFrequency(fixedLegPaymentFrequency_)
                 .withOvernightLegPaymentFrequency(overnightLegPaymentFrequency_)
                 .withArithmeticAverage(mrs_, vol_, byApprox_);
-        
+
         earliestDate_ = swap_->startDate();
         latestDate_ = swap_->maturityDate();
     }

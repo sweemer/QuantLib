@@ -30,9 +30,9 @@ using namespace std;
 namespace QuantLib {
 
     BlackCallableFixedRateBondEngine::BlackCallableFixedRateBondEngine(
-        const Handle<Quote>& fwdYieldVol, Handle<YieldTermStructure> discountCurve)
+        Handle<Quote> fwdYieldVol, Handle<YieldTermStructure> discountCurve)
     : volatility_(ext::shared_ptr<CallableBondVolatilityStructure>(
-          new CallableBondConstantVolatility(0, NullCalendar(), fwdYieldVol, Actual365Fixed()))),
+          new CallableBondConstantVolatility(0, NullCalendar(), std::move(fwdYieldVol), Actual365Fixed()))),
       discountCurve_(std::move(discountCurve)) {
         registerWith(volatility_);
         registerWith(discountCurve_);

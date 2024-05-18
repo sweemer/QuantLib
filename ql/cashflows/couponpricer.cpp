@@ -118,7 +118,7 @@ namespace QuantLib {
 
         IborCouponPricer::initialize(coupon);
 
-        const Handle<YieldTermStructure>& rateCurve = index_->forwardingTermStructure();
+        const auto& rateCurve = index_->forwardingTermStructure();
 
         if (rateCurve.empty()) {
             discount_ = Null<Real>(); // might not be needed, will be checked later

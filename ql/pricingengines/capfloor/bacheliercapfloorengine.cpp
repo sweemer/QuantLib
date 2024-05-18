@@ -38,11 +38,11 @@ namespace QuantLib {
     }
 
     BachelierCapFloorEngine::BachelierCapFloorEngine(Handle<YieldTermStructure> discountCurve,
-                                                     const Handle<Quote>& v,
+                                                     Handle<Quote> v,
                                                      const DayCounter& dc)
     : discountCurve_(std::move(discountCurve)),
       vol_(ext::shared_ptr<OptionletVolatilityStructure>(
-          new ConstantOptionletVolatility(0, NullCalendar(), Following, v, dc))) {
+          new ConstantOptionletVolatility(0, NullCalendar(), Following, std::move(v), dc))) {
         registerWith(discountCurve_);
         registerWith(vol_);
     }
@@ -116,7 +116,7 @@ namespace QuantLib {
                         floorletVega = bachelierBlackFormulaStdDevDerivative(strike,
                             forward, stdDevs[i], discountedAccrual) * sqrtTime;
                         floorletDelta = Integer(Option::Put) * bachelierBlackFormulaAssetItmProbability(
-                                                        Option::Put, strike, forward, 
+                                                        Option::Put, strike, forward,
                                                         stdDevs[i]);
                     }
                     Real floorlet = bachelierBlackFormula(Option::Put,

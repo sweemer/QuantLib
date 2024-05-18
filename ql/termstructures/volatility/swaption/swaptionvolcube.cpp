@@ -26,7 +26,7 @@
 namespace QuantLib {
 
     SwaptionVolatilityCube::SwaptionVolatilityCube(
-        const Handle<SwaptionVolatilityStructure>& atmVol,
+        Handle<SwaptionVolatilityStructure> atmVol,
         const std::vector<Period>& optionTenors,
         const std::vector<Period>& swapTenors,
         const std::vector<Spread>& strikeSpreads,
@@ -40,7 +40,7 @@ namespace QuantLib {
                                  atmVol->calendar(),
                                  atmVol->businessDayConvention(),
                                  atmVol->dayCounter()),
-      atmVol_(atmVol), nStrikes_(strikeSpreads.size()), strikeSpreads_(strikeSpreads),
+      atmVol_(std::move(atmVol)), nStrikes_(strikeSpreads.size()), strikeSpreads_(strikeSpreads),
       localStrikes_(nStrikes_), localSmile_(nStrikes_), volSpreads_(std::move(volSpreads)),
       swapIndexBase_(std::move(swapIndexBase)), shortSwapIndexBase_(std::move(shortSwapIndexBase)),
       vegaWeightedSmileFit_(vegaWeightedSmileFit) {

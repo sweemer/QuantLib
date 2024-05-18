@@ -35,8 +35,8 @@ namespace QuantLib {
       public:
         BlackIborQuantoCouponPricer(Handle<BlackVolTermStructure> fxRateBlackVolatility,
                                     Handle<Quote> underlyingFxCorrelation,
-                                    const Handle<OptionletVolatilityStructure>& capletVolatility)
-        : BlackIborCouponPricer(capletVolatility),
+                                    Handle<OptionletVolatilityStructure> capletVolatility)
+        : BlackIborCouponPricer(std::move(capletVolatility)),
           fxRateBlackVolatility_(std::move(fxRateBlackVolatility)),
           underlyingFxCorrelation_(std::move(underlyingFxCorrelation)) {
             registerWith(fxRateBlackVolatility_);

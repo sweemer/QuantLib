@@ -25,11 +25,11 @@
 namespace QuantLib {
 
     ExtendedCoxIngersollRoss::ExtendedCoxIngersollRoss(
-                              const Handle<YieldTermStructure>& termStructure,
+                              Handle<YieldTermStructure> termStructure,
                               Real theta, Real k, Real sigma, Real x0,
                               bool withFellerConstraint)
     : CoxIngersollRoss(x0, theta, k, sigma, withFellerConstraint),
-      TermStructureConsistentModel(termStructure){
+      TermStructureConsistentModel(std::move(termStructure)) {
         ExtendedCoxIngersollRoss::generateArguments();
     }
 
@@ -95,7 +95,7 @@ namespace QuantLib {
 
         Real discountShift = (discountT*CoxIngersollRoss::A(0.0,s)*std::exp(-B(0.0,s)*x0()))/
         (discountS*CoxIngersollRoss::A(0.0,t)*std::exp(-B(0.0,t)*x0()));
-        
+
         Real z = (std::log(CoxIngersollRoss::A(t,s)/strike)-std::log(discountShift))/b;
         Real call = discountS*chis(2.0*z*(rho+psi+b)) -
             strike*discountT*chit(2.0*z*(rho+psi));

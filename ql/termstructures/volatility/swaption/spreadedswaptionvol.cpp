@@ -26,10 +26,10 @@
 namespace QuantLib {
 
     SpreadedSwaptionVolatility::SpreadedSwaptionVolatility(
-        const Handle<SwaptionVolatilityStructure>& baseVol, Handle<Quote> spread)
+        Handle<SwaptionVolatilityStructure> baseVol, Handle<Quote> spread)
     : SwaptionVolatilityStructure(baseVol->businessDayConvention(), baseVol->dayCounter()),
-      baseVol_(baseVol), spread_(std::move(spread)) {
-        enableExtrapolation(baseVol->allowsExtrapolation());
+      baseVol_(std::move(baseVol)), spread_(std::move(spread)) {
+        enableExtrapolation(baseVol_->allowsExtrapolation());
         registerWith(baseVol_);
         registerWith(spread_);
     }

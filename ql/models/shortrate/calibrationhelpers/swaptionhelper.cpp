@@ -34,7 +34,7 @@ namespace QuantLib {
 
     SwaptionHelper::SwaptionHelper(const Period& maturity,
                                    const Period& length,
-                                   const Handle<Quote>& volatility,
+                                   Handle<Quote> volatility,
                                    ext::shared_ptr<IborIndex> index,
                                    const Period& fixedLegTenor,
                                    DayCounter fixedLegDayCounter,
@@ -47,7 +47,7 @@ namespace QuantLib {
                                    const Real shift,
                                    Natural settlementDays,
                                    RateAveraging::Type averagingMethod)
-    : BlackCalibrationHelper(volatility, errorType, type, shift), exerciseDate_(Null<Date>()),
+    : BlackCalibrationHelper(std::move(volatility), errorType, type, shift), exerciseDate_(Null<Date>()),
       endDate_(Null<Date>()), maturity_(maturity), length_(length), fixedLegTenor_(fixedLegTenor),
       index_(std::move(index)), termStructure_(std::move(termStructure)),
       fixedLegDayCounter_(std::move(fixedLegDayCounter)),
@@ -59,7 +59,7 @@ namespace QuantLib {
 
     SwaptionHelper::SwaptionHelper(const Date& exerciseDate,
                                    const Period& length,
-                                   const Handle<Quote>& volatility,
+                                   Handle<Quote> volatility,
                                    ext::shared_ptr<IborIndex> index,
                                    const Period& fixedLegTenor,
                                    DayCounter fixedLegDayCounter,
@@ -72,7 +72,7 @@ namespace QuantLib {
                                    const Real shift,
                                    Natural settlementDays,
                                    RateAveraging::Type averagingMethod)
-    : BlackCalibrationHelper(volatility, errorType, type, shift), exerciseDate_(exerciseDate),
+    : BlackCalibrationHelper(std::move(volatility), errorType, type, shift), exerciseDate_(exerciseDate),
       endDate_(Null<Date>()), maturity_(0 * Days), length_(length), fixedLegTenor_(fixedLegTenor),
       index_(std::move(index)), termStructure_(std::move(termStructure)),
       fixedLegDayCounter_(std::move(fixedLegDayCounter)),
@@ -84,7 +84,7 @@ namespace QuantLib {
 
     SwaptionHelper::SwaptionHelper(const Date& exerciseDate,
                                    const Date& endDate,
-                                   const Handle<Quote>& volatility,
+                                   Handle<Quote> volatility,
                                    ext::shared_ptr<IborIndex> index,
                                    const Period& fixedLegTenor,
                                    DayCounter fixedLegDayCounter,
@@ -97,7 +97,7 @@ namespace QuantLib {
                                    const Real shift,
                                    Natural settlementDays,
                                    RateAveraging::Type averagingMethod)
-    : BlackCalibrationHelper(volatility, errorType, type, shift), exerciseDate_(exerciseDate),
+    : BlackCalibrationHelper(std::move(volatility), errorType, type, shift), exerciseDate_(exerciseDate),
       endDate_(endDate), maturity_(0 * Days), length_(0 * Days), fixedLegTenor_(fixedLegTenor),
       index_(std::move(index)), termStructure_(std::move(termStructure)),
       fixedLegDayCounter_(std::move(fixedLegDayCounter)),

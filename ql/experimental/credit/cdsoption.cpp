@@ -35,16 +35,16 @@ namespace QuantLib {
           public:
             ImpliedVolHelper(
                    const CdsOption& cdsoption,
-                   const Handle<DefaultProbabilityTermStructure>& probability,
+                   Handle<DefaultProbabilityTermStructure> probability,
                    Real recoveryRate,
-                   const Handle<YieldTermStructure>& termStructure,
+                   Handle<YieldTermStructure> termStructure,
                    Real targetValue)
             : targetValue_(targetValue), vol_(ext::make_shared<SimpleQuote>(0.0)) {
 
                 Handle<Quote> h(vol_);
                 engine_ = ext::shared_ptr<PricingEngine>(
-                           new BlackCdsOptionEngine(probability, recoveryRate,
-                                                    termStructure, h));
+                           new BlackCdsOptionEngine(std::move(probability), recoveryRate,
+                                                    std::move(termStructure), h));
                 cdsoption.setupArguments(engine_->getArguments());
 
                 results_ =
@@ -119,8 +119,8 @@ namespace QuantLib {
 
     Volatility CdsOption::impliedVolatility(
                    Real targetValue,
-                   const Handle<YieldTermStructure>& termStructure,
-                   const Handle<DefaultProbabilityTermStructure>& probability,
+                   Handle<YieldTermStructure> termStructure,
+                   Handle<DefaultProbabilityTermStructure> probability,
                    Real recoveryRate,
                    Real accuracy,
                    Size maxEvaluations,
@@ -131,8 +131,8 @@ namespace QuantLib {
 
         Volatility guess = 0.10;
 
-        ImpliedVolHelper f(*this, probability, recoveryRate,
-                           termStructure, targetValue);
+        ImpliedVolHelper f(*this, std::move(probability), recoveryRate,
+                           std::move(termStructure), targetValue);
         Brent solver;
         solver.setMaxEvaluations(maxEvaluations);
         return solver.solve(f, accuracy, guess, minVol, maxVol);
@@ -153,4 +153,3 @@ namespace QuantLib {
     }
 
 }
-

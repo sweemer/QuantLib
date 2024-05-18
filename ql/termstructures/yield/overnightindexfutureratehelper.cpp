@@ -48,20 +48,20 @@ namespace QuantLib {
     }
 
     OvernightIndexFutureRateHelper::OvernightIndexFutureRateHelper(
-        const Handle<Quote>& price,
+        Handle<Quote> price,
         // first day of reference period
         const Date& valueDate,
         // delivery date
         const Date& maturityDate,
         const ext::shared_ptr<OvernightIndex>& overnightIndex,
-        const Handle<Quote>& convexityAdjustment,
+        Handle<Quote> convexityAdjustment,
         RateAveraging::Type averagingMethod)
-    : RateHelper(price) {
+    : RateHelper(std::move(price)) {
         ext::shared_ptr<Payoff> payoff;
         ext::shared_ptr<OvernightIndex> index =
             ext::dynamic_pointer_cast<OvernightIndex>(overnightIndex->clone(termStructureHandle_));
         future_ = ext::make_shared<OvernightIndexFuture>(
-            index, valueDate, maturityDate, convexityAdjustment, averagingMethod);
+            std::move(index), valueDate, maturityDate, std::move(convexityAdjustment), averagingMethod);
         earliestDate_ = valueDate;
         latestDate_ = maturityDate;
     }
@@ -96,16 +96,16 @@ namespace QuantLib {
 
 
     SofrFutureRateHelper::SofrFutureRateHelper(
-        const Handle<Quote>& price,
+        Handle<Quote> price,
         Month referenceMonth,
         Year referenceYear,
         Frequency referenceFreq,
-        const Handle<Quote>& convexityAdjustment)
-    : OvernightIndexFutureRateHelper(price,
+        Handle<Quote> convexityAdjustment)
+    : OvernightIndexFutureRateHelper(std::move(price),
             getValidSofrStart(referenceMonth, referenceYear, referenceFreq),
             getValidSofrEnd(referenceMonth, referenceYear, referenceFreq),
             ext::make_shared<Sofr>(),
-            convexityAdjustment,
+            std::move(convexityAdjustment),
             referenceFreq == Quarterly ? RateAveraging::Compound : RateAveraging::Simple) {
         QL_REQUIRE(referenceFreq == Quarterly || referenceFreq == Monthly,
             "only monthly and quarterly SOFR futures accepted");

@@ -24,26 +24,26 @@
 
 namespace QuantLib {
 
-    TreeSwaptionEngine::TreeSwaptionEngine(const ext::shared_ptr<ShortRateModel>& model,
+    TreeSwaptionEngine::TreeSwaptionEngine(ext::shared_ptr<ShortRateModel> model,
                                            Size timeSteps,
                                            Handle<YieldTermStructure> termStructure)
-    : LatticeShortRateModelEngine<Swaption::arguments, Swaption::results>(model, timeSteps),
+    : LatticeShortRateModelEngine<Swaption::arguments, Swaption::results>(std::move(model), timeSteps),
       termStructure_(std::move(termStructure)) {
         registerWith(termStructure_);
     }
 
-    TreeSwaptionEngine::TreeSwaptionEngine(const ext::shared_ptr<ShortRateModel>& model,
+    TreeSwaptionEngine::TreeSwaptionEngine(ext::shared_ptr<ShortRateModel> model,
                                            const TimeGrid& timeGrid,
                                            Handle<YieldTermStructure> termStructure)
-    : LatticeShortRateModelEngine<Swaption::arguments, Swaption::results>(model, timeGrid),
+    : LatticeShortRateModelEngine<Swaption::arguments, Swaption::results>(std::move(model), timeGrid),
       termStructure_(std::move(termStructure)) {
         registerWith(termStructure_);
     }
 
-    TreeSwaptionEngine::TreeSwaptionEngine(const Handle<ShortRateModel>& model,
+    TreeSwaptionEngine::TreeSwaptionEngine(Handle<ShortRateModel> model,
                                            Size timeSteps,
                                            Handle<YieldTermStructure> termStructure)
-    : LatticeShortRateModelEngine<Swaption::arguments, Swaption::results>(model, timeSteps),
+    : LatticeShortRateModelEngine<Swaption::arguments, Swaption::results>(std::move(model), timeSteps),
       termStructure_(std::move(termStructure)) {
         registerWith(termStructure_);
     }

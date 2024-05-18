@@ -31,7 +31,7 @@
 namespace QuantLib {
 
     CapHelper::CapHelper(const Period& length,
-                         const Handle<Quote>& volatility,
+                         Handle<Quote> volatility,
                          ext::shared_ptr<IborIndex> index,
                          Frequency fixedLegFrequency,
                          DayCounter fixedLegDayCounter,
@@ -40,7 +40,7 @@ namespace QuantLib {
                          BlackCalibrationHelper::CalibrationErrorType errorType,
                          const VolatilityType type,
                          const Real shift)
-    : BlackCalibrationHelper(volatility, errorType, type, shift), length_(length),
+    : BlackCalibrationHelper(std::move(volatility), errorType, type, shift), length_(length),
       index_(std::move(index)), termStructure_(std::move(termStructure)),
       fixedLegFrequency_(fixedLegFrequency), fixedLegDayCounter_(std::move(fixedLegDayCounter)),
       includeFirstSwaplet_(includeFirstSwaplet) {

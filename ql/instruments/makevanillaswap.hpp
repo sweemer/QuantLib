@@ -79,10 +79,8 @@ namespace QuantLib {
         MakeVanillaSwap& withFloatingLegDayCount(const DayCounter& dc);
         MakeVanillaSwap& withFloatingLegSpread(Spread sp);
 
-        MakeVanillaSwap& withDiscountingTermStructure(
-                              const Handle<YieldTermStructure>& discountCurve);
-        MakeVanillaSwap& withPricingEngine(
-                              const ext::shared_ptr<PricingEngine>& engine);
+        MakeVanillaSwap& withDiscountingTermStructure(Handle<YieldTermStructure> discountCurve);
+        MakeVanillaSwap& withPricingEngine(ext::shared_ptr<PricingEngine> engine);
         MakeVanillaSwap& withIndexedCoupons(const ext::optional<bool>& b = true);
         MakeVanillaSwap& withAtParCoupons(bool b = true);
       private:

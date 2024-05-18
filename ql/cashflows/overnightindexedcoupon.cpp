@@ -94,7 +94,7 @@ namespace QuantLib {
                 // forward part using telescopic property in order
                 // to avoid the evaluation of multiple forward fixings
                 if (i<n) {
-                    const Handle<YieldTermStructure> curve = index->forwardingTermStructure();
+                    const auto& curve = index->forwardingTermStructure();
                     QL_REQUIRE(!curve.empty(),
                                "null term structure set to this instance of " << index->name());
 

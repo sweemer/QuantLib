@@ -28,7 +28,7 @@
 #include <ql/termstructures/volatility/swaption/swaptionvolcube.hpp>
 #include <ql/math/interpolations/interpolation2d.hpp>
 
-namespace QuantLib {    
+namespace QuantLib {
 
     //! Interpolated Swaption Volatility Cube
     /*! This class implements the Interpolated Swaption Volatility Cube,
@@ -50,7 +50,7 @@ namespace QuantLib {
               shortSwapIndexBase is used to identify this second family.
         */
         InterpolatedSwaptionVolatilityCube(
-            const Handle<SwaptionVolatilityStructure>& atmVolStructure,
+            Handle<SwaptionVolatilityStructure> atmVolStructure,
             const std::vector<Period>& optionTenors,
             const std::vector<Period>& swapTenors,
             const std::vector<Spread>& strikeSpreads,

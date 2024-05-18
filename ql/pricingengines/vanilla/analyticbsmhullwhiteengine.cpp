@@ -34,13 +34,13 @@ namespace QuantLib {
           public:
             ShiftedBlackVolTermStructure(
                 Real varianceOffset,
-                const Handle<BlackVolTermStructure> & volTS)
+                Handle<BlackVolTermStructure> volTS)
                 : BlackVolTermStructure(volTS->referenceDate(),
                                         volTS->calendar(),
                                         Following,
                                         volTS->dayCounter()),
                   varianceOffset_(varianceOffset),
-                  volTS_(volTS) { }
+                  volTS_(std::move(volTS)) { }
 
             Real minStrike() const override { return volTS_->minStrike(); }
             Real maxStrike() const override { return volTS_->maxStrike(); }

@@ -134,10 +134,9 @@ namespace QuantLib {
     }
 
     MakeYoYInflationCapFloor&
-    MakeYoYInflationCapFloor::withAtmStrike(
-                      const Handle<YieldTermStructure>& nominalTermStructure) {
+    MakeYoYInflationCapFloor::withAtmStrike(Handle<YieldTermStructure> nominalTermStructure) {
         QL_REQUIRE(strike_ == Null<Rate>(), "explicit strike already given");
-        nominalTermStructure_ = nominalTermStructure;
+        nominalTermStructure_ = std::move(nominalTermStructure);
         return *this;
     }
 
@@ -148,4 +147,3 @@ namespace QuantLib {
     }
 
 }
-

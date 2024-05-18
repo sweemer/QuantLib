@@ -39,7 +39,7 @@ namespace QuantLib {
     */
     class SwaptionVolatilityCube : public SwaptionVolatilityDiscrete {
       public:
-        SwaptionVolatilityCube(const Handle<SwaptionVolatilityStructure>& atmVolStructure,
+        SwaptionVolatilityCube(Handle<SwaptionVolatilityStructure> atmVolStructure,
                                const std::vector<Period>& optionTenors,
                                const std::vector<Period>& swapTenors,
                                const std::vector<Spread>& strikeSpreads,

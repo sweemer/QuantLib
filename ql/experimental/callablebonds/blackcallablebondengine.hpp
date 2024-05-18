@@ -44,7 +44,7 @@ namespace QuantLib {
         : public CallableFixedRateBond::engine {
       public:
         //! volatility is the quoted fwd yield volatility, not price vol
-        BlackCallableFixedRateBondEngine(const Handle<Quote>& fwdYieldVol,
+        BlackCallableFixedRateBondEngine(Handle<Quote> fwdYieldVol,
                                          Handle<YieldTermStructure> discountCurve);
         //! volatility is the quoted fwd yield volatility, not price vol
         BlackCallableFixedRateBondEngine(Handle<CallableBondVolatilityStructure> yieldVolStructure,
@@ -76,15 +76,15 @@ namespace QuantLib {
       public:
         //! volatility is the quoted fwd yield volatility, not price vol
         BlackCallableZeroCouponBondEngine(
-                              const Handle<Quote>& fwdYieldVol,
-                              const Handle<YieldTermStructure>& discountCurve)
-        : BlackCallableFixedRateBondEngine(fwdYieldVol, discountCurve) {}
+                              Handle<Quote> fwdYieldVol,
+                              Handle<YieldTermStructure> discountCurve)
+        : BlackCallableFixedRateBondEngine(std::move(fwdYieldVol), std::move(discountCurve)) {}
 
         //! volatility is the quoted fwd yield volatility, not price vol
         BlackCallableZeroCouponBondEngine(
-             const Handle<CallableBondVolatilityStructure>& yieldVolStructure,
-             const Handle<YieldTermStructure>& discountCurve)
-        : BlackCallableFixedRateBondEngine(yieldVolStructure, discountCurve) {}
+             Handle<CallableBondVolatilityStructure> yieldVolStructure,
+             Handle<YieldTermStructure> discountCurve)
+        : BlackCallableFixedRateBondEngine(std::move(yieldVolStructure), std::move(discountCurve)) {}
     };
 
 }

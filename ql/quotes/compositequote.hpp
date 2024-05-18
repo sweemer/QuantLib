@@ -61,10 +61,10 @@ namespace QuantLib {
 
     //! creator method
     template <class BinaryFunction>
-    CompositeQuote<BinaryFunction> makeCompositeQuote(const Handle<Quote>& element1,
-                                                      const Handle<Quote>& element2,
+    CompositeQuote<BinaryFunction> makeCompositeQuote(Handle<Quote> element1,
+                                                      Handle<Quote> element2,
                                                       const BinaryFunction& f) {
-        return CompositeQuote<BinaryFunction>(element1, element2, f);
+        return CompositeQuote<BinaryFunction>(std::move(element1), std::move(element2), f);
     }
 
     // inline definitions

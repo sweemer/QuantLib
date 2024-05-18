@@ -35,7 +35,7 @@ namespace QuantLib {
     class CapHelper : public BlackCalibrationHelper {
       public:
         CapHelper(const Period& length,
-                  const Handle<Quote>& volatility,
+                  Handle<Quote> volatility,
                   ext::shared_ptr<IborIndex> index,
                   // data for ATM swap-rate calculation
                   Frequency fixedLegFrequency,

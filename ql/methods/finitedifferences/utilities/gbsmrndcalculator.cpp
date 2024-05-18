@@ -41,7 +41,7 @@ namespace QuantLib {
     }
 
     Real GBSMRNDCalculator::cdf(Real k, Time t) const {
-        const Handle<BlackVolTermStructure> volTS
+        const auto& volTS
             = process_->blackVolatility();
 
         const Real dk = 1e-3*k;

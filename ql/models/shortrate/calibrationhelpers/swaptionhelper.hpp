@@ -43,7 +43,7 @@ namespace QuantLib {
       public:
         SwaptionHelper(const Period& maturity,
                        const Period& length,
-                       const Handle<Quote>& volatility,
+                       Handle<Quote> volatility,
                        ext::shared_ptr<IborIndex> index,
                        const Period& fixedLegTenor,
                        DayCounter fixedLegDayCounter,
@@ -59,7 +59,7 @@ namespace QuantLib {
 
         SwaptionHelper(const Date& exerciseDate,
                        const Period& length,
-                       const Handle<Quote>& volatility,
+                       Handle<Quote> volatility,
                        ext::shared_ptr<IborIndex> index,
                        const Period& fixedLegTenor,
                        DayCounter fixedLegDayCounter,
@@ -75,7 +75,7 @@ namespace QuantLib {
 
         SwaptionHelper(const Date& exerciseDate,
                        const Date& endDate,
-                       const Handle<Quote>& volatility,
+                       Handle<Quote> volatility,
                        ext::shared_ptr<IborIndex> index,
                        const Period& fixedLegTenor,
                        DayCounter fixedLegDayCounter,

@@ -41,7 +41,7 @@ namespace QuantLib {
     */
     class QuantoTermStructure : public ZeroYieldStructure {
       public:
-        QuantoTermStructure(const Handle<YieldTermStructure>& underlyingDividendTS,
+        QuantoTermStructure(Handle<YieldTermStructure> underlyingDividendTS,
                             Handle<YieldTermStructure> riskFreeTS,
                             Handle<YieldTermStructure> foreignRiskFreeTS,
                             Handle<BlackVolTermStructure> underlyingBlackVolTS,
@@ -73,7 +73,7 @@ namespace QuantLib {
     // inline definitions
 
     inline QuantoTermStructure::QuantoTermStructure(
-        const Handle<YieldTermStructure>& underlyingDividendTS,
+        Handle<YieldTermStructure> underlyingDividendTS,
         Handle<YieldTermStructure> riskFreeTS,
         Handle<YieldTermStructure> foreignRiskFreeTS,
         Handle<BlackVolTermStructure> underlyingBlackVolTS,
@@ -82,7 +82,7 @@ namespace QuantLib {
         Real exchRateATMlevel,
         Real underlyingExchRateCorrelation)
     : ZeroYieldStructure(underlyingDividendTS->dayCounter()),
-      underlyingDividendTS_(underlyingDividendTS), riskFreeTS_(std::move(riskFreeTS)),
+      underlyingDividendTS_(std::move(underlyingDividendTS)), riskFreeTS_(std::move(riskFreeTS)),
       foreignRiskFreeTS_(std::move(foreignRiskFreeTS)),
       underlyingBlackVolTS_(std::move(underlyingBlackVolTS)),
       exchRateBlackVolTS_(std::move(exchRateBlackVolTS)),

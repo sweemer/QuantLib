@@ -124,7 +124,7 @@ namespace QuantLib {
         //! implied volatility
         Volatility impliedVolatility(
                               Real price,
-                              const Handle<YieldTermStructure>& discountCurve,
+                              Handle<YieldTermStructure> discountCurve,
                               Volatility guess,
                               Real accuracy = 1.0e-4,
                               Natural maxEvaluations = 100,

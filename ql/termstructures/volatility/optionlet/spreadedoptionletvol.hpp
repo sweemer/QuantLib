@@ -36,7 +36,7 @@ namespace QuantLib {
 
     class SpreadedOptionletVolatility : public OptionletVolatilityStructure {
       public:
-        SpreadedOptionletVolatility(const Handle<OptionletVolatilityStructure>&,
+        SpreadedOptionletVolatility(Handle<OptionletVolatilityStructure> baseVol,
                                     Handle<Quote> spread);
         // All virtual methods of base classes must be forwarded
         //! \name VolatilityTermStructure interface
@@ -73,7 +73,7 @@ namespace QuantLib {
     inline DayCounter SpreadedOptionletVolatility::dayCounter() const {
         return baseVol_->dayCounter();
     }
-    
+
     inline Date SpreadedOptionletVolatility::maxDate() const {
         return baseVol_->maxDate();
     }
@@ -81,15 +81,15 @@ namespace QuantLib {
     inline Time SpreadedOptionletVolatility::maxTime() const {
         return baseVol_->maxTime();
     }
-        
+
     inline const Date& SpreadedOptionletVolatility::referenceDate() const {
         return baseVol_->referenceDate();
     }
-        
+
     inline Calendar SpreadedOptionletVolatility::calendar() const {
         return baseVol_->calendar();
     }
-        
+
     inline Natural SpreadedOptionletVolatility::settlementDays() const {
         return baseVol_->settlementDays();
     }
@@ -98,11 +98,11 @@ namespace QuantLib {
     SpreadedOptionletVolatility::businessDayConvention() const {
         return baseVol_->businessDayConvention();
     }
-    
+
     inline Rate SpreadedOptionletVolatility::minStrike() const {
         return baseVol_->minStrike();
     }
-    
+
     inline Rate SpreadedOptionletVolatility::maxStrike() const {
         return baseVol_->maxStrike();
     }

@@ -22,7 +22,7 @@
 
 namespace QuantLib {
 
-    ConstantCPIVolatility:: ConstantCPIVolatility(const Handle<Quote>& vol,
+    ConstantCPIVolatility:: ConstantCPIVolatility(Handle<Quote> vol,
                                                   Natural settlementDays,
                                                   const Calendar& cal,
                                                   BusinessDayConvention bdc,
@@ -32,7 +32,7 @@ namespace QuantLib {
                                                   bool indexIsInterpolated)
     : CPIVolatilitySurface(settlementDays, cal, bdc, dc,
                            observationLag, frequency, indexIsInterpolated),
-      volatility_(vol) {}
+      volatility_(std::move(vol)) {}
 
     ConstantCPIVolatility:: ConstantCPIVolatility(Volatility vol,
                                                   Natural settlementDays,
@@ -52,4 +52,3 @@ namespace QuantLib {
     }
 
 }
-

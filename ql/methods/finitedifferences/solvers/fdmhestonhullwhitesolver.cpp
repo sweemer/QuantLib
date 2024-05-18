@@ -25,27 +25,27 @@
 
 namespace QuantLib {
 
-    FdmHestonHullWhiteSolver::FdmHestonHullWhiteSolver(const Handle<HestonProcess>& hestonProcess,
-                                                       const Handle<HullWhiteProcess>& hwProcess,
+    FdmHestonHullWhiteSolver::FdmHestonHullWhiteSolver(Handle<HestonProcess> hestonProcess,
+                                                       Handle<HullWhiteProcess> hwProcess,
                                                        Rate corrEquityShortRate,
                                                        FdmSolverDesc solverDesc,
                                                        const FdmSchemeDesc& schemeDesc)
-    : hestonProcess_(hestonProcess), hwProcess_(hwProcess),
+    : hestonProcess_(std::move(hestonProcess)), hwProcess_(std::move(hwProcess)),
       corrEquityShortRate_(corrEquityShortRate), solverDesc_(std::move(solverDesc)),
       schemeDesc_(schemeDesc) {
 
-        registerWith(hestonProcess);
-        registerWith(hwProcess);
+        registerWith(hestonProcess_);
+        registerWith(hwProcess_);
     }
 
     void FdmHestonHullWhiteSolver::performCalculations() const {
-        const ext::shared_ptr<FdmLinearOpComposite> op(
+        ext::shared_ptr<FdmLinearOpComposite> op(
 			ext::make_shared<FdmHestonHullWhiteOp>(solverDesc_.mesher,
                                      hestonProcess_.currentLink(),
-                                     hwProcess_.currentLink(), 
+                                     hwProcess_.currentLink(),
                                      corrEquityShortRate_));
 
-        solver_ = ext::make_shared<Fdm3DimSolver>(solverDesc_, schemeDesc_, op);
+        solver_ = ext::make_shared<Fdm3DimSolver>(solverDesc_, schemeDesc_, std::move(op));
     }
 
     Real FdmHestonHullWhiteSolver::valueAt(Real s, Real v, Rate r) const {
@@ -55,12 +55,12 @@ namespace QuantLib {
         return solver_->interpolateAt(x, v, r);
     }
 
-    Real FdmHestonHullWhiteSolver::deltaAt(Real s, Real v, Rate r, Real eps) 
+    Real FdmHestonHullWhiteSolver::deltaAt(Real s, Real v, Rate r, Real eps)
     const {
         return (valueAt(s+eps, v, r) - valueAt(s-eps, v, r))/(2*eps);
     }
 
-    Real FdmHestonHullWhiteSolver::gammaAt(Real s, Real v, Rate r, Real eps) 
+    Real FdmHestonHullWhiteSolver::gammaAt(Real s, Real v, Rate r, Real eps)
     const {
         return (valueAt(s+eps, v, r)+valueAt(s-eps, v,r )
                 -2*valueAt(s, v, r))/(eps*eps);

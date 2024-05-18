@@ -39,7 +39,7 @@ namespace QuantLib {
                                 Volatility vol,
                                 const DayCounter& dc = Actual365Fixed());
         BachelierCapFloorEngine(Handle<YieldTermStructure> discountCurve,
-                                const Handle<Quote>& vol,
+                                Handle<Quote> vol,
                                 const DayCounter& dc = Actual365Fixed());
         BachelierCapFloorEngine(Handle<YieldTermStructure> discountCurve,
                                 Handle<OptionletVolatilityStructure> vol);

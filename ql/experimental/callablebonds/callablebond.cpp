@@ -73,7 +73,7 @@ namespace QuantLib {
     class CallableBond::ImpliedVolHelper {
       public:
         ImpliedVolHelper(const CallableBond& bond,
-                         const Handle<YieldTermStructure>& discountCurve,
+                         Handle<YieldTermStructure> discountCurve,
                          Real targetValue,
                          bool matchNPV);
         Real operator()(Volatility x) const;
@@ -87,14 +87,14 @@ namespace QuantLib {
 
     CallableBond::ImpliedVolHelper::ImpliedVolHelper(
                               const CallableBond& bond,
-                              const Handle<YieldTermStructure>& discountCurve,
+                              Handle<YieldTermStructure> discountCurve,
                               Real targetValue,
                               bool matchNPV)
     : targetValue_(targetValue), matchNPV_(matchNPV) {
 
         vol_ = ext::make_shared<SimpleQuote>(0.0);
         engine_ = ext::make_shared<BlackCallableFixedRateBondEngine>(Handle<Quote>(vol_),
-                                                                     discountCurve);
+                                                                     std::move(discountCurve));
 
         bond.setupArguments(engine_->getArguments());
         results_ =
@@ -111,7 +111,7 @@ namespace QuantLib {
 
     Volatility CallableBond::impliedVolatility(
                               const Bond::Price& targetPrice,
-                              const Handle<YieldTermStructure>& discountCurve,
+                              Handle<YieldTermStructure> discountCurve,
                               Real accuracy,
                               Size maxEvaluations,
                               Volatility minVol,
@@ -132,7 +132,7 @@ namespace QuantLib {
 
         Real targetValue = dirtyTargetPrice * faceAmount_ / 100.0;
         Volatility guess = 0.5 * (minVol + maxVol);
-        ImpliedVolHelper f(*this, discountCurve, targetValue, false);
+        ImpliedVolHelper f(*this, std::move(discountCurve), targetValue, false);
         Brent solver;
         solver.setMaxEvaluations(maxEvaluations);
         return solver.solve(f, accuracy, guess, minVol, maxVol);

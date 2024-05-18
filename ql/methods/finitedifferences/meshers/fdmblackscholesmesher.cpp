@@ -61,9 +61,9 @@ namespace QuantLib {
 
         std::sort(intermediateSteps.begin(), intermediateSteps.end());
 
-        const Handle<YieldTermStructure> rTS = process->riskFreeRate();
+        const auto& rTS = process->riskFreeRate();
 
-        const Handle<YieldTermStructure> qTS =
+        const auto& qTS =
             (fdmQuantoHelper) != nullptr ?
                 Handle<YieldTermStructure>(ext::make_shared<QuantoTermStructure>(
                     process->dividendYield(), process->riskFreeRate(),
@@ -94,10 +94,10 @@ namespace QuantLib {
 
         // Set the grid boundaries
         const Real normInvEps = InverseCumulativeNormal()(1-eps);
-        const Real sigmaSqrtT 
+        const Real sigmaSqrtT
             = process->blackVolatility()->blackVol(maturity, strike)
                                                         *std::sqrt(maturity);
-        
+
         Real xMin = std::log(mi) - sigmaSqrtT*normInvEps*scaleFactor;
         Real xMax = std::log(ma) + sigmaSqrtT*normInvEps*scaleFactor;
 
@@ -109,42 +109,41 @@ namespace QuantLib {
         }
 
         ext::shared_ptr<Fdm1dMesher> helper;
-        if (   cPoint.first != Null<Real>() 
+        if (   cPoint.first != Null<Real>()
             && std::log(cPoint.first) >=xMin && std::log(cPoint.first) <=xMax) {
-            
+
             helper = ext::shared_ptr<Fdm1dMesher>(
-                new Concentrating1dMesher(xMin, xMax, size, 
+                new Concentrating1dMesher(xMin, xMax, size,
                     std::pair<Real,Real>(std::log(cPoint.first),
                                          cPoint.second)));
         }
         else {
             helper = ext::shared_ptr<Fdm1dMesher>(
                                         new Uniform1dMesher(xMin, xMax, size));
-            
+
         }
-        
+
         locations_ = helper->locations();
         for (Size i=0; i < locations_.size(); ++i) {
             dplus_[i]  = helper->dplus(i);
             dminus_[i] = helper->dminus(i);
         }
     }
-            
-    ext::shared_ptr<GeneralizedBlackScholesProcess> 
-    FdmBlackScholesMesher::processHelper(const Handle<Quote>& s0,
-                                         const Handle<YieldTermStructure>& rTS,
-                                         const Handle<YieldTermStructure>& qTS,
+
+    ext::shared_ptr<GeneralizedBlackScholesProcess>
+    FdmBlackScholesMesher::processHelper(Handle<Quote> s0,
+                                         Handle<YieldTermStructure> rTS,
+                                         Handle<YieldTermStructure> qTS,
                                          Volatility vol) {
-        
+        const auto& referenceDate = rTS->referenceDate();
+        const auto& dayCounter = rTS->dayCounter();
         return ext::make_shared<GeneralizedBlackScholesProcess>(
-            
-                s0, qTS, rTS,
+                std::move(s0), std::move(qTS), std::move(rTS),
                 Handle<BlackVolTermStructure>(
                     ext::shared_ptr<BlackVolTermStructure>(
-                        new BlackConstantVol(rTS->referenceDate(),
+                        new BlackConstantVol(referenceDate,
                                              Calendar(),
                                              vol,
-                                             rTS->dayCounter()))));
+                                             dayCounter))));
     }
 }
-

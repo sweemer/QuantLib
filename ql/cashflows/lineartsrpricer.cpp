@@ -51,14 +51,14 @@ namespace QuantLib {
     const Real LinearTsrPricer::defaultLowerBound = 0.0001,
              LinearTsrPricer::defaultUpperBound = 2.0000;
 
-    LinearTsrPricer::LinearTsrPricer(const Handle<SwaptionVolatilityStructure>& swaptionVol,
+    LinearTsrPricer::LinearTsrPricer(Handle<SwaptionVolatilityStructure> swaptionVol,
                                      Handle<Quote> meanReversion,
                                      Handle<YieldTermStructure> couponDiscountCurve,
                                      const Settings& settings,
                                      ext::shared_ptr<Integrator> integrator)
-    : CmsCouponPricer(swaptionVol), meanReversion_(std::move(meanReversion)),
+    : CmsCouponPricer(std::move(swaptionVol)), meanReversion_(std::move(meanReversion)),
       couponDiscountCurve_(std::move(couponDiscountCurve)), settings_(settings),
-      volDayCounter_(swaptionVol->dayCounter()), integrator_(std::move(integrator)) {
+      volDayCounter_(swaptionVolatility()->dayCounter()), integrator_(std::move(integrator)) {
 
         if (!couponDiscountCurve_.empty())
             registerWith(couponDiscountCurve_);

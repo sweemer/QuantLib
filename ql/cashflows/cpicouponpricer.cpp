@@ -39,10 +39,9 @@ namespace QuantLib {
 
     QL_DEPRECATED_ENABLE_WARNING
 
-    void CPICouponPricer::setCapletVolatility(
-       const Handle<CPIVolatilitySurface>& capletVol) {
+    void CPICouponPricer::setCapletVolatility(Handle<CPIVolatilitySurface> capletVol) {
         QL_REQUIRE(!capletVol.empty(),"empty capletVol handle");
-        capletVol_ = capletVol;
+        capletVol_ = std::move(capletVol);
         registerWith(capletVol_);
     }
 

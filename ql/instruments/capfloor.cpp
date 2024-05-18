@@ -73,7 +73,7 @@ namespace QuantLib {
                 break;
             case Normal:
                 engine_ = ext::shared_ptr<PricingEngine>(new
-                    BachelierCapFloorEngine(discountCurve_, h, 
+                    BachelierCapFloorEngine(discountCurve_, h,
                                                             Actual365Fixed()));
                 break;
             default:
@@ -321,7 +321,7 @@ namespace QuantLib {
     }
 
     Volatility CapFloor::impliedVolatility(Real targetValue,
-                                           const Handle<YieldTermStructure>& d,
+                                           Handle<YieldTermStructure> d,
                                            Volatility guess,
                                            Real accuracy,
                                            Natural maxEvaluations,
@@ -332,7 +332,7 @@ namespace QuantLib {
         //calculate();
         QL_REQUIRE(!isExpired(), "instrument expired");
 
-        ImpliedCapVolHelper f(*this, d, targetValue, displacement, type);
+        ImpliedCapVolHelper f(*this, std::move(d), targetValue, displacement, type);
         //Brent solver;
         NewtonSafe solver;
         solver.setMaxEvaluations(maxEvaluations);

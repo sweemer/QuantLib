@@ -66,8 +66,8 @@ namespace QuantLib {
         Real riskyAnnuity() const;
         Volatility impliedVolatility(
                               Real price,
-                              const Handle<YieldTermStructure>& termStructure,
-                              const Handle<DefaultProbabilityTermStructure>&,
+                              Handle<YieldTermStructure> termStructure,
+                              Handle<DefaultProbabilityTermStructure> probability,
                               Real recoveryRate,
                               Real accuracy = 1.e-4,
                               Size maxEvaluations = 100,

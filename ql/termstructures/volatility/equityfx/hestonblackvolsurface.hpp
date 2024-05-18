@@ -34,7 +34,7 @@ namespace QuantLib {
     class HestonBlackVolSurface : public BlackVolTermStructure {
       public:
         explicit HestonBlackVolSurface(
-            const Handle<HestonModel>& hestonModel,
+            Handle<HestonModel> hestonModel,
             AnalyticHestonEngine::ComplexLogFormula cpxLogFormula =
                 AnalyticHestonEngine::AngledContour,
             AnalyticHestonEngine::Integration integration =
@@ -57,5 +57,3 @@ namespace QuantLib {
 }
 
 #endif
-
-

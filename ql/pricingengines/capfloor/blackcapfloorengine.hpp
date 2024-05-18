@@ -42,7 +42,7 @@ namespace QuantLib {
                             const DayCounter& dc = Actual365Fixed(),
                             Real displacement = 0.0);
         BlackCapFloorEngine(Handle<YieldTermStructure> discountCurve,
-                            const Handle<Quote>& vol,
+                            Handle<Quote> vol,
                             const DayCounter& dc = Actual365Fixed(),
                             Real displacement = 0.0);
         BlackCapFloorEngine(Handle<YieldTermStructure> discountCurve,

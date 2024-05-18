@@ -37,19 +37,19 @@ namespace QuantLib {
                           Calendar calendar,
                           Real s0,
                           Real strikePrice,
-                          const Handle<Quote>& volatility,
-                          const Handle<YieldTermStructure>& riskFreeRate,
-                          const Handle<YieldTermStructure>& dividendYield,
+                          Handle<Quote> volatility,
+                          Handle<YieldTermStructure> riskFreeRate,
+                          Handle<YieldTermStructure> dividendYield,
                           BlackCalibrationHelper::CalibrationErrorType errorType =
                               BlackCalibrationHelper::RelativePriceError);
 
         HestonModelHelper(const Period& maturity,
                           Calendar calendar,
-                          const Handle<Quote>& s0,
+                          Handle<Quote> s0,
                           Real strikePrice,
-                          const Handle<Quote>& volatility,
-                          const Handle<YieldTermStructure>& riskFreeRate,
-                          const Handle<YieldTermStructure>& dividendYield,
+                          Handle<Quote> volatility,
+                          Handle<YieldTermStructure> riskFreeRate,
+                          Handle<YieldTermStructure> dividendYield,
                           BlackCalibrationHelper::CalibrationErrorType errorType =
                               BlackCalibrationHelper::RelativePriceError);
 
@@ -75,4 +75,3 @@ namespace QuantLib {
 
 
 #endif
-

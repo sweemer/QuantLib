@@ -81,7 +81,7 @@ namespace QuantLib {
         MakeCms& withAtmSpread(bool flag = true);
 
         MakeCms& withDiscountingTermStructure(
-            const Handle<YieldTermStructure>& discountingTermStructure);
+            Handle<YieldTermStructure> discountingTermStructure);
         MakeCms& withCmsCouponPricer(
             const ext::shared_ptr<CmsCouponPricer>& couponPricer);
 

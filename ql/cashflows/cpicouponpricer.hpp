@@ -55,9 +55,7 @@ namespace QuantLib {
             return nominalTermStructure_;
         }
 
-        virtual void setCapletVolatility(
-            const Handle<CPIVolatilitySurface>& capletVol);
-
+        virtual void setCapletVolatility(Handle<CPIVolatilitySurface> capletVol);
 
         //! \name InflationCouponPricer interface
         //@{
@@ -106,7 +104,7 @@ namespace QuantLib {
         Spread spread_;
         Real discount_;
     };
-    
+
 }
 
 #endif

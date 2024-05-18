@@ -175,14 +175,13 @@ namespace QuantLib {
             Handle<YieldTermStructure> termStructure_;
         };
 
-        TermStructureFittingParameter(
-                               const ext::shared_ptr<Parameter::Impl>& impl)
-        : Parameter(0, impl, NoConstraint()) {}
+        TermStructureFittingParameter(ext::shared_ptr<Parameter::Impl> impl)
+        : Parameter(0, std::move(impl), NoConstraint()) {}
 
-        TermStructureFittingParameter(const Handle<YieldTermStructure>& term)
+        TermStructureFittingParameter(Handle<YieldTermStructure> term)
         : Parameter(
                   0,
-                  ext::shared_ptr<Parameter::Impl>(new NumericalImpl(term)),
+                  ext::shared_ptr<Parameter::Impl>(new NumericalImpl(std::move(term))),
                   NoConstraint())
         {}
     };

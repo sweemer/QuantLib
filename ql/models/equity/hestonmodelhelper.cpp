@@ -34,31 +34,31 @@ namespace QuantLib {
                                          Calendar calendar,
                                          const Real s0,
                                          const Real strikePrice,
-                                         const Handle<Quote>& volatility,
-                                         const Handle<YieldTermStructure>& riskFreeRate,
-                                         const Handle<YieldTermStructure>& dividendYield,
+                                         Handle<Quote> volatility,
+                                         Handle<YieldTermStructure> riskFreeRate,
+                                         Handle<YieldTermStructure> dividendYield,
                                          BlackCalibrationHelper::CalibrationErrorType errorType)
-    : BlackCalibrationHelper(volatility, errorType), maturity_(maturity),
+    : BlackCalibrationHelper(std::move(volatility), errorType), maturity_(maturity),
       calendar_(std::move(calendar)), s0_(Handle<Quote>(ext::make_shared<SimpleQuote>(s0))),
-      strikePrice_(strikePrice), riskFreeRate_(riskFreeRate), dividendYield_(dividendYield) {
-        registerWith(riskFreeRate);
-        registerWith(dividendYield);
+      strikePrice_(strikePrice), riskFreeRate_(std::move(riskFreeRate)), dividendYield_(std::move(dividendYield)) {
+        registerWith(riskFreeRate_);
+        registerWith(dividendYield_);
     }
 
     HestonModelHelper::HestonModelHelper(const Period& maturity,
                                          Calendar calendar,
-                                         const Handle<Quote>& s0,
+                                         Handle<Quote> s0,
                                          const Real strikePrice,
-                                         const Handle<Quote>& volatility,
-                                         const Handle<YieldTermStructure>& riskFreeRate,
-                                         const Handle<YieldTermStructure>& dividendYield,
+                                         Handle<Quote> volatility,
+                                         Handle<YieldTermStructure> riskFreeRate,
+                                         Handle<YieldTermStructure> dividendYield,
                                          BlackCalibrationHelper::CalibrationErrorType errorType)
-    : BlackCalibrationHelper(volatility, errorType), maturity_(maturity),
-      calendar_(std::move(calendar)), s0_(s0), strikePrice_(strikePrice),
-      riskFreeRate_(riskFreeRate), dividendYield_(dividendYield) {
-        registerWith(s0);
-        registerWith(riskFreeRate);
-        registerWith(dividendYield);
+    : BlackCalibrationHelper(std::move(volatility), errorType), maturity_(maturity),
+      calendar_(std::move(calendar)), s0_(std::move(s0)), strikePrice_(strikePrice),
+      riskFreeRate_(std::move(riskFreeRate)), dividendYield_(std::move(dividendYield)) {
+        registerWith(s0_);
+        registerWith(riskFreeRate_);
+        registerWith(dividendYield_);
     }
 
     void HestonModelHelper::performCalculations() const {
@@ -91,4 +91,3 @@ namespace QuantLib {
             s0_->value() * dividendYield_->discount(tau_), stdDev);
     }
 }
-

@@ -118,7 +118,7 @@ namespace QuantLib {
                     invalidValue = *(vBegin++);
                 }
             }
-            IndexManager::instance().setHistory(tag, h);
+            IndexManager::instance().setHistory(tag, std::move(h));
             QL_REQUIRE(noInvalidFixing, "At least one invalid fixing provided: "
                                             << invalidDate.weekday() << " " << invalidDate << ", "
                                             << invalidValue);

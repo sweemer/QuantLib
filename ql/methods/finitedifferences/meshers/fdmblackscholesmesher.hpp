@@ -52,9 +52,9 @@ namespace QuantLib {
             Real spotAdjustment = 0.0);
 
         static ext::shared_ptr<GeneralizedBlackScholesProcess> processHelper(
-             const Handle<Quote>& s0,
-             const Handle<YieldTermStructure>& rTS,
-             const Handle<YieldTermStructure>& qTS,
+             Handle<Quote> s0,
+             Handle<YieldTermStructure> rTS,
+             Handle<YieldTermStructure> qTS,
              Volatility vol);
     };
 }

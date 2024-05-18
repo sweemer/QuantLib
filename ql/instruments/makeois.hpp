@@ -82,7 +82,7 @@ namespace QuantLib {
         MakeOIS& withOvernightLegSpread(Spread sp);
 
         MakeOIS& withDiscountingTermStructure(
-                  const Handle<YieldTermStructure>& discountingTermStructure);
+                  Handle<YieldTermStructure> discountingTermStructure);
 
         MakeOIS &withTelescopicValueDates(bool telescopicValueDates);
 

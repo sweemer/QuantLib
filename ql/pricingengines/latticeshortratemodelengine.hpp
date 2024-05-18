@@ -39,13 +39,13 @@ namespace QuantLib {
         : public GenericModelEngine<ShortRateModel, Arguments, Results> {
       public:
         LatticeShortRateModelEngine(
-                               const ext::shared_ptr<ShortRateModel>& model,
+                               ext::shared_ptr<ShortRateModel> model,
                                Size timeSteps);
         LatticeShortRateModelEngine(
-                               const Handle<ShortRateModel>& model,
+                               Handle<ShortRateModel> model,
                                Size timeSteps);
         LatticeShortRateModelEngine(
-                               const ext::shared_ptr<ShortRateModel>& model,
+                               ext::shared_ptr<ShortRateModel> model,
                                const TimeGrid& timeGrid);
         void update() override;
 
@@ -57,9 +57,9 @@ namespace QuantLib {
 
     template <class Arguments, class Results>
     LatticeShortRateModelEngine<Arguments, Results>::LatticeShortRateModelEngine(
-            const ext::shared_ptr<ShortRateModel>& model,
+            ext::shared_ptr<ShortRateModel> model,
             Size timeSteps)
-    : GenericModelEngine<ShortRateModel, Arguments, Results>(model),
+    : GenericModelEngine<ShortRateModel, Arguments, Results>(std::move(model)),
       timeSteps_(timeSteps) {
         QL_REQUIRE(timeSteps>0,
                    "timeSteps must be positive, " << timeSteps <<
@@ -68,9 +68,9 @@ namespace QuantLib {
 
     template <class Arguments, class Results>
     LatticeShortRateModelEngine<Arguments, Results>::LatticeShortRateModelEngine(
-            const Handle<ShortRateModel>& model,
+            Handle<ShortRateModel> model,
             Size timeSteps)
-    : GenericModelEngine<ShortRateModel, Arguments, Results>(model),
+    : GenericModelEngine<ShortRateModel, Arguments, Results>(std::move(model)),
       timeSteps_(timeSteps) {
         QL_REQUIRE(timeSteps>0,
                    "timeSteps must be positive, " << timeSteps <<
@@ -79,9 +79,9 @@ namespace QuantLib {
 
     template <class Arguments, class Results>
     LatticeShortRateModelEngine<Arguments, Results>::LatticeShortRateModelEngine(
-            const ext::shared_ptr<ShortRateModel>& model,
+            ext::shared_ptr<ShortRateModel> model,
             const TimeGrid& timeGrid)
-    : GenericModelEngine<ShortRateModel, Arguments, Results>(model),
+    : GenericModelEngine<ShortRateModel, Arguments, Results>(std::move(model)),
       timeGrid_(timeGrid), timeSteps_(0) {
         lattice_ = this->model_->tree(timeGrid);
     }

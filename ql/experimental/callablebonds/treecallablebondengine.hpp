@@ -65,16 +65,14 @@ namespace QuantLib {
         TreeCallableZeroCouponBondEngine(
                            const ext::shared_ptr<ShortRateModel>& model,
                            const Size timeSteps,
-                           const Handle<YieldTermStructure>& termStructure =
-                                                 Handle<YieldTermStructure>())
-        : TreeCallableFixedRateBondEngine(model, timeSteps, termStructure) {}
+                           Handle<YieldTermStructure> termStructure = {})
+        : TreeCallableFixedRateBondEngine(model, timeSteps, std::move(termStructure)) {}
 
         TreeCallableZeroCouponBondEngine(
                                const ext::shared_ptr<ShortRateModel>& model,
                                const TimeGrid& timeGrid,
-                           const Handle<YieldTermStructure>& termStructure =
-                                                 Handle<YieldTermStructure>())
-        : TreeCallableFixedRateBondEngine(model, timeGrid, termStructure) {}
+                               Handle<YieldTermStructure> termStructure = {})
+        : TreeCallableFixedRateBondEngine(model, timeGrid, std::move(termStructure)) {}
     };
 
 }

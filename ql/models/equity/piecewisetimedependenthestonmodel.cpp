@@ -24,17 +24,17 @@
 namespace QuantLib {
 
     PiecewiseTimeDependentHestonModel::PiecewiseTimeDependentHestonModel(
-        const Handle<YieldTermStructure>& riskFreeRate,
-        const Handle<YieldTermStructure>& dividendYield,
-        const Handle<Quote>& s0,
+        Handle<YieldTermStructure> riskFreeRate,
+        Handle<YieldTermStructure> dividendYield,
+        Handle<Quote> s0,
         Real v0,
         const Parameter& theta,
         const Parameter& kappa,
         const Parameter& sigma,
         const Parameter& rho,
         TimeGrid timeGrid)
-    : CalibratedModel(5), s0_(s0), riskFreeRate_(riskFreeRate), dividendYield_(dividendYield),
-      timeGrid_(std::move(timeGrid)) {
+    : CalibratedModel(5), s0_(std::move(s0)), riskFreeRate_(std::move(riskFreeRate)),
+      dividendYield_(std::move(dividendYield)), timeGrid_(std::move(timeGrid)) {
 
         arguments_[0] = theta;
         arguments_[1] = kappa;
@@ -42,23 +42,22 @@ namespace QuantLib {
         arguments_[3] = rho;
         arguments_[4] = ConstantParameter(v0, PositiveConstraint());
 
-        registerWith(s0);
-        registerWith(riskFreeRate);
-        registerWith(dividendYield);
+        registerWith(s0_);
+        registerWith(riskFreeRate_);
+        registerWith(dividendYield_);
     }
 
     const TimeGrid& PiecewiseTimeDependentHestonModel::timeGrid() const {
         return timeGrid_;
     }
-    
-    const Handle<YieldTermStructure>& 
+
+    const Handle<YieldTermStructure>&
     PiecewiseTimeDependentHestonModel::dividendYield() const {
         return dividendYield_;
     }
 
-    const Handle<YieldTermStructure>& 
+    const Handle<YieldTermStructure>&
     PiecewiseTimeDependentHestonModel::riskFreeRate() const {
         return riskFreeRate_;
     }
 }
-

@@ -74,11 +74,9 @@ namespace QuantLib {
         Handle<OptionletVolatilityStructure> capletVolatility() const {
             return capletVol_;
         }
-        void setCapletVolatility(
-                            const Handle<OptionletVolatilityStructure>& v =
-                                    Handle<OptionletVolatilityStructure>()) {
+        void setCapletVolatility(Handle<OptionletVolatilityStructure> v = {}) {
             unregisterWith(capletVol_);
-            capletVol_ = v;
+            capletVol_ = std::move(v);
             registerWith(capletVol_);
             update();
         }
@@ -112,11 +110,11 @@ namespace QuantLib {
       public:
         enum TimingAdjustment { Black76, BivariateLognormal };
         BlackIborCouponPricer(
-            const Handle<OptionletVolatilityStructure>& v = Handle<OptionletVolatilityStructure>(),
+            Handle<OptionletVolatilityStructure> v = {},
             const TimingAdjustment timingAdjustment = Black76,
             Handle<Quote> correlation = Handle<Quote>(ext::shared_ptr<Quote>(new SimpleQuote(1.0))),
             const ext::optional<bool> useIndexedCoupon = ext::nullopt)
-        : IborCouponPricer(v, useIndexedCoupon), timingAdjustment_(timingAdjustment),
+        : IborCouponPricer(std::move(v), useIndexedCoupon), timingAdjustment_(timingAdjustment),
           correlation_(std::move(correlation)) {
             { // this additional scope seems required to avoid a misleading-indentation warning
                 QL_REQUIRE(timingAdjustment_ == Black76 || timingAdjustment_ == BivariateLognormal,
@@ -157,11 +155,9 @@ namespace QuantLib {
         Handle<SwaptionVolatilityStructure> swaptionVolatility() const{
             return swaptionVol_;
         }
-        void setSwaptionVolatility(
-                            const Handle<SwaptionVolatilityStructure>& v=
-                                    Handle<SwaptionVolatilityStructure>()) {
+        void setSwaptionVolatility(Handle<SwaptionVolatilityStructure> v = {}) {
             unregisterWith(swaptionVol_);
-            swaptionVol_ = v;
+            swaptionVol_ = std::move(v);
             registerWith(swaptionVol_);
             update();
         }
@@ -174,7 +170,7 @@ namespace QuantLib {
     class MeanRevertingPricer {
     public:
         virtual Real meanReversion() const = 0;
-        virtual void setMeanReversion(const Handle<Quote>&) = 0;
+        virtual void setMeanReversion(Handle<Quote>) = 0;
         virtual ~MeanRevertingPricer() = default;
     };
 

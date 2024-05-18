@@ -75,10 +75,10 @@ namespace QuantLib {
 //===========================================================================//
 //                             HaganPricer                               //
 //===========================================================================//
-    HaganPricer::HaganPricer(const Handle<SwaptionVolatilityStructure>& swaptionVol,
+    HaganPricer::HaganPricer(Handle<SwaptionVolatilityStructure> swaptionVol,
                              GFunctionFactory::YieldCurveModel modelOfYieldCurve,
                              Handle<Quote> meanReversion)
-    : CmsCouponPricer(swaptionVol), modelOfYieldCurve_(modelOfYieldCurve),
+    : CmsCouponPricer(std::move(swaptionVol)), modelOfYieldCurve_(modelOfYieldCurve),
       meanReversion_(std::move(meanReversion)) {
         registerWith(meanReversion_);
     }
@@ -267,14 +267,14 @@ namespace QuantLib {
 
     }
 
-    NumericHaganPricer::NumericHaganPricer(const Handle<SwaptionVolatilityStructure>& swaptionVol,
+    NumericHaganPricer::NumericHaganPricer(Handle<SwaptionVolatilityStructure> swaptionVol,
                                            GFunctionFactory::YieldCurveModel modelOfYieldCurve,
-                                           const Handle<Quote>& meanReversion,
+                                           Handle<Quote> meanReversion,
                                            Real lowerLimit,
                                            Real upperLimit,
                                            Real precision,
                                            Real hardUpperLimit)
-    : HaganPricer(swaptionVol, modelOfYieldCurve, meanReversion),
+    : HaganPricer(std::move(swaptionVol), modelOfYieldCurve, std::move(meanReversion)),
       lowerLimit_(lowerLimit), upperLimit_(upperLimit),
       precision_(precision), hardUpperLimit_(hardUpperLimit) {}
 
@@ -501,10 +501,10 @@ namespace QuantLib {
 //===========================================================================//
 
     AnalyticHaganPricer::AnalyticHaganPricer(
-        const Handle<SwaptionVolatilityStructure>& swaptionVol,
+        Handle<SwaptionVolatilityStructure> swaptionVol,
         GFunctionFactory::YieldCurveModel modelOfYieldCurve,
-        const Handle<Quote>& meanReversion)
-    : HaganPricer(swaptionVol, modelOfYieldCurve, meanReversion)
+        Handle<Quote> meanReversion)
+    : HaganPricer(std::move(swaptionVol), modelOfYieldCurve, std::move(meanReversion))
       { }
 
     //Hagan, 3.5b, 3.5c
@@ -979,9 +979,8 @@ namespace QuantLib {
         return calibratedShift_;
     }
 
-    ext::shared_ptr<GFunction> GFunctionFactory::newGFunctionWithShifts(const CmsCoupon& coupon,
-                                                                          const Handle<Quote>& meanReversion) {
-        return ext::shared_ptr<GFunction>(new GFunctionWithShifts(coupon, meanReversion));
+    ext::shared_ptr<GFunction> GFunctionFactory::newGFunctionWithShifts(const CmsCoupon& coupon, Handle<Quote> meanReversion) {
+        return ext::shared_ptr<GFunction>(new GFunctionWithShifts(coupon, std::move(meanReversion)));
     }
 
 }

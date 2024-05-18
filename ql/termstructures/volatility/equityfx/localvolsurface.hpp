@@ -44,11 +44,11 @@ namespace QuantLib {
     */
     class LocalVolSurface : public LocalVolTermStructure {
       public:
-        LocalVolSurface(const Handle<BlackVolTermStructure>& blackTS,
+        LocalVolSurface(Handle<BlackVolTermStructure> blackTS,
                         Handle<YieldTermStructure> riskFreeTS,
                         Handle<YieldTermStructure> dividendTS,
                         Handle<Quote> underlying);
-        LocalVolSurface(const Handle<BlackVolTermStructure>& blackTS,
+        LocalVolSurface(Handle<BlackVolTermStructure> blackTS,
                         Handle<YieldTermStructure> riskFreeTS,
                         Handle<YieldTermStructure> dividendTS,
                         Real underlying);

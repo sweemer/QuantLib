@@ -48,7 +48,7 @@ namespace QuantLib {
     */
     class HullWhite : public Vasicek, public TermStructureConsistentModel {
       public:
-        HullWhite(const Handle<YieldTermStructure>& termStructure,
+        HullWhite(Handle<YieldTermStructure> termStructure,
                   Real a = 0.1, Real sigma = 0.01);
 
         ext::shared_ptr<Lattice> tree(const TimeGrid& grid) const override;
@@ -150,10 +150,10 @@ namespace QuantLib {
             Real a_, sigma_;
         };
       public:
-        FittingParameter(const Handle<YieldTermStructure>& termStructure,
+        FittingParameter(Handle<YieldTermStructure> termStructure,
                          Real a, Real sigma)
         : TermStructureFittingParameter(ext::shared_ptr<Parameter::Impl>(
-                      new FittingParameter::Impl(termStructure, a, sigma))) {}
+                      new FittingParameter::Impl(std::move(termStructure), a, sigma))) {}
     };
 
 
@@ -169,4 +169,3 @@ namespace QuantLib {
 
 
 #endif
-

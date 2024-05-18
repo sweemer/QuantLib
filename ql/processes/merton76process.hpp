@@ -35,10 +35,10 @@ namespace QuantLib {
     /*! \ingroup processes */
     class Merton76Process : public StochasticProcess1D {
       public:
-        Merton76Process(const Handle<Quote>& stateVariable,
-                        const Handle<YieldTermStructure>& dividendTS,
-                        const Handle<YieldTermStructure>& riskFreeTS,
-                        const Handle<BlackVolTermStructure>& blackVolTS,
+        Merton76Process(Handle<Quote> stateVariable,
+                        Handle<YieldTermStructure> dividendTS,
+                        Handle<YieldTermStructure> riskFreeTS,
+                        Handle<BlackVolTermStructure> blackVolTS,
                         Handle<Quote> jumpInt,
                         Handle<Quote> logJMean,
                         Handle<Quote> logJVol,

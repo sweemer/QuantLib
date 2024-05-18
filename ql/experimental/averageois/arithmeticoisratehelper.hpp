@@ -36,7 +36,7 @@ namespace QuantLib {
             Natural settlementDays,
             const Period& tenor, // swap maturity
             Frequency fixedLegPaymentFrequency,
-            const Handle<Quote>& fixedRate,
+            Handle<Quote> fixedRate,
             ext::shared_ptr<OvernightIndex> overnightIndex,
             Frequency overnightLegPaymentFrequency,
             Handle<Quote> spread,
@@ -79,7 +79,7 @@ namespace QuantLib {
           Real mrs_;
           Real vol_;
           bool byApprox_;
- 
+
     };
 
 }

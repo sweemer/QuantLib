@@ -73,7 +73,7 @@ namespace QuantLib {
         */
         Volatility impliedVolatility(
                               const Bond::Price& targetPrice,
-                              const Handle<YieldTermStructure>& discountCurve,
+                              Handle<YieldTermStructure> discountCurve,
                               Real accuracy,
                               Size maxEvaluations,
                               Volatility minVol,

@@ -58,7 +58,7 @@ namespace QuantLib {
         const Real df  = 4*process->theta()*process->kappa()/squared(mixedSigma);
         try {
             std::multiset<std::pair<Real, Real> > grid;
-            
+
             for (Size l=1; l<=tAvgSteps; ++l) {
                 const Real t = (maturity*l)/tAvgSteps;
                 const Real ncp = 4*process->kappa()*std::exp(-process->kappa()*t)/(squared(mixedSigma)
@@ -76,7 +76,7 @@ namespace QuantLib {
 
                 Real vTmp = qMin;
                 grid.insert(std::pair<Real, Real>(qMin, epsilon));
-                
+
                 for (Size i=1; i < size; ++i) {
                     ps = (1 - epsilon - p)/(size-i);
                     p += ps;
@@ -89,9 +89,9 @@ namespace QuantLib {
                     grid.insert(std::pair<Real, Real>(vx, p));
                 }
             }
-            QL_REQUIRE(grid.size() == size*tAvgSteps, 
+            QL_REQUIRE(grid.size() == size*tAvgSteps,
                        "something wrong with the grid size");
-            
+
             const std::vector<std::pair<Real, Real> > tp(grid.begin(), grid.end());
 
             for (Size i=0; i < size; ++i) {
@@ -102,7 +102,7 @@ namespace QuantLib {
                     pGrid[i]+=tp[j].second/(e-b);
                 }
             }
-        } 
+        }
         catch (const Error&) {
             // use default mesh
             const Real vol = mixedSigma*
@@ -119,7 +119,7 @@ namespace QuantLib {
             }
         }
 
-        Real skewHint = ((process->kappa() != 0.0) 
+        Real skewHint = ((process->kappa() != 0.0)
                 ? Real(std::max(1.0, mixedSigma/process->kappa())) : 1.0);
 
         std::sort(pGrid.begin(), pGrid.end());
@@ -177,8 +177,8 @@ namespace QuantLib {
 
             acc(leverageFct->localVol(0, s0, true));
 
-            const Handle<YieldTermStructure> rTS = process->riskFreeRate();
-            const Handle<YieldTermStructure> qTS = process->dividendYield();
+            const auto& rTS = process->riskFreeRate();
+            const auto& qTS = process->dividendYield();
 
             for (Size l=1; l <= tAvgSteps; ++l) {
                 const Real t = (maturity*l)/tAvgSteps;

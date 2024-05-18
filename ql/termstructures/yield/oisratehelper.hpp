@@ -36,7 +36,7 @@ namespace QuantLib {
       public:
         OISRateHelper(Natural settlementDays,
                       const Period& tenor, // swap maturity
-                      const Handle<Quote>& fixedRate,
+                      Handle<Quote> fixedRate,
                       const ext::shared_ptr<OvernightIndex>& overnightIndex,
                       // exogenous discounting curve
                       Handle<YieldTermStructure> discountingCurve = {},
@@ -99,7 +99,7 @@ namespace QuantLib {
       public:
         DatedOISRateHelper(const Date& startDate,
                            const Date& endDate,
-                           const Handle<Quote>& fixedRate,
+                           Handle<Quote> fixedRate,
                            const ext::shared_ptr<OvernightIndex>& overnightIndex,
                            // exogenous discounting curve
                            Handle<YieldTermStructure> discountingCurve = {},
@@ -113,14 +113,14 @@ namespace QuantLib {
                            ext::optional<bool> endOfMonth = ext::nullopt,
                            ext::optional<Frequency> fixedPaymentFrequency = ext::nullopt,
                            const Calendar& fixedCalendar = Calendar());
-        
+
         /*! \deprecated Use the overload without forward start.
                         Deprecated in version 1.35.
         */
         QL_DEPRECATED
         DatedOISRateHelper(const Date& startDate,
                            const Date& endDate,
-                           const Handle<Quote>& fixedRate,
+                           Handle<Quote> fixedRate,
                            const ext::shared_ptr<OvernightIndex>& overnightIndex,
                            // exogenous discounting curve
                            Handle<YieldTermStructure> discountingCurve,

@@ -185,9 +185,8 @@ namespace QuantLib {
         return *this;
     }
 
-    MakeCms& MakeCms::withDiscountingTermStructure(
-                const Handle<YieldTermStructure>& discountingTermStructure) {
-        engine_ = ext::make_shared<DiscountingSwapEngine>(discountingTermStructure);
+    MakeCms& MakeCms::withDiscountingTermStructure(Handle<YieldTermStructure> discountingTermStructure) {
+        engine_ = ext::make_shared<DiscountingSwapEngine>(std::move(discountingTermStructure));
         return *this;
     }
 

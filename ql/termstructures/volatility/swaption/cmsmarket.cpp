@@ -152,14 +152,14 @@ namespace QuantLib {
         }
     }
 
-    void CmsMarket::reprice(const Handle<SwaptionVolatilityStructure> &v,
+    void CmsMarket::reprice(Handle<SwaptionVolatilityStructure> v,
                             Real meanReversion) {
         Handle<Quote> meanReversionQuote(
             ext::make_shared<SimpleQuote>(meanReversion));
         for (Size j = 0; j < nSwapIndexes_; ++j) {
             // ??
             // set new volatility structure and new mean reversion
-            pricers_[j]->setSwaptionVolatility(v);
+            pricers_[j]->setSwaptionVolatility(std::move(v));
             if (meanReversion != Null<Real>()) {
                 ext::shared_ptr<MeanRevertingPricer> p =
                     ext::dynamic_pointer_cast<MeanRevertingPricer>(

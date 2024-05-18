@@ -56,9 +56,9 @@ namespace QuantLib {
 
     //! creator method
     template <class UnaryFunction>
-    DerivedQuote<UnaryFunction> makeDerivedQuote(const Handle<Quote>& element,
+    DerivedQuote<UnaryFunction> makeDerivedQuote(Handle<Quote> element,
                                                  const UnaryFunction& f) {
-        return DerivedQuote<UnaryFunction>(element, f);
+        return DerivedQuote<UnaryFunction>(std::move(element), f);
     }
 
     // inline definitions

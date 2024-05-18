@@ -44,7 +44,7 @@ namespace QuantLib {
         // Handle or just shared_ptr ??
         OptionletStripper2(
             const ext::shared_ptr<OptionletStripper1>& optionletStripper1,
-            const Handle<CapFloorTermVolCurve>& atmCapFloorTermVolCurve);
+            Handle<CapFloorTermVolCurve> atmCapFloorTermVolCurve);
 
         std::vector<Rate> atmCapFloorStrikes() const;
         std::vector<Real> atmCapFloorPrices() const;

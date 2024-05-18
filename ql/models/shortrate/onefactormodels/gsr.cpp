@@ -23,15 +23,15 @@
 
 namespace QuantLib {
 
-    Gsr::Gsr(const Handle<YieldTermStructure>& termStructure,
+    Gsr::Gsr(Handle<YieldTermStructure> termStructure,
              std::vector<Date> volstepdates,
              const std::vector<Real>& volatilities,
              const Real reversion,
              const Real T)
-    : Gaussian1dModel(termStructure), CalibratedModel(2), reversion_(arguments_[0]),
+    : Gaussian1dModel(std::move(termStructure)), CalibratedModel(2), reversion_(arguments_[0]),
       sigma_(arguments_[1]), volstepdates_(std::move(volstepdates)) {
 
-        QL_REQUIRE(!termStructure.empty(), "yield term structure handle is empty");
+        QL_REQUIRE(!this->termStructure().empty(), "yield term structure handle is empty");
 
         volatilities_.resize(volatilities.size());
         for (Size i = 0; i < volatilities.size(); ++i)
@@ -42,15 +42,15 @@ namespace QuantLib {
         initialize(T);
     }
 
-    Gsr::Gsr(const Handle<YieldTermStructure>& termStructure,
+    Gsr::Gsr(Handle<YieldTermStructure> termStructure,
              std::vector<Date> volstepdates,
              const std::vector<Real>& volatilities,
              const std::vector<Real>& reversions,
              const Real T)
-    : Gaussian1dModel(termStructure), CalibratedModel(2), reversion_(arguments_[0]),
+    : Gaussian1dModel(std::move(termStructure)), CalibratedModel(2), reversion_(arguments_[0]),
       sigma_(arguments_[1]), volstepdates_(std::move(volstepdates)) {
 
-        QL_REQUIRE(!termStructure.empty(), "yield term structure handle is empty");
+        QL_REQUIRE(!this->termStructure().empty(), "yield term structure handle is empty");
 
         volatilities_.resize(volatilities.size());
         for (Size i = 0; i < volatilities.size(); ++i)
@@ -62,30 +62,30 @@ namespace QuantLib {
         initialize(T);
     }
 
-    Gsr::Gsr(const Handle<YieldTermStructure>& termStructure,
+    Gsr::Gsr(Handle<YieldTermStructure> termStructure,
              std::vector<Date> volstepdates,
              std::vector<Handle<Quote> > volatilities,
              const Handle<Quote>& reversion,
              const Real T)
-    : Gaussian1dModel(termStructure), CalibratedModel(2), reversion_(arguments_[0]),
+    : Gaussian1dModel(std::move(termStructure)), CalibratedModel(2), reversion_(arguments_[0]),
       sigma_(arguments_[1]), volatilities_(std::move(volatilities)),
       reversions_(std::vector<Handle<Quote> >(1, reversion)),
       volstepdates_(std::move(volstepdates)) {
 
-        QL_REQUIRE(!termStructure.empty(), "yield term structure handle is empty");
+        QL_REQUIRE(!this->termStructure().empty(), "yield term structure handle is empty");
         initialize(T);
     }
 
-    Gsr::Gsr(const Handle<YieldTermStructure>& termStructure,
+    Gsr::Gsr(Handle<YieldTermStructure> termStructure,
              std::vector<Date> volstepdates,
              std::vector<Handle<Quote> > volatilities,
              std::vector<Handle<Quote> > reversions,
              const Real T)
-    : Gaussian1dModel(termStructure), CalibratedModel(2), reversion_(arguments_[0]),
+    : Gaussian1dModel(std::move(termStructure)), CalibratedModel(2), reversion_(arguments_[0]),
       sigma_(arguments_[1]), volatilities_(std::move(volatilities)),
       reversions_(std::move(reversions)), volstepdates_(std::move(volstepdates)) {
 
-        QL_REQUIRE(!termStructure.empty(), "yield term structure handle is empty");
+        QL_REQUIRE(!this->termStructure().empty(), "yield term structure handle is empty");
         initialize(T);
     }
 

@@ -93,7 +93,7 @@ namespace QuantLib {
         newGFunctionExactYield(const CmsCoupon& coupon);
         static ext::shared_ptr<GFunction>
         newGFunctionWithShifts(const CmsCoupon& coupon,
-                               const Handle<Quote>& meanReversion);
+                               Handle<Quote> meanReversion);
       private:
         class GFunctionStandard : public GFunction {
           public:
@@ -211,15 +211,15 @@ namespace QuantLib {
         Rate floorletRate(Rate effectiveFloor) const override;
         /* */
         Real meanReversion() const override;
-        void setMeanReversion(const Handle<Quote>& meanReversion) override {
+        void setMeanReversion(Handle<Quote> meanReversion) override {
             unregisterWith(meanReversion_);
-            meanReversion_ = meanReversion;
+            meanReversion_ = std::move(meanReversion);
             registerWith(meanReversion_);
             update();
         };
 
       protected:
-        HaganPricer(const Handle<SwaptionVolatilityStructure>& swaptionVol,
+        HaganPricer(Handle<SwaptionVolatilityStructure> swaptionVol,
                     GFunctionFactory::YieldCurveModel modelOfYieldCurve,
                     Handle<Quote> meanReversion);
         void initialize(const FloatingRateCoupon& coupon) override;
@@ -253,9 +253,9 @@ namespace QuantLib {
     class NumericHaganPricer : public HaganPricer {
       public:
         NumericHaganPricer(
-            const Handle<SwaptionVolatilityStructure>& swaptionVol,
+            Handle<SwaptionVolatilityStructure> swaptionVol,
             GFunctionFactory::YieldCurveModel modelOfYieldCurve,
-            const Handle<Quote>& meanReversion,
+            Handle<Quote> meanReversion,
             Rate lowerLimit = 0.0,
             Rate upperLimit = 1.0,
             Real precision = 1.0e-6,
@@ -323,9 +323,9 @@ namespace QuantLib {
     class AnalyticHaganPricer : public HaganPricer {
       public:
         AnalyticHaganPricer(
-            const Handle<SwaptionVolatilityStructure>& swaptionVol,
+            Handle<SwaptionVolatilityStructure> swaptionVol,
             GFunctionFactory::YieldCurveModel modelOfYieldCurve,
-            const Handle<Quote>& meanReversion);
+            Handle<Quote> meanReversion);
       protected:
         Real optionletPrice(Option::Type optionType, Real strike) const override;
         Real swapletPrice() const override;

@@ -45,7 +45,7 @@ namespace QuantLib {
                      the bond after creating the helper, so that the
                      helper has sole ownership of it.
         */
-        BondHelper(const Handle<Quote>& price,
+        BondHelper(Handle<Quote> price,
                    const ext::shared_ptr<Bond>& bond,
                    Bond::Price::Type priceType = Bond::Price::Clean);
 
@@ -80,7 +80,7 @@ namespace QuantLib {
         ~FixedRateBondHelper() override = default;
         QL_DEPRECATED_ENABLE_WARNING
 
-        FixedRateBondHelper(const Handle<Quote>& price,
+        FixedRateBondHelper(Handle<Quote> price,
                             Natural settlementDays,
                             Real faceAmount,
                             Schedule schedule,
@@ -128,7 +128,7 @@ namespace QuantLib {
         ~CPIBondHelper() override = default;
         QL_DEPRECATED_ENABLE_WARNING
 
-        CPIBondHelper(const Handle<Quote>& price,
+        CPIBondHelper(Handle<Quote> price,
                       Natural settlementDays,
                       Real faceAmount,
                       bool growthOnly,

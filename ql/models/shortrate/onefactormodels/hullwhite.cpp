@@ -28,16 +28,16 @@ using std::sqrt;
 
 namespace QuantLib {
 
-    HullWhite::HullWhite(const Handle<YieldTermStructure>& termStructure,
+    HullWhite::HullWhite(Handle<YieldTermStructure> termStructure,
                          Real a, Real sigma)
     : Vasicek(termStructure->forwardRate(0.0, 0.0, Continuous, NoFrequency),
                                          a, 0.0, sigma, 0.0),
-      TermStructureConsistentModel(termStructure) {
+      TermStructureConsistentModel(std::move(termStructure)) {
         b_ = NullParameter();
         lambda_ = NullParameter();
         HullWhite::generateArguments();
 
-        registerWith(termStructure);
+        registerWith(this->termStructure());
     }
 
     ext::shared_ptr<Lattice> HullWhite::tree(const TimeGrid& grid) const {
@@ -167,4 +167,3 @@ namespace QuantLib {
     }
 
 }
-

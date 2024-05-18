@@ -28,7 +28,7 @@
 namespace QuantLib {
 
     ZeroCouponInflationSwapHelper::ZeroCouponInflationSwapHelper(
-        const Handle<Quote>& quote,
+        Handle<Quote> quote,
         const Period& swapObsLag,
         const Date& maturity,
         Calendar calendar,
@@ -37,7 +37,7 @@ namespace QuantLib {
         ext::shared_ptr<ZeroInflationIndex> zii,
         CPI::InterpolationType observationInterpolation,
         Handle<YieldTermStructure> nominalTermStructure)
-    : BootstrapHelper<ZeroInflationTermStructure>(quote), swapObsLag_(swapObsLag),
+    : BootstrapHelper<ZeroInflationTermStructure>(std::move(quote)), swapObsLag_(swapObsLag),
       maturity_(maturity), calendar_(std::move(calendar)), paymentConvention_(paymentConvention),
       dayCounter_(std::move(dayCounter)), zii_(std::move(zii)),
       observationInterpolation_(observationInterpolation),
@@ -109,7 +109,7 @@ namespace QuantLib {
 
 
     YearOnYearInflationSwapHelper::YearOnYearInflationSwapHelper(
-        const Handle<Quote>& quote,
+        Handle<Quote> quote,
         const Period& swapObsLag,
         const Date& maturity,
         Calendar calendar,
@@ -117,7 +117,7 @@ namespace QuantLib {
         DayCounter dayCounter,
         ext::shared_ptr<YoYInflationIndex> yii,
         Handle<YieldTermStructure> nominalTermStructure)
-    : BootstrapHelper<YoYInflationTermStructure>(quote), swapObsLag_(swapObsLag),
+    : BootstrapHelper<YoYInflationTermStructure>(std::move(quote)), swapObsLag_(swapObsLag),
       maturity_(maturity), calendar_(std::move(calendar)), paymentConvention_(paymentConvention),
       dayCounter_(std::move(dayCounter)), yii_(std::move(yii)),
       nominalTermStructure_(std::move(nominalTermStructure)) {

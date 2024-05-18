@@ -36,16 +36,16 @@ namespace QuantLib {
         with Stochastic Volatility with Applications to Bond and
         Currency Options.  The review of Financial Studies, Volume 6,
         Issue 2, 327-343.
-        
-        A. Elices, Models with time-dependent parameters using 
+
+        A. Elices, Models with time-dependent parameters using
         transform methods: application to Heston’s model,
         http://arxiv.org/pdf/0708.2020
     */
     class PiecewiseTimeDependentHestonModel : public CalibratedModel {
       public:
-        PiecewiseTimeDependentHestonModel(const Handle<YieldTermStructure>& riskFreeRate,
-                                          const Handle<YieldTermStructure>& dividendYield,
-                                          const Handle<Quote>& s0,
+        PiecewiseTimeDependentHestonModel(Handle<YieldTermStructure> riskFreeRate,
+                                          Handle<YieldTermStructure> dividendYield,
+                                          Handle<Quote> s0,
                                           Real v0,
                                           const Parameter& theta,
                                           const Parameter& kappa,
@@ -66,11 +66,11 @@ namespace QuantLib {
         // spot
         Real s0()          const { return s0_->value(); }
 
-        
+
         const TimeGrid& timeGrid() const;
         const Handle<YieldTermStructure>& dividendYield() const;
         const Handle<YieldTermStructure>& riskFreeRate() const;
-        
+
       protected:
         const Handle<Quote> s0_;
         const Handle<YieldTermStructure> riskFreeRate_;
@@ -81,4 +81,3 @@ namespace QuantLib {
 
 
 #endif
-

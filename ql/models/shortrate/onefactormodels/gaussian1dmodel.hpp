@@ -178,8 +178,8 @@ class Gaussian1dModel : public TermStructureConsistentModel, public LazyObject {
 
   protected:
     // we let derived classes register with the termstructure
-    Gaussian1dModel(const Handle<YieldTermStructure> &yieldTermStructure)
-        : TermStructureConsistentModel(yieldTermStructure) {
+    Gaussian1dModel(Handle<YieldTermStructure> yieldTermStructure)
+        : TermStructureConsistentModel(std::move(yieldTermStructure)) {
         registerWith(Settings::instance().evaluationDate());
     }
 

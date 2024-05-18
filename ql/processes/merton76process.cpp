@@ -24,16 +24,16 @@
 
 namespace QuantLib {
 
-    Merton76Process::Merton76Process(const Handle<Quote>& stateVariable,
-                                     const Handle<YieldTermStructure>& dividendTS,
-                                     const Handle<YieldTermStructure>& riskFreeTS,
-                                     const Handle<BlackVolTermStructure>& blackVolTS,
+    Merton76Process::Merton76Process(Handle<Quote> stateVariable,
+                                     Handle<YieldTermStructure> dividendTS,
+                                     Handle<YieldTermStructure> riskFreeTS,
+                                     Handle<BlackVolTermStructure> blackVolTS,
                                      Handle<Quote> jumpInt,
                                      Handle<Quote> logJMean,
                                      Handle<Quote> logJVol,
                                      const ext::shared_ptr<discretization>& disc)
     : StochasticProcess1D(disc), blackProcess_(
-          new BlackScholesMertonProcess(stateVariable, dividendTS, riskFreeTS, blackVolTS, disc)),
+          new BlackScholesMertonProcess(std::move(stateVariable), std::move(dividendTS), std::move(riskFreeTS), std::move(blackVolTS), disc)),
       jumpIntensity_(std::move(jumpInt)), logMeanJump_(std::move(logJMean)),
       logJumpVolatility_(std::move(logJVol)) {
         registerWith(blackProcess_);

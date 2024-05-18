@@ -35,7 +35,7 @@ namespace QuantLib {
 
     /*! Italian CCTEU (Certificato di credito del tesoro)
         Euribor6M indexed floating rate bond
-    
+
         \ingroup instruments
 
     */
@@ -43,8 +43,7 @@ namespace QuantLib {
       public:
         CCTEU(const Date& maturityDate,
               Spread spread,
-              const Handle<YieldTermStructure>& fwdCurve =
-                                    Handle<YieldTermStructure>(),
+              Handle<YieldTermStructure> fwdCurve = {},
               const Date& startDate = Date(),
               const Date& issueDate = Date());
         //! \name Bond interface

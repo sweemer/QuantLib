@@ -96,7 +96,7 @@ namespace QuantLib {
 
         if (disTs_.empty() || iterExerciseDate != disTs_->referenceDate()) {
 
-            const Handle<YieldTermStructure> discount
+            const auto& discount
                 = disModel_->termStructure();
 
             disTs_.linkTo(ext::shared_ptr<YieldTermStructure>(
@@ -105,7 +105,7 @@ namespace QuantLib {
                     iterExerciseDate, discount->referenceDate(),
                     disModel_)));
 
-            const Handle<YieldTermStructure> fwd = fwdModel_->termStructure();
+            const auto& fwd = fwdModel_->termStructure();
 
             fwdTs_.linkTo(ext::shared_ptr<YieldTermStructure>(
                 new FdmAffineModelTermStructure(fwdRate,

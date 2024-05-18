@@ -29,7 +29,7 @@ namespace QuantLib {
 
     OISRateHelper::OISRateHelper(Natural settlementDays,
                                  const Period& tenor, // swap maturity
-                                 const Handle<Quote>& fixedRate,
+                                 Handle<Quote> fixedRate,
                                  const ext::shared_ptr<OvernightIndex>& overnightIndex,
                                  Handle<YieldTermStructure> discount,
                                  bool telescopicValueDates,
@@ -45,7 +45,7 @@ namespace QuantLib {
                                  ext::optional<bool> endOfMonth,
                                  ext::optional<Frequency> fixedPaymentFrequency,
                                  Calendar fixedCalendar)
-    : RelativeDateRateHelper(fixedRate), pillarChoice_(pillar), settlementDays_(settlementDays), tenor_(tenor),
+    : RelativeDateRateHelper(std::move(fixedRate)), pillarChoice_(pillar), settlementDays_(settlementDays), tenor_(tenor),
       discountHandle_(std::move(discount)), telescopicValueDates_(telescopicValueDates),
       paymentLag_(paymentLag), paymentConvention_(paymentConvention),
       paymentFrequency_(paymentFrequency), paymentCalendar_(std::move(paymentCalendar)),
@@ -159,7 +159,7 @@ namespace QuantLib {
 
     DatedOISRateHelper::DatedOISRateHelper(const Date& startDate,
                                            const Date& endDate,
-                                           const Handle<Quote>& fixedRate,
+                                           Handle<Quote> fixedRate,
                                            const ext::shared_ptr<OvernightIndex>& overnightIndex,
                                            Handle<YieldTermStructure> discount,
                                            bool telescopicValueDates,
@@ -172,7 +172,7 @@ namespace QuantLib {
                                            ext::optional<bool> endOfMonth,
                                            ext::optional<Frequency> fixedPaymentFrequency,
                                            const Calendar& fixedCalendar)
-    : RateHelper(fixedRate), discountHandle_(std::move(discount)),
+    : RateHelper(std::move(fixedRate)), discountHandle_(std::move(discount)),
       telescopicValueDates_(telescopicValueDates), averagingMethod_(averagingMethod) {
 
         auto clonedOvernightIndex =
@@ -217,7 +217,7 @@ namespace QuantLib {
 
     DatedOISRateHelper::DatedOISRateHelper(const Date& startDate,
                                            const Date& endDate,
-                                           const Handle<Quote>& fixedRate,
+                                           Handle<Quote> fixedRate,
                                            const ext::shared_ptr<OvernightIndex>& overnightIndex,
                                            Handle<YieldTermStructure> discount,
                                            bool telescopicValueDates,
@@ -231,10 +231,10 @@ namespace QuantLib {
                                            ext::optional<bool> endOfMonth,
                                            ext::optional<Frequency> fixedPaymentFrequency,
                                            const Calendar& fixedCalendar)
-    : DatedOISRateHelper(startDate, endDate, fixedRate, overnightIndex, std::move(discount), telescopicValueDates,
+    : DatedOISRateHelper(startDate, endDate, std::move(fixedRate), overnightIndex, std::move(discount), telescopicValueDates,
                          averagingMethod, paymentLag, paymentConvention, paymentFrequency, paymentCalendar,
                          overnightSpread, endOfMonth, fixedPaymentFrequency, fixedCalendar) {}
-    
+
     void DatedOISRateHelper::setTermStructure(YieldTermStructure* t) {
         // do not set the relinkable handle as an observer -
         // force recalculation when needed

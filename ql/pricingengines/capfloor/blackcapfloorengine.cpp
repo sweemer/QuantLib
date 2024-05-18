@@ -42,12 +42,12 @@ namespace QuantLib {
     }
 
     BlackCapFloorEngine::BlackCapFloorEngine(Handle<YieldTermStructure> discountCurve,
-                                             const Handle<Quote>& v,
+                                             Handle<Quote> v,
                                              const DayCounter& dc,
                                              Real displacement)
     : discountCurve_(std::move(discountCurve)),
       vol_(ext::shared_ptr<OptionletVolatilityStructure>(
-          new ConstantOptionletVolatility(0, NullCalendar(), Following, v, dc))),
+          new ConstantOptionletVolatility(0, NullCalendar(), Following, std::move(v), dc))),
       displacement_(displacement) {
         registerWith(discountCurve_);
         registerWith(vol_);
@@ -112,14 +112,14 @@ namespace QuantLib {
                         stdDevs[i] = std::sqrt(vol_->blackVariance(fixingDate,
                                                                    strike));
                         vegas[i] = blackFormulaStdDevDerivative(strike,
-                            forward, stdDevs[i], discountedAccrual, displacement_) 
+                            forward, stdDevs[i], discountedAccrual, displacement_)
                             * sqrtTime;
                         deltas[i] = blackFormulaAssetItmProbability(Option::Call,
                             strike, forward, stdDevs[i], displacement_);
                     }
                     // include caplets with past fixing date
                     values[i] = blackFormula(Option::Call,
-                        strike, forward, stdDevs[i], discountedAccrual, 
+                        strike, forward, stdDevs[i], discountedAccrual,
                         displacement_);
                 }
                 if (type == CapFloor::Floor || type == CapFloor::Collar) {
@@ -130,10 +130,10 @@ namespace QuantLib {
                         stdDevs[i] = std::sqrt(vol_->blackVariance(fixingDate,
                                                                    strike));
                         floorletVega = blackFormulaStdDevDerivative(strike,
-                            forward, stdDevs[i], discountedAccrual, displacement_) 
+                            forward, stdDevs[i], discountedAccrual, displacement_)
                             * sqrtTime;
                         floorletDelta = Integer(Option::Put) * blackFormulaAssetItmProbability(
-                                                        Option::Put, strike, forward, 
+                                                        Option::Put, strike, forward,
                                                         stdDevs[i], displacement_);
                     }
                     Real floorlet = blackFormula(Option::Put,
@@ -146,7 +146,7 @@ namespace QuantLib {
                         // a collar is long a cap and short a floor
                         values[i] -= floorlet;
                         vegas[i] -= floorletVega;
-                        deltas[i] -= floorletDelta; 
+                        deltas[i] -= floorletDelta;
                     }
                 }
                 value += values[i];

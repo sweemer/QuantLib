@@ -35,7 +35,7 @@ namespace QuantLib {
       public:
         //! \name Constructors
         //@{
-        ConstantCPIVolatility(const Handle<Quote>& vol,
+        ConstantCPIVolatility(Handle<Quote> vol,
                               Natural settlementDays,
                               const Calendar&,
                               BusinessDayConvention bdc,
@@ -70,4 +70,3 @@ namespace QuantLib {
 }
 
 #endif
-

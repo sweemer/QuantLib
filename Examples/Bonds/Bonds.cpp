@@ -453,7 +453,7 @@ int main(int, char* []) {
                                  volatility,
                                  Actual365Fixed()));
 
-         pricer->setCapletVolatility(vol);
+         pricer->setCapletVolatility(std::move(vol));
          setCouponPricer(floatingRateBond.cashflows(),pricer);
 
          // Yield curve bootstrapping
@@ -555,4 +555,3 @@ int main(int, char* []) {
         return 1;
     }
 }
-

@@ -31,19 +31,19 @@
 
 namespace QuantLib {
 
-    MarkovFunctional::MarkovFunctional(const Handle<YieldTermStructure>& termStructure,
+    MarkovFunctional::MarkovFunctional(Handle<YieldTermStructure> termStructure,
                                        const Real reversion,
                                        std::vector<Date> volstepdates,
                                        std::vector<Real> volatilities,
-                                       const Handle<SwaptionVolatilityStructure>& swaptionVol,
+                                       Handle<SwaptionVolatilityStructure> swaptionVol,
                                        const std::vector<Date>& swaptionExpiries,
                                        const std::vector<Period>& swaptionTenors,
                                        const ext::shared_ptr<SwapIndex>& swapIndexBase,
                                        MarkovFunctional::ModelSettings modelSettings)
-    : Gaussian1dModel(termStructure), CalibratedModel(1), modelSettings_(std::move(modelSettings)),
+    : Gaussian1dModel(std::move(termStructure)), CalibratedModel(1), modelSettings_(std::move(modelSettings)),
       capletCalibrated_(false), reversion_(ConstantParameter(reversion, NoConstraint())),
       sigma_(arguments_[0]), volstepdates_(std::move(volstepdates)),
-      volatilities_(std::move(volatilities)), swaptionVol_(swaptionVol),
+      volatilities_(std::move(volatilities)), swaptionVol_(std::move(swaptionVol)),
       swaptionExpiries_(swaptionExpiries), swaptionTenors_(swaptionTenors),
       swapIndexBase_(swapIndexBase), iborIndex_(swapIndexBase->iborIndex()) {
 
@@ -54,33 +54,33 @@ namespace QuantLib {
                        << swaptionTenors.size() << ")");
         QL_REQUIRE(!swaptionExpiries.empty(),
                    "need at least one swaption expiry to calibrate numeraire");
-        QL_REQUIRE(!termStructure.empty(),
+        QL_REQUIRE(!this->termStructure().empty(),
                    "yield term structure handle is empty");
-        QL_REQUIRE(!swaptionVol.empty(),
+        QL_REQUIRE(!swaptionVol_.empty(),
                    "swaption volatility structure is empty");
         modelSettings_.validate();
         initialize();
     }
 
-    MarkovFunctional::MarkovFunctional(const Handle<YieldTermStructure>& termStructure,
+    MarkovFunctional::MarkovFunctional(Handle<YieldTermStructure> termStructure,
                                        const Real reversion,
                                        std::vector<Date> volstepdates,
                                        std::vector<Real> volatilities,
-                                       const Handle<OptionletVolatilityStructure>& capletVol,
+                                       Handle<OptionletVolatilityStructure> capletVol,
                                        const std::vector<Date>& capletExpiries,
                                        ext::shared_ptr<IborIndex> iborIndex,
                                        MarkovFunctional::ModelSettings modelSettings)
-    : Gaussian1dModel(termStructure), CalibratedModel(1), modelSettings_(std::move(modelSettings)),
+    : Gaussian1dModel(std::move(termStructure)), CalibratedModel(1), modelSettings_(std::move(modelSettings)),
       capletCalibrated_(true), reversion_(ConstantParameter(reversion, NoConstraint())),
       sigma_(arguments_[0]), volstepdates_(std::move(volstepdates)),
-      volatilities_(std::move(volatilities)), capletVol_(capletVol),
+      volatilities_(std::move(volatilities)), capletVol_(std::move(capletVol)),
       capletExpiries_(capletExpiries), iborIndex_(std::move(iborIndex)) {
 
         QL_REQUIRE(!capletExpiries.empty(),
                    "need at least one caplet expiry to calibrate numeraire");
-        QL_REQUIRE(!termStructure.empty(),
+        QL_REQUIRE(!this->termStructure().empty(),
                    "yield term structure handle is empty");
-        QL_REQUIRE(!capletVol.empty(), "caplet volatility structure is empty");
+        QL_REQUIRE(!capletVol_.empty(), "caplet volatility structure is empty");
         modelSettings_.validate();
         initialize();
     }
@@ -332,7 +332,7 @@ namespace QuantLib {
             if ((modelSettings_.adjustments_ & ModelSettings::KahaleSmile) != 0) {
 
                 i->second.smileSection_ = ext::make_shared<KahaleSmileSection>(
-                    
+
                         i->second.rawSmileSection_, i->second.atm_,
                         (modelSettings_.adjustments_ &
                          ModelSettings::KahaleInterpolation) != 0,

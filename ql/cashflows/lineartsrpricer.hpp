@@ -159,7 +159,7 @@ namespace QuantLib {
 
 
         LinearTsrPricer(
-            const Handle<SwaptionVolatilityStructure>& swaptionVol,
+            Handle<SwaptionVolatilityStructure> swaptionVol,
             Handle<Quote> meanReversion,
             Handle<YieldTermStructure> couponDiscountCurve = Handle<YieldTermStructure>(),
             const Settings& settings = Settings(),
@@ -174,9 +174,9 @@ namespace QuantLib {
         Rate floorletRate(Rate effectiveFloor) const override;
         /* */
         Real meanReversion() const override;
-        void setMeanReversion(const Handle<Quote>& meanReversion) override {
+        void setMeanReversion(Handle<Quote> meanReversion) override {
             unregisterWith(meanReversion_);
-            meanReversion_ = meanReversion;
+            meanReversion_ = std::move(meanReversion);
             registerWith(meanReversion_);
             update();
         }

@@ -38,31 +38,31 @@ namespace QuantLib {
 
     class FdmHestonHullWhiteSolver : public LazyObject {
       public:
-        FdmHestonHullWhiteSolver(const Handle<HestonProcess>& hestonProcess,
-                                 const Handle<HullWhiteProcess>& hwProcess,
+        FdmHestonHullWhiteSolver(Handle<HestonProcess> hestonProcess,
+                                 Handle<HullWhiteProcess> hwProcess,
                                  Rate corrEquityShortRate,
                                  FdmSolverDesc solverDesc,
                                  const FdmSchemeDesc& schemeDesc = FdmSchemeDesc::Hundsdorfer());
 
         Real valueAt(Real s, Real v, Rate r) const;
         Real thetaAt(Real s, Real v, Rate r) const;
-        
-        // First and second order derivative with respect to S_t. 
+
+        // First and second order derivative with respect to S_t.
         // Please note that this is not the "model implied" delta or gamma.
-        // E.g. see Fabio Mercurio, Massimo Morini 
+        // E.g. see Fabio Mercurio, Massimo Morini
         // "A Note on Hedging with Local and Stochastic Volatility Models",
-        // http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1294284  
+        // http://papers.ssrn.com/sol3/papers.cfm?abstract_id=1294284
         Real deltaAt(Real s, Real v, Rate r, Real eps) const;
         Real gammaAt(Real s, Real v, Rate r, Real eps) const;
-        
+
       protected:
         void performCalculations() const override;
 
       private:
-        const Handle<HestonProcess> hestonProcess_;  
+        const Handle<HestonProcess> hestonProcess_;
         const Handle<HullWhiteProcess> hwProcess_;
         const Real corrEquityShortRate_;
-        
+
         const FdmSolverDesc solverDesc_;
         const FdmSchemeDesc schemeDesc_;
 

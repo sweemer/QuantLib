@@ -97,7 +97,7 @@ namespace QuantLib {
         fixingDate_ = cashFlow.fixingDate();
         QL_REQUIRE(fixingDate_ >= baseDate_, "Fixing date cannot fall before base date.");
         growthOnlyPayoff_ = cashFlow.growthOnly();
-        
+
         QL_REQUIRE(!quantoCurrencyTermStructure_.empty(),
                    "Quanto currency term structure handle cannot be empty.");
         QL_REQUIRE(!equityVolatility_.empty(),

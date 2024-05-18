@@ -79,20 +79,20 @@ namespace QuantLib {
                                       due at default time. If set to
                                       false, they are due at the end of
                                       the accrual period.
-            @param protectionStart  The first date where a default event will trigger the contract. 
+            @param protectionStart  The first date where a default event will trigger the contract.
                                     Before the CDS Big Bang 2009, this was typically trade date (T) + 1 calendar day.
-                                    After the CDS Big Bang 2009, protection is typically effective immediately i.e. on 
+                                    After the CDS Big Bang 2009, protection is typically effective immediately i.e. on
                                     trade date so this is what should be entered for protection start.
-                                    Notice that there is no default lookback period and protection start here. 
+                                    Notice that there is no default lookback period and protection start here.
                                     In the way it determines the dirty amount it is more like the trade execution date.
             @param lastPeriodDayCounter Day-count convention for accrual in last period
-            @param rebatesAccrual  The protection seller pays the accrued 
-                                    scheduled current coupon at the start 
+            @param rebatesAccrual  The protection seller pays the accrued
+                                    scheduled current coupon at the start
                                     of the contract. The rebate date is not
                                     provided but computed to be two days after
                                     protection start.
-            @param tradeDate  The contract's trade date. It will be used with the \p cashSettlementDays to determine 
-                              the date on which the cash settlement amount is paid. If not given, the trade date is 
+            @param tradeDate  The contract's trade date. It will be used with the \p cashSettlementDays to determine
+                              the date on which the cash settlement amount is paid. If not given, the trade date is
                               guessed from the protection start date and \p schedule date generation rule.
             @param cashSettlementDays  The number of business days from \p tradeDate to cash settlement date.
         */
@@ -126,25 +126,25 @@ namespace QuantLib {
                                      due at default time. If set to
                                      false, they are due at the end of
                                      the accrual period.
-            @param protectionStart  The first date where a default event will trigger the contract. 
+            @param protectionStart  The first date where a default event will trigger the contract.
                                     Before the CDS Big Bang 2009, this was typically trade date (T) + 1 calendar day.
-                                    After the CDS Big Bang 2009, protection is typically effective immediately i.e. on 
+                                    After the CDS Big Bang 2009, protection is typically effective immediately i.e. on
                                     trade date so this is what should be entered for protection start.
-                                    Notice that there is no default lookback period and protection start here. 
+                                    Notice that there is no default lookback period and protection start here.
                                     In the way it determines the dirty amount it is more like the trade execution date.
-            @param upfrontDate Settlement date for the upfront and accrual 
+            @param upfrontDate Settlement date for the upfront and accrual
                                     rebate (if any) payments.
-                                    Typically T+3, this is also the default 
+                                    Typically T+3, this is also the default
                                     value.
             @param lastPeriodDayCounter Day-count convention for accrual in last period
-            @param rebatesAccrual  The protection seller pays the accrued 
-                                    scheduled current coupon at the start 
+            @param rebatesAccrual  The protection seller pays the accrued
+                                    scheduled current coupon at the start
                                     of the contract. The rebate date is not
                                     provided but computed to be two days after
                                     protection start.
-            @param tradeDate  The contract's trade date. It will be used with the \p cashSettlementDays to determine 
-                              the date on which the cash settlement amount is paid if \p upfrontDate is empty. If not 
-                              given, the trade date is guessed from the protection start date and \p schedule date 
+            @param tradeDate  The contract's trade date. It will be used with the \p cashSettlementDays to determine
+                              the date on which the cash settlement amount is paid if \p upfrontDate is empty. If not
+                              given, the trade date is guessed from the protection start date and \p schedule date
                               generation rule.
             @param cashSettlementDays  The number of business days from \p tradeDate to cash settlement date.
         */
@@ -232,7 +232,7 @@ namespace QuantLib {
                     settle on trade date +3.
         */
         Rate impliedHazardRate(Real targetNPV,
-                               const Handle<YieldTermStructure>& discountCurve,
+                               Handle<YieldTermStructure> discountCurve,
                                const DayCounter& dayCounter,
                                Real recoveryRate = 0.4,
                                Real accuracy = 1.0e-8,
@@ -270,7 +270,7 @@ namespace QuantLib {
                     settle on trade date +3.
         */
         Rate conventionalSpread(Real conventionalRecovery,
-                                const Handle<YieldTermStructure>& discountCurve,
+                                Handle<YieldTermStructure> discountCurve,
                                 const DayCounter& dayCounter,
                                 PricingModel model = Midpoint) const;
         //@}

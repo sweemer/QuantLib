@@ -47,17 +47,17 @@ namespace QuantLib {
       public:
         BinomialConvertibleEngine(ext::shared_ptr<GeneralizedBlackScholesProcess> process,
                                   Size timeSteps,
-                                  const Handle<Quote>& creditSpread,
+                                  Handle<Quote> creditSpread,
                                   DividendSchedule dividends = DividendSchedule())
         : process_(std::move(process)), timeSteps_(timeSteps),
-          dividends_(std::move(dividends)), creditSpread_(creditSpread)
+          dividends_(std::move(dividends)), creditSpread_(std::move(creditSpread))
            {
             QL_REQUIRE(timeSteps>0,
                        "timeSteps must be positive, " << timeSteps <<
                        " not allowed");
 
             registerWith(process_);
-            registerWith(creditSpread);
+            registerWith(creditSpread_);
         }
         void calculate() const override;
         const Handle<Quote>& creditSpread() const { return creditSpread_; }

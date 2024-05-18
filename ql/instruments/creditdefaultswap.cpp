@@ -133,7 +133,7 @@ namespace QuantLib {
         // Set the maturity date.
         maturity_ = schedule.dates().back();
 
-        // Deal with the accrual rebate. We use the standard conventions for accrual calculation introduced with the 
+        // Deal with the accrual rebate. We use the standard conventions for accrual calculation introduced with the
         // CDS Big Bang in 2009.
         if (rebatesAccrual) {
 
@@ -339,7 +339,7 @@ namespace QuantLib {
 
     Rate CreditDefaultSwap::impliedHazardRate(
                                Real targetNPV,
-                               const Handle<YieldTermStructure>& discountCurve,
+                               Handle<YieldTermStructure> discountCurve,
                                const DayCounter& dayCounter,
                                Real recoveryRate,
                                Real accuracy,
@@ -356,11 +356,11 @@ namespace QuantLib {
         switch (model) {
           case Midpoint:
             engine = ext::make_shared<MidPointCdsEngine>(
-                probability, recoveryRate, discountCurve);
+                probability, recoveryRate, std::move(discountCurve));
             break;
           case ISDA:
             engine = ext::make_shared<IsdaCdsEngine>(
-                probability, recoveryRate, discountCurve,
+                probability, recoveryRate, std::move(discountCurve),
                 ext::nullopt,
                 IsdaCdsEngine::Taylor,
                 IsdaCdsEngine::HalfDayBias,
@@ -382,7 +382,7 @@ namespace QuantLib {
 
     Rate CreditDefaultSwap::conventionalSpread(
                               Real conventionalRecovery,
-                              const Handle<YieldTermStructure>& discountCurve,
+                              Handle<YieldTermStructure> discountCurve,
                               const DayCounter& dayCounter,
                               PricingModel model) const {
 
@@ -397,11 +397,11 @@ namespace QuantLib {
         switch (model) {
           case Midpoint:
             engine = ext::make_shared<MidPointCdsEngine>(
-                probability, conventionalRecovery, discountCurve);
+                probability, conventionalRecovery, std::move(discountCurve));
             break;
           case ISDA:
             engine = ext::make_shared<IsdaCdsEngine>(
-                probability, conventionalRecovery, discountCurve,
+                probability, conventionalRecovery, std::move(discountCurve),
                 ext::nullopt,
                 IsdaCdsEngine::Taylor,
                 IsdaCdsEngine::HalfDayBias,

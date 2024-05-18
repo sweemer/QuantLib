@@ -24,15 +24,15 @@
 
 namespace QuantLib {
     BatesProcess::BatesProcess(
-                              const Handle<YieldTermStructure>& riskFreeRate,
-                              const Handle<YieldTermStructure>& dividendYield,
-                              const Handle<Quote>& s0,
+                              Handle<YieldTermStructure> riskFreeRate,
+                              Handle<YieldTermStructure> dividendYield,
+                              Handle<Quote> s0,
                               Real v0, Real kappa,
                               Real theta, Real sigma, Real rho,
-                              Real lambda, Real nu, Real delta, 
+                              Real lambda, Real nu, Real delta,
                               HestonProcess::Discretization d)
-    : HestonProcess(riskFreeRate, dividendYield, 
-                    s0, v0, kappa, theta, sigma, rho, d),
+    : HestonProcess(std::move(riskFreeRate), std::move(dividendYield),
+                    std::move(s0), v0, kappa, theta, sigma, rho, d),
       lambda_(lambda), delta_(delta), nu_(nu),
       m_(std::exp(nu+0.5*delta*delta)-1) {
     }
@@ -53,10 +53,10 @@ namespace QuantLib {
             p = 0.0;
         else if (p >= 1.0)
             p = 1.0-QL_EPSILON;
-        
-        const Real n = InverseCumulativePoisson(lambda_*dt)(p);        
+
+        const Real n = InverseCumulativePoisson(lambda_*dt)(p);
         Array retVal = HestonProcess::evolve(t0, x0, dt, dw);
-        retVal[0] *= 
+        retVal[0] *=
             std::exp(-lambda_*m_*dt + nu_*n+delta_*std::sqrt(n)*dw[hestonFactors+1]);
 
         return retVal;

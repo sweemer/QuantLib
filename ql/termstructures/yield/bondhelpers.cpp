@@ -27,10 +27,10 @@
 
 namespace QuantLib {
 
-    BondHelper::BondHelper(const Handle<Quote>& price,
+    BondHelper::BondHelper(Handle<Quote> price,
                            const ext::shared_ptr<Bond>& bond,
                            const Bond::Price::Type priceType)
-    : RateHelper(price), bond_(ext::make_shared<Bond>(*bond)), priceType_(priceType) {
+    : RateHelper(std::move(price)), bond_(ext::make_shared<Bond>(*bond)), priceType_(priceType) {
 
         // the bond's last cashflow date, which can be later than
         // bond's maturity date because of adjustment
@@ -81,7 +81,7 @@ namespace QuantLib {
     QL_DEPRECATED_DISABLE_WARNING
 
     FixedRateBondHelper::FixedRateBondHelper(
-                                    const Handle<Quote>& price,
+                                    Handle<Quote> price,
                                     Natural settlementDays,
                                     Real faceAmount,
                                     Schedule schedule,
@@ -96,7 +96,7 @@ namespace QuantLib {
                                     const BusinessDayConvention exCouponConvention,
                                     bool exCouponEndOfMonth,
                                     const Bond::Price::Type priceType)
-    : BondHelper(price,
+    : BondHelper(std::move(price),
                  ext::make_shared<FixedRateBond>(settlementDays, faceAmount, std::move(schedule),
                                                  coupons, dayCounter, paymentConvention,
                                                  redemption, issueDate, paymentCalendar,
@@ -118,7 +118,7 @@ namespace QuantLib {
     QL_DEPRECATED_DISABLE_WARNING
 
     CPIBondHelper::CPIBondHelper(
-                            const Handle<Quote>& price,
+                            Handle<Quote> price,
                             Natural settlementDays,
                             Real faceAmount,
                             const bool growthOnly,
@@ -137,7 +137,7 @@ namespace QuantLib {
                             const BusinessDayConvention exCouponConvention,
                             bool exCouponEndOfMonth,
                             const Bond::Price::Type priceType)
-    : BondHelper(price,
+    : BondHelper(std::move(price),
                  ext::make_shared<CPIBond>(settlementDays, faceAmount, growthOnly, baseCPI,
                                            observationLag, cpiIndex, observationInterpolation,
                                            std::move(schedule), fixedRate, accrualDayCounter, paymentConvention,
