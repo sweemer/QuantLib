@@ -112,12 +112,12 @@ namespace QuantLib {
     class RelinkableHandle : public Handle<T> {
       public:
         explicit RelinkableHandle(
-                       const ext::shared_ptr<T>& p = ext::shared_ptr<T>(),
+                       ext::shared_ptr<T> p = {},
                        bool registerAsObserver = true);
         explicit RelinkableHandle(
                        T* p,
                        bool registerAsObserver = true);
-        void linkTo(const ext::shared_ptr<T>&,
+        void linkTo(ext::shared_ptr<T> h,
                     bool registerAsObserver = true);
     };
 
@@ -174,9 +174,9 @@ namespace QuantLib {
 
 
     template <class T>
-    inline RelinkableHandle<T>::RelinkableHandle(const ext::shared_ptr<T>& p,
+    inline RelinkableHandle<T>::RelinkableHandle(ext::shared_ptr<T> p,
                                                  bool registerAsObserver)
-    : Handle<T>(p,registerAsObserver) {}
+    : Handle<T>(std::move(p), registerAsObserver) {}
 
     template <class T>
     inline RelinkableHandle<T>::RelinkableHandle(T* p,
@@ -184,9 +184,9 @@ namespace QuantLib {
     : Handle<T>(p,registerAsObserver) {}
 
     template <class T>
-    inline void RelinkableHandle<T>::linkTo(const ext::shared_ptr<T>& h,
+    inline void RelinkableHandle<T>::linkTo(ext::shared_ptr<T> h,
                                             bool registerAsObserver) {
-        this->link_->linkTo(h,registerAsObserver);
+        this->link_->linkTo(std::move(h), registerAsObserver);
     }
 
 }
