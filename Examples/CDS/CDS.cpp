@@ -68,7 +68,7 @@ void example01() {
     auto flatRate = ext::make_shared<SimpleQuote>(0.01);
     Handle<YieldTermStructure> tsCurve(
         ext::make_shared<FlatForward>(
-            todaysDate, Handle<Quote>(flatRate), Actual365Fixed()));
+            todaysDate, Handle<Quote>(std::move(flatRate)), Actual365Fixed()));
 
     /*
       In Lehmans Brothers "guide to exotic credit derivatives"
@@ -348,7 +348,7 @@ std::copy(cdsSchedule.begin(), cdsSchedule.end(),
 
     // price with isda engine
     auto engine = ext::make_shared<IsdaCdsEngine>(
-            Handle<DefaultProbabilityTermStructure>(defaultTs0), 0.4, rateTs,
+            Handle<DefaultProbabilityTermStructure>(std::move(defaultTs0)), 0.4, rateTs,
             false, IsdaCdsEngine::Taylor, IsdaCdsEngine::NoBias, IsdaCdsEngine::Piecewise);
 
     trade->setPricingEngine(engine);

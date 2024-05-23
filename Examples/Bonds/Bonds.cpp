@@ -101,17 +101,17 @@ int main(int, char* []) {
          DayCounter zcBondsDayCounter = Actual365Fixed();
 
          auto zc3m = ext::make_shared<DepositRateHelper>(
-                 Handle<Quote>(zc3mRate),
+                 Handle<Quote>(std::move(zc3mRate)),
                  3*Months, fixingDays,
                  calendar, ModifiedFollowing,
                  true, zcBondsDayCounter);
          auto zc6m = ext::make_shared<DepositRateHelper>(
-                 Handle<Quote>(zc6mRate),
+                 Handle<Quote>(std::move(zc6mRate)),
                  6*Months, fixingDays,
                  calendar, ModifiedFollowing,
                  true, zcBondsDayCounter);
          auto zc1y = ext::make_shared<DepositRateHelper>(
-                 Handle<Quote>(zc1yRate),
+                 Handle<Quote>(std::move(zc1yRate)),
                  1*Years, fixingDays,
                  calendar, ModifiedFollowing,
                  true, zcBondsDayCounter);
@@ -270,32 +270,32 @@ int main(int, char* []) {
          DayCounter depositDayCounter = Actual360();
 
          auto d1w = ext::make_shared<DepositRateHelper>(
-                 Handle<Quote>(d1wRate),
+                 Handle<Quote>(std::move(d1wRate)),
                  1*Weeks, fixingDays,
                  calendar, ModifiedFollowing,
                  true, depositDayCounter);
          auto d1m = ext::make_shared<DepositRateHelper>(
-                 Handle<Quote>(d1mRate),
+                 Handle<Quote>(std::move(d1mRate)),
                  1*Months, fixingDays,
                  calendar, ModifiedFollowing,
                  true, depositDayCounter);
          auto d3m = ext::make_shared<DepositRateHelper>(
-                 Handle<Quote>(d3mRate),
+                 Handle<Quote>(std::move(d3mRate)),
                  3*Months, fixingDays,
                  calendar, ModifiedFollowing,
                  true, depositDayCounter);
          auto d6m = ext::make_shared<DepositRateHelper>(
-                 Handle<Quote>(d6mRate),
+                 Handle<Quote>(std::move(d6mRate)),
                  6*Months, fixingDays,
                  calendar, ModifiedFollowing,
                  true, depositDayCounter);
          auto d9m = ext::make_shared<DepositRateHelper>(
-                 Handle<Quote>(d9mRate),
+                 Handle<Quote>(std::move(d9mRate)),
                  9*Months, fixingDays,
                  calendar, ModifiedFollowing,
                  true, depositDayCounter);
          auto d1y = ext::make_shared<DepositRateHelper>(
-                 Handle<Quote>(d1yRate),
+                 Handle<Quote>(std::move(d1yRate)),
                  1*Years, fixingDays,
                  calendar, ModifiedFollowing,
                  true, depositDayCounter);
@@ -309,27 +309,27 @@ int main(int, char* []) {
          const Period forwardStart(1*Days);
 
          auto s2y = ext::make_shared<SwapRateHelper>(
-                 Handle<Quote>(s2yRate), 2*Years,
+                 Handle<Quote>(std::move(s2yRate)), 2*Years,
                  calendar, swFixedLegFrequency,
                  swFixedLegConvention, swFixedLegDayCounter,
                  swFloatingLegIndex, Handle<Quote>(), forwardStart);
          auto s3y = ext::make_shared<SwapRateHelper>(
-                 Handle<Quote>(s3yRate), 3*Years,
+                 Handle<Quote>(std::move(s3yRate)), 3*Years,
                  calendar, swFixedLegFrequency,
                  swFixedLegConvention, swFixedLegDayCounter,
                  swFloatingLegIndex, Handle<Quote>(), forwardStart);
          auto s5y = ext::make_shared<SwapRateHelper>(
-                 Handle<Quote>(s5yRate), 5*Years,
+                 Handle<Quote>(std::move(s5yRate)), 5*Years,
                  calendar, swFixedLegFrequency,
                  swFixedLegConvention, swFixedLegDayCounter,
                  swFloatingLegIndex, Handle<Quote>(), forwardStart);
          auto s10y = ext::make_shared<SwapRateHelper>(
-                 Handle<Quote>(s10yRate), 10*Years,
+                 Handle<Quote>(std::move(s10yRate)), 10*Years,
                  calendar, swFixedLegFrequency,
                  swFixedLegConvention, swFixedLegDayCounter,
                  swFloatingLegIndex, Handle<Quote>(), forwardStart);
          auto s15y = ext::make_shared<SwapRateHelper>(
-                 Handle<Quote>(s15yRate), 15*Years,
+                 Handle<Quote>(std::move(s15yRate)), 15*Years,
                  calendar, swFixedLegFrequency,
                  swFixedLegConvention, swFixedLegDayCounter,
                  swFloatingLegIndex, Handle<Quote>(), forwardStart);

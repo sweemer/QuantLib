@@ -104,7 +104,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
 
     ext::shared_ptr<BlackScholesMertonProcess> stochProcess(new BlackScholesMertonProcess(
             Handle<Quote>(spot), Handle<YieldTermStructure>(qTS), Handle<YieldTermStructure>(rTS),
-            Handle<BlackVolTermStructure>(volTS)));
+            Handle<BlackVolTermStructure>(std::move(volTS))));
 
     ext::shared_ptr<PricingEngine> engine(
         new BaroneAdesiWhaleyApproximationEngine(stochProcess));

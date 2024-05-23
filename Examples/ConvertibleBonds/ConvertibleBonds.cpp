@@ -165,7 +165,7 @@ int main(int, char* []) {
         auto rate = ext::make_shared<SimpleQuote>(riskFreeRate);
 
         Handle<YieldTermStructure> discountCurve(
-                ext::make_shared<FlatForward>(today, Handle<Quote>(rate), dayCounter));
+                ext::make_shared<FlatForward>(today, Handle<Quote>(std::move(rate)), dayCounter));
 
         ConvertibleFixedCouponBond europeanBond(
                             exercise, conversionRatio, callability,
@@ -259,4 +259,3 @@ int main(int, char* []) {
     }
 
 }
-

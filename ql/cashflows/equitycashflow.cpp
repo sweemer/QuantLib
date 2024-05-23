@@ -35,7 +35,7 @@ namespace QuantLib {
                 ext::shared_ptr<YieldTermStructure> flatTs(ext::make_shared<FlatForward>(
                     0, NullCalendar(), Handle<Quote>(ext::make_shared<SimpleQuote>(0.0)),
                     Actual365Fixed()));
-                return Handle<YieldTermStructure>(flatTs);
+                return Handle<YieldTermStructure>(std::move(flatTs));
             }
             return dividendHandle;
         }

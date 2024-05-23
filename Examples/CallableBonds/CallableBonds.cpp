@@ -42,12 +42,12 @@ using namespace QuantLib;
 
 ext::shared_ptr<YieldTermStructure>
     flatRate(const Date& today,
-             const ext::shared_ptr<Quote>& forward,
+             ext::shared_ptr<Quote> forward,
              const DayCounter& dc,
              const Compounding& compounding,
              const Frequency& frequency) {
     return ext::make_shared<FlatForward>(today,
-                                         Handle<Quote>(forward),
+                                         Handle<Quote>(std::move(forward)),
                                          dc,
                                          compounding,
                                          frequency);
@@ -310,4 +310,3 @@ int main(int, char* [])
         return 1;
     }
 }
-

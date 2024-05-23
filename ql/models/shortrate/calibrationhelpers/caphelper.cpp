@@ -73,11 +73,11 @@ namespace QuantLib {
         switch(volatilityType_) {
           case ShiftedLognormal:
             engine = ext::make_shared<BlackCapFloorEngine>(
-                termStructure_, vol, Actual365Fixed(), shift_);
+                termStructure_, std::move(vol), Actual365Fixed(), shift_);
             break;
           case Normal:
             engine = ext::make_shared<BachelierCapFloorEngine>(
-                termStructure_, vol, Actual365Fixed());
+                termStructure_, std::move(vol), Actual365Fixed());
             break;
           default:
             QL_FAIL("unknown volatility type: " << volatilityType_);

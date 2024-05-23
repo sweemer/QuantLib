@@ -104,7 +104,7 @@ int main(int, char* []) {
         auto flatRate = ext::make_shared<SimpleQuote>(0.04875825);
         Handle<YieldTermStructure> rhTermStructure(
             ext::make_shared<FlatForward>(
-                      settlementDate, Handle<Quote>(flatRate),
+                      settlementDate, Handle<Quote>(std::move(flatRate)),
                                       Actual365Fixed()));
 
         // Define the ATM/OTM/ITM swaps
@@ -176,7 +176,7 @@ int main(int, char* []) {
             swaptions.push_back(ext::make_shared<SwaptionHelper>(
                                swaptionMaturities[i],
                                Period(swapLengths[j], Years),
-                               Handle<Quote>(vol),
+                               Handle<Quote>(std::move(vol)),
                                indexSixMonths,
                                indexSixMonths->tenor(),
                                indexSixMonths->dayCounter(),
@@ -363,4 +363,3 @@ int main(int, char* []) {
         return 1;
     }
 }
-

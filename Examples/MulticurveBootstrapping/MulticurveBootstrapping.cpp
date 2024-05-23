@@ -115,7 +115,7 @@ int main(int, char* []) {
             auto settlementDays = q.first;
             auto quote = q.second;
             auto helper = ext::make_shared<DepositRateHelper>(
-                Handle<Quote>(quote),
+                Handle<Quote>(std::move(quote)),
                 1 * Days, settlementDays,
                 calendar, Following,
                 false, depositDayCounter);
@@ -135,7 +135,7 @@ int main(int, char* []) {
             auto tenor = q.first;
             auto quote = q.second;
             auto helper = ext::make_shared<OISRateHelper>(
-                2, tenor, Handle<Quote>(quote), eonia);
+                2, tenor, Handle<Quote>(std::move(quote)), eonia);
             eoniaInstruments.push_back(helper);
         }
 
@@ -154,7 +154,7 @@ int main(int, char* []) {
             auto endDate = q.first.second;
             auto quote = q.second;
             auto helper = ext::make_shared<DatedOISRateHelper>(
-                startDate, endDate, Handle<Quote>(quote), eonia);
+                startDate, endDate, Handle<Quote>(std::move(quote)), eonia);
             eoniaInstruments.push_back(helper);
         }
 
@@ -185,7 +185,7 @@ int main(int, char* []) {
             auto tenor = q.first;
             auto quote = q.second;
             auto helper = ext::make_shared<OISRateHelper>(
-                2, tenor, Handle<Quote>(quote), eonia);
+                2, tenor, Handle<Quote>(std::move(quote)), eonia);
             eoniaInstruments.push_back(helper);
         }
 
@@ -214,7 +214,7 @@ int main(int, char* []) {
         auto d6MRate = ext::make_shared<SimpleQuote>(0.00312);
 
         auto d6M = ext::make_shared<DepositRateHelper>(
-            Handle<Quote>(d6MRate),
+            Handle<Quote>(std::move(d6MRate)),
             6 * Months, 3,
             calendar, Following,
             false, depositDayCounter);
@@ -248,7 +248,7 @@ int main(int, char* []) {
             auto monthsToStart = q.first;
             auto quote = q.second;
             auto helper = ext::make_shared<FraRateHelper>(
-                Handle<Quote>(quote),
+                Handle<Quote>(std::move(quote)),
                 monthsToStart, euribor6M);
             euribor6MInstruments.push_back(helper);
         }
@@ -283,7 +283,7 @@ int main(int, char* []) {
             auto tenor = q.first;
             auto quote = q.second;
             auto helper = ext::make_shared<SwapRateHelper>(
-                Handle<Quote>(quote), tenor,
+                Handle<Quote>(std::move(quote)), tenor,
                 calendar, swFixedLegFrequency,
                 swFixedLegConvention, swFixedLegDayCounter,
                 euribor6M,

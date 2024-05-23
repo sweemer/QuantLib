@@ -133,11 +133,11 @@ namespace QuantLib {
         switch(volatilityType_) {
         case ShiftedLognormal:
             engine = ext::make_shared<BlackSwaptionEngine>(
-                termStructure_, vol, Actual365Fixed(), shift_);
+                termStructure_, std::move(vol), Actual365Fixed(), shift_);
             break;
         case Normal:
             engine = ext::make_shared<BachelierSwaptionEngine>(
-                termStructure_, vol, Actual365Fixed());
+                termStructure_, std::move(vol), Actual365Fixed());
             break;
         default:
             QL_FAIL("can not construct engine: " << volatilityType_);
