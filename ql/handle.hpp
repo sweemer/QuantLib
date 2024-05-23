@@ -114,6 +114,10 @@ namespace QuantLib {
         explicit RelinkableHandle(
                        ext::shared_ptr<T> p = {},
                        bool registerAsObserver = true);
+        /*! \deprecated Use the constructor taking shared_ptr.
+                        Deprecated in version 1.35.
+        */
+        [[deprecated("Use the constructor taking shared_ptr.")]]
         explicit RelinkableHandle(
                        T* p,
                        bool registerAsObserver = true);
