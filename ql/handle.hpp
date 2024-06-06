@@ -29,6 +29,30 @@
 
 namespace QuantLib {
 
+    template <class T>
+    class Link : public Observable, public Observer {
+      public:
+        Link(const ext::shared_ptr<T>& h,
+                bool registerAsObserver);
+        Link(ext::shared_ptr<T>&& h,
+                bool registerAsObserver);
+        template <class U>
+        Link(const Link<U>& other);
+        template <class U>
+        Link(Link<U>&& other);
+        void linkTo(ext::shared_ptr<T>,
+                    bool registerAsObserver);
+        bool empty() const { return !h_; }
+        bool isObserver() const { return isObserver_; }
+        const ext::shared_ptr<T>& currentLink() const & { return h_; }
+        ext::shared_ptr<T>&& currentLink() && { return std::move(h_); }
+        void update() override { notifyObservers(); }
+
+        private:
+        ext::shared_ptr<T> h_;
+        bool isObserver_ = false;
+    };
+
     //! Shared handle to an observable
     /*! All copies of an instance of this class refer to the same
         observable by means of a relinkable smart pointer. When such
@@ -40,23 +64,7 @@ namespace QuantLib {
     template <class T>
     class Handle {
       protected:
-        class Link : public Observable, public Observer {
-          public:
-            Link(const ext::shared_ptr<T>& h,
-                 bool registerAsObserver);
-            Link(ext::shared_ptr<T>&& h,
-                 bool registerAsObserver);
-            void linkTo(ext::shared_ptr<T>,
-                        bool registerAsObserver);
-            bool empty() const { return !h_; }
-            const ext::shared_ptr<T>& currentLink() const { return h_; }
-            void update() override { notifyObservers(); }
-
-          private:
-            ext::shared_ptr<T> h_;
-            bool isObserver_ = false;
-        };
-        ext::shared_ptr<Link> link_;
+        ext::shared_ptr<Link<T>> link_;
       public:
         /*! \name Constructors
 
@@ -79,15 +87,25 @@ namespace QuantLib {
         : Handle(ext::shared_ptr<T>()) {}
         explicit Handle(const ext::shared_ptr<T>& p,
                         bool registerAsObserver = true)
-        : link_(new Link(p, registerAsObserver)) {}
+        : link_(new Link<T>(p, registerAsObserver)) {}
         explicit Handle(ext::shared_ptr<T>&& p,
                         bool registerAsObserver = true)
-        : link_(new Link(std::move(p), registerAsObserver)) {}
+        : link_(new Link<T>(std::move(p), registerAsObserver)) {}
+        template <class U>
+        Handle(const Handle<U>& other)
+        : link_(new Link<T>(other.link())) {}
+        template <class U>
+        Handle(Handle<U>&& other)
+        : link_(new Link<T>(std::move(std::move(other).link()))) {}
         //@}
         //! dereferencing
         const ext::shared_ptr<T>& currentLink() const;
         const ext::shared_ptr<T>& operator->() const;
         const ext::shared_ptr<T>& operator*() const;
+        //! allows for copying the link into another handle
+        const Link<T>& link() const &;
+        //! allows for moving the link into another handle
+        Link<T>&& link() &&;
         //! checks if the contained shared pointer points to anything
         bool empty() const;
         //! allows registration as observable
@@ -145,18 +163,29 @@ namespace QuantLib {
     // inline definitions
 
     template <class T>
-    inline Handle<T>::Link::Link(const ext::shared_ptr<T>& h, bool registerAsObserver) {
+    inline Link<T>::Link(const ext::shared_ptr<T>& h, bool registerAsObserver) {
         linkTo(h, registerAsObserver);
     }
 
     template <class T>
-    inline Handle<T>::Link::Link(ext::shared_ptr<T>&& h, bool registerAsObserver) {
+    inline Link<T>::Link(ext::shared_ptr<T>&& h, bool registerAsObserver) {
         linkTo(std::move(h), registerAsObserver);
     }
 
     template <class T>
-    inline void Handle<T>::Link::linkTo(ext::shared_ptr<T> h,
-                                        bool registerAsObserver) {
+    template <class U>
+    inline Link<T>::Link(const Link<U>& link) {
+        linkTo(link.currentLink(), link.isObserver());
+    }
+
+    template <class T>
+    template <class U>
+    inline Link<T>::Link(Link<U>&& link) {
+        linkTo(std::move(std::move(link).currentLink()), link.isObserver());
+    }
+
+    template <class T>
+    inline void Link<T>::linkTo(ext::shared_ptr<T> h, bool registerAsObserver) {
         if ((h != h_) || (isObserver_ != registerAsObserver)) {
             if (h_ && isObserver_)
                 unregisterWith(h_);
@@ -185,6 +214,18 @@ namespace QuantLib {
     inline const ext::shared_ptr<T>& Handle<T>::operator*() const {
         QL_REQUIRE(!empty(), "empty Handle cannot be dereferenced");
         return link_->currentLink();
+    }
+
+    template <class T>
+    inline const Link<T>& Handle<T>::link() const & {
+        QL_REQUIRE(!empty(), "empty Handle cannot be dereferenced");
+        return *link_;
+    }
+
+    template <class T>
+    inline Link<T>&& Handle<T>::link() && {
+        QL_REQUIRE(!empty(), "empty Handle cannot be dereferenced");
+        return std::move(*link_);
     }
 
     template <class T>

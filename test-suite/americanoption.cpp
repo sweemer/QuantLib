@@ -164,9 +164,15 @@ BOOST_AUTO_TEST_CASE(testBaroneAdesiWhaleyValues) {
 
         ext::shared_ptr<BlackScholesMertonProcess> stochProcess(new
             BlackScholesMertonProcess(Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+                                      Handle(qTS),
+                                      Handle(rTS),
+                                      Handle(volTS)));
+#else
                                       Handle<YieldTermStructure>(qTS),
                                       Handle<YieldTermStructure>(rTS),
                                       Handle<BlackVolTermStructure>(volTS)));
+#endif
 
         ext::shared_ptr<PricingEngine> engine(
                       new BaroneAdesiWhaleyApproximationEngine(stochProcess));
@@ -232,9 +238,15 @@ BOOST_AUTO_TEST_CASE(testBjerksundStenslandValues) {
 
         ext::shared_ptr<BlackScholesMertonProcess> stochProcess(new
             BlackScholesMertonProcess(Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+                                      Handle(qTS),
+                                      Handle(rTS),
+                                      Handle(volTS)));
+#else
                                       Handle<YieldTermStructure>(qTS),
                                       Handle<YieldTermStructure>(rTS),
                                       Handle<BlackVolTermStructure>(volTS)));
+#endif
 
         ext::shared_ptr<PricingEngine> engine(
                      new BjerksundStenslandApproximationEngine(stochProcess));
@@ -356,9 +368,15 @@ BOOST_AUTO_TEST_CASE(testJuValues) {
 
         ext::shared_ptr<BlackScholesMertonProcess> stochProcess(new
             BlackScholesMertonProcess(Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+                                      Handle(qTS),
+                                      Handle(rTS),
+                                      Handle(volTS)));
+#else
                                       Handle<YieldTermStructure>(qTS),
                                       Handle<YieldTermStructure>(rTS),
                                       Handle<BlackVolTermStructure>(volTS)));
+#endif
 
         ext::shared_ptr<PricingEngine> engine(
                             new JuQuadraticApproximationEngine(stochProcess));
@@ -395,9 +413,15 @@ BOOST_AUTO_TEST_CASE(testFdValues) {
     ext::shared_ptr<BlackScholesMertonProcess> stochProcess =
         ext::make_shared<BlackScholesMertonProcess>(
             Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+            Handle(qTS),
+            Handle(rTS),
+            Handle(volTS));
+#else
             Handle<YieldTermStructure>(qTS),
             Handle<YieldTermStructure>(rTS),
             Handle<BlackVolTermStructure>(volTS));
+#endif
 
     ext::shared_ptr<PricingEngine> pdeEngine =
         ext::make_shared<FdBlackScholesVanillaEngine>(stochProcess, 100, 400);
@@ -743,9 +767,15 @@ BOOST_AUTO_TEST_CASE(testEscrowedVsSpotAmericanOption) {
 
     const auto process = ext::make_shared<BlackScholesMertonProcess>(
         Handle<Quote>(ext::make_shared<SimpleQuote>(100)),
+#ifdef __cpp_deduction_guides
+        Handle(flatRate(0.08, dc)),
+        Handle(flatRate(0.04, dc)),
+        Handle(flatVol(vol, dc))
+#else
         Handle<YieldTermStructure>(flatRate(0.08, dc)),
         Handle<YieldTermStructure>(flatRate(0.04, dc)),
         Handle<BlackVolTermStructure>(flatVol(vol, dc))
+#endif
     );
 
    const auto maturityDate = today + Period(12, Months);
@@ -814,9 +844,15 @@ BOOST_AUTO_TEST_CASE(testTodayIsDividendDate) {
 
     const auto process = ext::make_shared<BlackScholesMertonProcess>(
         Handle<Quote>(ext::make_shared<SimpleQuote>(100)),
+#ifdef __cpp_deduction_guides
+        Handle(flatRate(0.05, dc)),
+        Handle(flatRate(0.07, dc)),
+        Handle(flatVol(vol, dc))
+#else
         Handle<YieldTermStructure>(flatRate(0.05, dc)),
         Handle<YieldTermStructure>(flatRate(0.07, dc)),
         Handle<BlackVolTermStructure>(flatVol(vol, dc))
+#endif
     );
 
     const auto maturityDate = today + Period(12, Months);
@@ -942,9 +978,15 @@ BOOST_AUTO_TEST_CASE(testCallPutParity) {
     auto buildStochProcess = [&dc](const OptionSpec& testCase) {
         return ext::make_shared<BlackScholesMertonProcess>(
             Handle<Quote>(ext::make_shared<SimpleQuote>(testCase.spot)),
+#ifdef __cpp_deduction_guides
+            Handle(flatRate(testCase.q, dc)),
+            Handle(flatRate(testCase.r, dc)),
+            Handle(flatVol(testCase.volatility, dc))
+#else
             Handle<YieldTermStructure>(flatRate(testCase.q, dc)),
             Handle<YieldTermStructure>(flatRate(testCase.r, dc)),
             Handle<BlackVolTermStructure>(flatVol(testCase.volatility, dc))
+#endif
         );
     };
     const OptionSpec testCaseSpecs[] = {
@@ -1319,9 +1361,15 @@ BOOST_AUTO_TEST_CASE(testQdAmericanEngines) {
 
     const auto bsProcess = ext::make_shared<BlackScholesMertonProcess>(
         Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+        Handle(flatRate(today, qRate, dc)),
+        Handle(flatRate(today, rRate, dc)),
+        Handle(flatVol(today, vol, dc))
+#else
         Handle<YieldTermStructure>(flatRate(today, qRate, dc)),
         Handle<YieldTermStructure>(flatRate(today, rRate, dc)),
         Handle<BlackVolTermStructure>(flatVol(today, vol, dc))
+#endif
     );
 
     const auto qrPlusAmericanEngine =
@@ -1412,7 +1460,7 @@ BOOST_AUTO_TEST_CASE(testAndersenLakeHighPrecisionExample) {
         Real expected[2];
         Real tol;
     };
-    
+
     const SchemeSpec testCases[] = {
         { 24, 3, 9,  0.05, {0.1069528125898476, 0.1069524359360852}, 1e-6},
         {  5, 1, 4,  0.05, {0.1070237787625299, 0.1070042740171235}, 1e-3},
@@ -1447,9 +1495,15 @@ BOOST_AUTO_TEST_CASE(testAndersenLakeHighPrecisionExample) {
 
         const auto bsProcess = ext::make_shared<BlackScholesMertonProcess>(
             Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+            Handle(flatRate(today, q, dc)),
+            Handle(flatRate(today, r, dc)),
+            Handle(flatVol(today, vol, dc))
+#else
             Handle<YieldTermStructure>(flatRate(today, q, dc)),
             Handle<YieldTermStructure>(flatRate(today, r, dc)),
             Handle<BlackVolTermStructure>(flatVol(today, vol, dc))
+#endif
         );
 
         VanillaOption americanOption(
@@ -1510,9 +1564,15 @@ BOOST_AUTO_TEST_CASE(testQdEngineStandardExample) {
 
     const auto bsProcess = ext::make_shared<BlackScholesMertonProcess>(
         Handle<Quote>(ext::make_shared<SimpleQuote>(S)),
+#ifdef __cpp_deduction_guides
+        Handle(flatRate(today, q, dc)),
+        Handle(flatRate(today, r, dc)),
+        Handle(flatVol(today, sigma, dc))
+#else
         Handle<YieldTermStructure>(flatRate(today, q, dc)),
         Handle<YieldTermStructure>(flatRate(today, r, dc)),
         Handle<BlackVolTermStructure>(flatVol(today, sigma, dc))
+#endif
     );
 
     const auto payoff =
@@ -1619,9 +1679,15 @@ BOOST_AUTO_TEST_CASE(testBulkQdFpAmericanEngine) {
 
     const auto bsProcess = ext::make_shared<BlackScholesMertonProcess>(
         Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+        Handle(flatRate(today, qRate, dc)),
+        Handle(flatRate(today, rRate, dc)),
+        Handle(flatVol(today, vol, dc))
+#else
         Handle<YieldTermStructure>(flatRate(today, qRate, dc)),
         Handle<YieldTermStructure>(flatRate(today, rRate, dc)),
         Handle<BlackVolTermStructure>(flatVol(today, vol, dc))
+#endif
     );
 
     const auto qdFpFastAmericanEngine =
@@ -1710,9 +1776,15 @@ BOOST_AUTO_TEST_CASE(testQdEngineWithLobattoIntegral) {
 
     const auto bsProcess = ext::make_shared<BlackScholesMertonProcess>(
         Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+        Handle(flatRate(today, q, dc)),
+        Handle(flatRate(today, r, dc)),
+        Handle(flatVol(today, sigma, dc))
+#else
         Handle<YieldTermStructure>(flatRate(today, q, dc)),
         Handle<YieldTermStructure>(flatRate(today, r, dc)),
         Handle<BlackVolTermStructure>(flatVol(today, sigma, dc))
+#endif
     );
 
     VanillaOption option(
@@ -1777,9 +1849,15 @@ BOOST_AUTO_TEST_CASE(testQdNegativeDividendYield) {
 
     const auto process = ext::make_shared<BlackScholesMertonProcess>(
         Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+        Handle(flatRate(qRate, dc)),
+        Handle(flatRate(rRate, dc)),
+        Handle(flatVol(0.4, dc))
+#else
         Handle<YieldTermStructure>(flatRate(qRate, dc)),
         Handle<YieldTermStructure>(flatRate(rRate, dc)),
         Handle<BlackVolTermStructure>(flatVol(0.4, dc))
+#endif
     );
 
     VanillaOption option(
@@ -1849,10 +1927,16 @@ BOOST_AUTO_TEST_CASE(testBjerksundStenslandEuropeanGreeks) {
 
     const auto bsProcess = ext::make_shared<BlackScholesMertonProcess>(
         Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+        Handle(flatRate(qTS, Actual365Fixed())),
+        Handle(flatRate(rTS, Actual360())),
+        Handle(flatVol(today, sigma, Thirty360(Thirty360::European)))
+#else
         Handle<YieldTermStructure>(flatRate(qTS, Actual365Fixed())),
         Handle<YieldTermStructure>(flatRate(rTS, Actual360())),
         Handle<BlackVolTermStructure>(
             flatVol(today, sigma, Thirty360(Thirty360::European)))
+#endif
     );
 
     struct OptionSpec {
@@ -1922,10 +2006,16 @@ BOOST_AUTO_TEST_CASE(testBjerksundStenslandAmericanGreeks) {
 
     const auto bsProcess = ext::make_shared<BlackScholesMertonProcess>(
         Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+        Handle(flatRate(qRate, Actual360())),
+        Handle(flatRate(rRate, Actual365Fixed())),
+        Handle(flatVol(today, vol, Thirty360(Thirty360::ISDA)))
+#else
         Handle<YieldTermStructure>(flatRate(qRate, Actual360())),
         Handle<YieldTermStructure>(flatRate(rRate, Actual365Fixed())),
         Handle<BlackVolTermStructure>(
             flatVol(today, vol, Thirty360(Thirty360::ISDA)))
+#endif
     );
 
     const auto bjerksundStenslandEngine =
@@ -2117,10 +2207,16 @@ BOOST_AUTO_TEST_CASE(testSingleBjerksundStenslandGreeks) {
 
     const auto bsProcess = ext::make_shared<BlackScholesMertonProcess>(
         Handle<Quote>(spot),
+#ifdef __cpp_deduction_guides
+        Handle(flatRate(qRate, Actual365Fixed())),
+        Handle(flatRate(rRate, Actual365Fixed())),
+        Handle(flatVol(today, vol, Actual365Fixed()))
+#else
         Handle<YieldTermStructure>(flatRate(qRate, Actual365Fixed())),
         Handle<YieldTermStructure>(flatRate(rRate, Actual365Fixed())),
         Handle<BlackVolTermStructure>(
             flatVol(today, vol, Actual365Fixed()))
+#endif
     );
 
     const Date maturityDate = today + Period(2, Years);
