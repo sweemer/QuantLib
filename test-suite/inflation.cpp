@@ -25,6 +25,7 @@
 #include <ql/indexes/inflation/euhicp.hpp>
 #include <ql/indexes/inflation/ukhicp.hpp>
 #include <ql/indexes/inflation/aucpi.hpp>
+#include <ql/shared_ptr.hpp>
 #include <ql/termstructures/inflation/piecewisezeroinflationcurve.hpp>
 #include <ql/termstructures/inflation/piecewiseyoyinflationcurve.hpp>
 #include <ql/termstructures/yield/flatforward.hpp>
@@ -977,8 +978,8 @@ BOOST_AUTO_TEST_CASE(testRatioYYIndex) {
 
     auto iir = ext::make_shared<YoYInflationIndex>(ukrpi);
     QL_DEPRECATED_DISABLE_WARNING
-    auto iirYES = ext::shared_ptr<YoYInflationIndex>(
-                                          new YoYInflationIndex(ukrpi, true));
+    auto iirYES = ext::make_shared<YoYInflationIndex>(
+                                          ukrpi, true);
     QL_DEPRECATED_ENABLE_WARNING
 
     Date todayMinusLag = evaluationDate - iir->availabilityLag();
@@ -1582,7 +1583,7 @@ BOOST_AUTO_TEST_CASE(testCpiYoYQuotedFlatInterpolation) {
 
     auto testIndex1 = ext::make_shared<YYUKRPI>();
     QL_DEPRECATED_DISABLE_WARNING
-    auto testIndex2 = ext::shared_ptr<YYUKRPI>(new YYUKRPI(true));
+    auto testIndex2 = ext::make_shared<YYUKRPI>(true);
     QL_DEPRECATED_ENABLE_WARNING
 
     testIndex1->addFixing(Date(1, November, 2020), 0.02935);
@@ -1618,7 +1619,7 @@ BOOST_AUTO_TEST_CASE(testCpiYoYQuotedLinearInterpolation) {
 
     auto testIndex1 = ext::make_shared<YYUKRPI>();
     QL_DEPRECATED_DISABLE_WARNING
-    auto testIndex2 = ext::shared_ptr<YYUKRPI>(new YYUKRPI(true));
+    auto testIndex2 = ext::make_shared<YYUKRPI>(true);
     QL_DEPRECATED_ENABLE_WARNING
 
     testIndex1->addFixing(Date(1, November, 2020), 0.02935);
@@ -1675,8 +1676,8 @@ BOOST_AUTO_TEST_CASE(testCpiYoYRatioFlatInterpolation) {
 
     auto testIndex1 = ext::make_shared<YoYInflationIndex>(underlying);
     QL_DEPRECATED_DISABLE_WARNING
-    auto testIndex2 = ext::shared_ptr<YoYInflationIndex>(
-                                     new YoYInflationIndex(underlying, true));
+    auto testIndex2 = ext::make_shared<YoYInflationIndex>(
+                                     underlying, true);
     QL_DEPRECATED_ENABLE_WARNING
 
     underlying->addFixing(Date(1, November, 2019), 291.0);
@@ -1720,8 +1721,8 @@ BOOST_AUTO_TEST_CASE(testCpiYoYRatioLinearInterpolation) {
 
     auto testIndex1 = ext::make_shared<YoYInflationIndex>(underlying);
     QL_DEPRECATED_DISABLE_WARNING
-    auto testIndex2 = ext::shared_ptr<YoYInflationIndex>(
-                                     new YoYInflationIndex(underlying, true));
+    auto testIndex2 = ext::make_shared<YoYInflationIndex>(
+                                     underlying, true);
     QL_DEPRECATED_ENABLE_WARNING
 
     underlying->addFixing(Date(1, November, 2019), 291.0);

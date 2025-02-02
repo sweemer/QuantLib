@@ -19,6 +19,7 @@
 */
 
 #include <ql/indexes/inflationindex.hpp>
+#include <ql/shared_ptr.hpp>
 #include <ql/termstructures/inflationtermstructure.hpp>
 #include <ql/time/calendars/nullcalendar.hpp>
 #include <utility>
@@ -254,7 +255,7 @@ namespace QuantLib {
     YoYInflationIndex::YoYInflationIndex(const ext::shared_ptr<ZeroInflationIndex>& underlyingIndex,
                                          bool interpolated,
                                          Handle<YoYInflationTermStructure> yoyInflation)
-    : YoYInflationIndex(underlyingIndex, yoyInflation) {
+    : YoYInflationIndex(underlyingIndex, std::move(yoyInflation)) {
         interpolated_ = interpolated;
     }
 
@@ -278,7 +279,7 @@ namespace QuantLib {
                                          const Period& availabilityLag,
                                          const Currency& currency,
                                          Handle<YoYInflationTermStructure> yoyInflation)
-    : YoYInflationIndex(familyName, region, revised, frequency, availabilityLag, currency, yoyInflation) {
+    : YoYInflationIndex(familyName, region, revised, frequency, availabilityLag, currency, std::move(yoyInflation)) {
         interpolated_ = interpolated;
     }
 
@@ -388,13 +389,13 @@ namespace QuantLib {
                            const Handle<YoYInflationTermStructure>& h) const {
         QL_DEPRECATED_DISABLE_WARNING
         if (ratio_) {
-            return ext::shared_ptr<YoYInflationIndex>(
-                new YoYInflationIndex(underlyingIndex_, interpolated_, h));
+            return ext::make_shared<YoYInflationIndex>(
+                underlyingIndex_, interpolated_, h);
         } else {
-            return ext::shared_ptr<YoYInflationIndex>(
-                new YoYInflationIndex(familyName_, region_, revised_,
+            return ext::make_shared<YoYInflationIndex>(
+                familyName_, region_, revised_,
                                       interpolated_, frequency_,
-                                      availabilityLag_, currency_, h));
+                                      availabilityLag_, currency_, h);
         }
         QL_DEPRECATED_ENABLE_WARNING
     }
